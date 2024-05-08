@@ -1,0 +1,1 @@
+"use strict";const e=require("../../index2.js");require("../../common/vendor.js"),require("../../utils/http.js"),require("../../enum/user.js"),require("../../utils/wx.js"),require("../../api/api.js"),wx.createPage(e._sfc_main);

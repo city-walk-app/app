@@ -1,0 +1,1 @@
+<scroll-view class="city-scroll data-v-54e5232b" scroll-y="{{true}}" scroll-x="{{false}}"><slot/></scroll-view><city-touch class="data-v-54e5232b" u-i="54e5232b-0" bind:__l="__l"/>

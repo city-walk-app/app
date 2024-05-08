@@ -1,0 +1,1 @@
+<view class="weather"><view wx:for="{{a}}" wx:for-item="i" wx:key="b">天气{{i.a}}</view></view>

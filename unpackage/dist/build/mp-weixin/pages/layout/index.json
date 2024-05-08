@@ -1,0 +1,10 @@
+{
+  "disableScroll": true,
+  "navigationStyle": "custom",
+  "usingComponents": {
+    "page-home": "../home/index",
+    "page-user": "../user/index",
+    "page-ranking": "../ranking/index",
+    "page-route-history": "../route-history/index"
+  }
+}

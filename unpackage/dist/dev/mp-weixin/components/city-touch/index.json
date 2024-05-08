@@ -1,0 +1,6 @@
+{
+  "component": true,
+  "usingComponents": {
+    "city-close": "../../svg/city-close/index"
+  }
+}

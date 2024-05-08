@@ -1,0 +1,49 @@
+{
+  "pages": [
+    {
+      "path": "pages/layout/index",
+      "style": {
+        "disableScroll": true,
+        "navigationStyle": "custom"
+      },
+      "permissions": {
+        "scope.userLocation": {
+          "desc": "你的应用需要获取您的地理位置信息以提供相关功能"
+        }
+      }
+    },
+    {
+      "path": "pages/login/index"
+    },
+    {
+      "path": "pages/footprint/index"
+    },
+    {
+      "path": "pages/ranking/index"
+    },
+    {
+      "path": "pages/route-detail/index"
+    },
+    {
+      "path": "pages/route-history/index"
+    },
+    {
+      "path": "pages/setting/index"
+    },
+    {
+      "path": "pages/supporter/index"
+    },
+    {
+      "path": "pages/user/index"
+    }
+  ],
+  "globalStyle": {
+    "disableScroll": true,
+    "navigationBarBackgroundColor": "#ffffff", // 设置顶部栏颜色为红色
+    "navigationBarTextStyle": "black" // 设置顶部栏文字颜色为白色
+  },
+  "requiredPrivateInfos": [
+    "getFuzzyLocation"
+  ],
+  "uniIdRouter": {}
+}

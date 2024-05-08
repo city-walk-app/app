@@ -1,0 +1,6 @@
+{
+  "component": true,
+  "usingComponents": {
+    "city-scroll": "../../components/city-sroll/index"
+  }
+}

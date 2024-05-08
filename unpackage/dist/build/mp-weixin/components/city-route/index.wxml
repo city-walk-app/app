@@ -1,0 +1,1 @@
+<view class="route-item" key="{{d}}" bindtap="{{e}}"><view class="{{['item-icon', a]}}"><view class="city-icon icon-walk"/></view><view class="item-content"><view class="item-content-title">打卡{{b}}个位置</view><view class="item-content-city">{{c}}</view></view></view>

@@ -1,0 +1,1 @@
+<view wx:if="{{a}}" class="l-confetti"><block wx:if="{{r0}}"><canvas class="l-confetti__canvas" canvas-id="{{b}}" id="{{c}}" type="2d"></canvas></block></view>

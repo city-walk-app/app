@@ -1,0 +1,28 @@
+{
+  "pages": [
+    "pages/layout/index",
+    "pages/login/index",
+    "pages/footprint/index",
+    "pages/ranking/index",
+    "pages/route-detail/index",
+    "pages/route-history/index",
+    "pages/setting/index",
+    "pages/supporter/index",
+    "pages/user/index"
+  ],
+  "window": {
+    "disableScroll": true,
+    "navigationBarBackgroundColor": "#ffffff",
+    "navigationBarTextStyle": "black"
+  },
+  "permission": {
+    "scope.userLocation": {
+      "desc": "你的位置信息将用于小程序位置接口的效果展示"
+    }
+  },
+  "requiredPrivateInfos": [
+    "getLocation",
+    "chooseLocation"
+  ],
+  "usingComponents": {}
+}

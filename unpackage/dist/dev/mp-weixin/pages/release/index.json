@@ -1,0 +1,6 @@
+{
+  "component": true,
+  "usingComponents": {
+    "city-dialog": "../../components/city-dialog/index"
+  }
+}
