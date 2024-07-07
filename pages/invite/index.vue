@@ -10,7 +10,7 @@
 <template>
   <div class="friends">
     <div class="header">
-      <h1>排行榜</h1>
+      <h1>邀请朋友</h1>
     </div>
   </div>
 </template>

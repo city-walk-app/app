@@ -63,7 +63,7 @@
 </script>
 
 <template>
-  <div class="layout" v-if="userInfoStorage && userInfoStorage.id">
+  <div class="layout" v-if="userInfoStorage && userInfoStorage.user_id">
     <div class="body" v-show="barActive === 0">
       <PageHome />
     </div>

@@ -26,11 +26,13 @@
    * 获取用户信息
    */
   const getUserInfo = async () => {
-    if (userInfo.value && userInfo.value.id) {
+    if (userInfo.value && userInfo.value.user_id) {
       return
     }
 
-    const res = await API.getUserInfo({ id: userInfoStorage.value.id })
+    const res = await API.getUserInfo({
+      user_id: userInfoStorage.value.user_id,
+    })
 
     if (res.code === 200) {
       userInfo.value = res.data

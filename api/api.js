@@ -44,7 +44,7 @@ export class Api extends Http {
   getUserInfo = (data) => {
     return this.request({
       method: 'GET',
-      url: '/user/info',
+      url: '/user/get/user_info',
       data
     })
   }

@@ -1,1 +1,0 @@
-<view wx:if="{{a}}" class="city-dialog data-v-96e4201e"><view class="city-dialog__mask data-v-96e4201e"/><view class="{{['data-v-96e4201e', 'city-dialog__wrapper', b]}}"><slot/></view></view>

@@ -1,7 +1,5 @@
 {
-  "component": true,
-  "usingComponents": {
-    "l-chart": "../../uni_modules/lime-echart/components/l-echart/l-echart",
-    "city-dialog": "../../components/city-dialog/index"
-  }
+  "disableScroll": true,
+  "navigationStyle": "custom",
+  "usingComponents": {}
 }

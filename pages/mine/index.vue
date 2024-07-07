@@ -1,9 +1,10 @@
 <script setup>
   import { ref, inject } from 'vue'
   import { Api } from '@/api'
-  import { VUE_APP_API_URL } from '@/utils'
+  import { VUE_APP_API_URL, getStorage } from '@/utils'
+  import { USER_INFO } from '@/enum'
 
-  const userInfo = inject('userInfo')
+  const userInfo = ref(getStorage(USER_INFO))
 
   const provinceInfo = ref()
   const API = new Api()
@@ -17,23 +18,23 @@
   /**
    * 获取用户的动态发布日历热力图
    */
-  const userGetCalendarHeatmap = async () => {
-    const date = new Date()
-    const res = await API.userGetCalendarHeatmap({
-      year: date.getFullYear(),
-      id: userInfo.value.id,
-    })
+  // const userGetCalendarHeatmap = async () => {
+  //   const date = new Date()
+  //   const res = await API.userGetCalendarHeatmap({
+  //     year: date.getFullYear(),
+  //     id: userInfo.value.id,
+  //   })
 
-    if (res.code === 200) {
-      calendarHeatmap.value = res.data
-    }
-  }
+  //   if (res.code === 200) {
+  //     calendarHeatmap.value = res.data
+  //   }
+  // }
 
   /**
    * 获取用户信息
    */
   const getUserInfo = async () => {
-    const res = await API.getUserInfo({ id: userInfo.value.id })
+    const res = await API.getUserInfo({ user_id: userInfo.value.user_id })
 
     if (res.code === 200) {
       userInfo.value = res.data
@@ -59,8 +60,8 @@
   }
 
   getUserInfo() // 获取用户信息
-  getUserProvince() // 获取当前用户走过的省份列表
-  userGetCalendarHeatmap() // 获取用户的动态发布日历热力图
+  // getUserProvince() // 获取当前用户走过的省份列表
+  // userGetCalendarHeatmap() // 获取用户的动态发布日历热力图
 </script>
 
 <template>
@@ -105,42 +106,6 @@
           <div class="user-city" v-if="userInfo.province">
             {{ userInfo.province }}
             <template v-if="userInfo.city"> - {{ userInfo.city }} </template>
-          </div>
-          <!-- 解锁版图数量 -->
-          <div class="active-list">
-            <div class="active-item">
-              <!-- 这里使用首页的背景模式，在哪个省份就使用哪个省份的版图 icon -->
-              <div class="active-icon">
-                <template v-if="provinceInfo && provinceInfo.province_banner">
-                  <image
-                    class="active-icon-img"
-                    :src="provinceInfo.province_banner"
-                    @load="bannerLoad"
-                  />
-                  <div
-                    class="province-banner"
-                    v-show="showBanner"
-                    :style="{
-                      mask: `url('${provinceInfo.province_banner}') 0 0 / cover no-repeat`,
-                      '-webkit-mask': `url('${provinceInfo.province_banner}') 0 0 / cover no-repeat`,
-                    }"
-                  />
-                </template>
-              </div>
-              解锁版图
-            </div>
-            <div class="active-item">
-              <div class="active-icon">
-                <i class="city-icon icon-xingxing" />
-              </div>
-              累计经验
-            </div>
-            <div class="active-item">
-              <div class="active-icon">
-                <i class="city-icon icon-jiangbei" />
-              </div>
-              经验排名
-            </div>
           </div>
         </div>
 

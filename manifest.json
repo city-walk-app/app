@@ -15,7 +15,9 @@
             "autoclose" : true,
             "delay" : 0
         },
-        "modules" : {},
+        "modules" : {
+            "Maps" : {}
+        },
         "distribute" : {
             "android" : {
                 "permissions" : [
@@ -33,8 +35,9 @@
             "sdkConfigs" : {
                 "maps" : {
                     "amap" : {
-                        "appkey_ios" : "",
-                        "appkey_android" : ""
+                        "name" : "amap_15227241216AAaXLOCkI",
+                        "appkey_ios" : "c3433e89cbc3609f0fe3c0299fdbac98",
+                        "appkey_android" : "c3433e89cbc3609f0fe3c0299fdbac98"
                     }
                 }
             }

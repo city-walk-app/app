@@ -1,7 +1,7 @@
 {
   "pages": [
     {
-      "path": "pages/layout/index",
+      "path": "pages/home/index",
       "style": {
         "disableScroll": true,
         "navigationStyle": "custom"
@@ -16,25 +16,22 @@
       "path": "pages/login/index"
     },
     {
-      "path": "pages/footprint/index"
-    },
-    {
       "path": "pages/ranking/index"
     },
     {
       "path": "pages/route-detail/index"
     },
     {
-      "path": "pages/route-history/index"
-    },
-    {
       "path": "pages/setting/index"
     },
     {
-      "path": "pages/supporter/index"
+      "path": "pages/mine/index"
     },
     {
-      "path": "pages/user/index"
+      "path": "pages/invite/index"
+    },
+    {
+      "path": "pages/friends/index"
     }
   ],
   "globalStyle": {
