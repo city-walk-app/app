@@ -32,6 +32,9 @@
     },
     {
       "path": "pages/friends/index"
+    },
+    {
+      "path": "pages/record-success/index"
     }
   ],
   "globalStyle": {

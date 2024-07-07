@@ -1,1 +1,1 @@
-"use strict";exports.USER_INFO="USER_INFO",exports.USER_PROVINCE_CODE="USER_PROVINCE_CODE";
+"use strict";exports.USER_INFO="USER_INFO";

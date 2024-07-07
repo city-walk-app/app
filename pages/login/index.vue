@@ -148,31 +148,35 @@
       userInfo.value = res.data
       setStorage(USER_INFO, res.data)
 
-      // 如果是新用户，则进行下一步
-      if (res.data.is_new_user) {
-        toast('注册成功，请完善信息')
-        step.value = 2
-      } else {
-        toast(res.message)
+      uni.navigateTo({
+        url: '/pages/home/index',
+      })
 
-        if (confettiRef.value) {
-          // 播放完成注册庆祝烟花
-          confettiRef.value.play({
-            particleCount: 100,
-            spread: 70,
-            shapes: ['circle'],
-            origin: {
-              y: 0.6,
-            },
-          })
+      // // 如果是新用户，则进行下一步
+      // if (res.data.is_new_user) {
+      //   toast('注册成功，请完善信息')
+      //   step.value = 2
+      // } else {
+      //   toast(res.message)
 
-          setTimeout(() => {
-            uni.navigateTo({
-              url: '/pages/layout/index',
-            })
-          }, 1500)
-        }
-      }
+      //   if (confettiRef.value) {
+      //     // 播放完成注册庆祝烟花
+      //     confettiRef.value.play({
+      //       particleCount: 100,
+      //       spread: 70,
+      //       shapes: ['circle'],
+      //       origin: {
+      //         y: 0.6,
+      //       },
+      //     })
+
+      //     setTimeout(() => {
+      //       uni.navigateTo({
+      //         url: '/pages/layout/index',
+      //       })
+      //     }, 1500)
+      //   }
+      // }
       return
     }
 
@@ -379,7 +383,7 @@
       <div class="swiper-item">
         <div class="header" />
 
-        <div class="code-input-wrapper" @click="codeInputClick">
+        <!-- <div class="code-input-wrapper" @click="codeInputClick">
           <div
             v-for="(item, index) in codeDigits"
             :key="index"
@@ -392,73 +396,22 @@
             ]"
           >
             {{ loginInfo.code[index] || '' }}
-          </div>
+          </div> -->
 
-          <input
-            type="number"
-            v-model="loginInfo.code"
-            maxlength="6"
-            class="code-input-shadow"
-            :adjust-position="false"
-            :focus="codeInputFouks"
-            @confirm="onLogin"
-            @blur="onBlur"
-          />
-        </div>
+        <input
+          type="number"
+          v-model="loginInfo.code"
+          maxlength="6"
+          :adjust-position="false"
+          :focus="codeInputFouks"
+          @confirm="onLogin"
+          @blur="onBlur"
+        />
+        <!-- </div> -->
 
         <div class="get-code-button" @click="sendEmail">
           <template v-if="getCodeButtonLoading">{{ timmer }}s 后再试</template>
           <template v-else>重新获取</template>
-        </div>
-      </div>
-
-      <!-- 3. 输入昵称 -->
-      <div class="swiper-item">
-        <div class="header">
-          <image
-            class="header-logo"
-            src="https://img.erpweb.eu.org/imgs/2024/01/245c8a7130242d47.png"
-          />
-
-          <h2 class="header-title">你的名字？</h2>
-        </div>
-
-        <div class="login-form">
-          <div class="input-wrapper">
-            <input
-              placeholder-class="input-placeholder"
-              class="login-input"
-              type="text"
-              maxlength="20"
-              v-model="nickName"
-              placeholder="你的名字"
-              :adjust-position="false"
-              :focus="inputFouksIndex === 2"
-              @confirm="onSetName"
-            />
-          </div>
-        </div>
-
-        <!-- 下一步按钮 -->
-        <div class="submit-button" @click="onSetName">
-          <i class="city-icon icon-you" />
-        </div>
-      </div>
-
-      <!-- 4. 选择头像 -->
-      <div class="swiper-item">
-        <div class="up-avatar" @click="upLoadAvatar">
-          <image
-            class="up-avatar-img"
-            v-if="avatarUrl && avatarUrl.length"
-            :src="avatarUrl"
-          />
-          <div v-else>选择头像</div>
-        </div>
-
-        <!-- 下一步按钮 -->
-        <div class="submit-button" @click="onSubmit">
-          <i class="city-icon icon-you" />
         </div>
       </div>
     </div>

@@ -1,1 +1,1 @@
-<view class="route-detail"><map wx:if="{{a}}" class="map" latitude="{{b}}" circles="{{c}}" longitude="{{d}}" scale="{{e}}" markers="{{f}}"/></view>
+<view class="route-detail"><map class="map" latitude="{{a}}" longitude="{{b}}"/></view>

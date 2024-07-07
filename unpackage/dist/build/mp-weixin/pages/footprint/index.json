@@ -1,5 +1,0 @@
-{
-  "usingComponents": {
-    "l-chart": "../../uni_modules/lime-echart/components/l-echart/l-echart"
-  }
-}

@@ -2,13 +2,13 @@
   "pages": [
     "pages/home/index",
     "pages/login/index",
-    "pages/footprint/index",
     "pages/ranking/index",
     "pages/route-detail/index",
-    "pages/route-history/index",
     "pages/setting/index",
-    "pages/supporter/index",
-    "pages/user/index"
+    "pages/mine/index",
+    "pages/invite/index",
+    "pages/friends/index",
+    "pages/record-success/index"
   ],
   "window": {
     "disableScroll": true,

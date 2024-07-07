@@ -42,7 +42,7 @@
   const onRecord = getAround(async (res) => {
     const { address, latitude, longitude, name } = res
 
-    const result = await API.createPositionRecord({
+    const result = await API.locationCreateRecord({
       address,
       latitude,
       longitude,
@@ -52,13 +52,16 @@
     toast(result.message)
 
     if (result.code === 200) {
-      // 判断是否解锁新的省份
-      if (result.data.new_province) {
-        visible.value = true
-        newPprovince.value = result.data.new_province
-      }
-
-      getLocation() // 获取位置信息
+      uni.navigateTo({
+        url: '/pages/record-success/index',
+      })
+      // console.log()
+      // // 判断是否解锁新的省份
+      // if (result.data.new_province) {
+      //   visible.value = true
+      //   newPprovince.value = result.data.new_province
+      // }
+      // getLocation() // 获取位置信息
     }
   })
 
@@ -97,11 +100,21 @@
   }
 
   const isLogin = () => {
-    if (userInfoStorage.value && userInfoStorage.value.user_id) {
+    if (
+      userInfoStorage &&
+      userInfoStorage.value &&
+      userInfoStorage.value.user_id
+    ) {
+      console.log('已经登录')
       // #ifdef MP-WEIXIN
       getStatusBarHeight() // 设置顶部栏高度
       // #endif
       getLocation() // 获取位置信息
+    } else {
+      console.log('未登录')
+      uni.navigateTo({
+        url: '/pages/login/index',
+      })
     }
   }
 
@@ -154,7 +167,7 @@
     <!-- 底部卡片 -->
     <div class="footer">
       <div class="footer-item" @click="goFriends">我的朋友</div>
-      <div class="footer-item">打卡</div>
+      <div class="footer-item" @click="onRecord">打卡</div>
       <div class="footer-item" @click="inviteFriends">邀请朋友</div>
       <div class="footer-item" @click="goRanking">排行榜</div>
     </div>

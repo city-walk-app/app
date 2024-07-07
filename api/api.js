@@ -74,10 +74,10 @@ export class Api extends Http {
   /**
    * 创建当前位置信息
    */
-  createPositionRecord = (data) => {
+  locationCreateRecord = (data) => {
     return this.request({
       method: 'POST',
-      url: '/gps/create_position_record',
+      url: '/location/create/record',
       data
     })
   }
