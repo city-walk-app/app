@@ -1,34 +1,16 @@
 <script setup>
-  import { ref, inject } from 'vue'
+  import { ref } from 'vue'
   import { Api } from '@/api'
   import { VUE_APP_API_URL, getStorage } from '@/utils'
   import { USER_INFO } from '@/enum'
 
   const userInfo = ref(getStorage(USER_INFO))
 
-  const provinceInfo = ref()
   const API = new Api()
-  /** 是否显示 banner */
-  const showBanner = ref(false)
-  /** 用户的动态发布日历热力图 */
-  const calendarHeatmap = ref()
   /** 省份列表 */
   const provinceList = ref()
-
-  /**
-   * 获取用户的动态发布日历热力图
-   */
-  // const userGetCalendarHeatmap = async () => {
-  //   const date = new Date()
-  //   const res = await API.userGetCalendarHeatmap({
-  //     year: date.getFullYear(),
-  //     id: userInfo.value.id,
-  //   })
-
-  //   if (res.code === 200) {
-  //     calendarHeatmap.value = res.data
-  //   }
-  // }
+  /** 步行记录列表 */
+  const routeList = ref()
 
   /**
    * 获取用户信息
@@ -42,26 +24,41 @@
   }
 
   /**
-   * 图片加载成功了
-   */
-  const bannerLoad = () => {
-    showBanner.value = true
-  }
-
-  /**
    * 获取当前用户走过的省份列表
    */
-  const getUserProvince = async () => {
-    const res = await API.getUserProvince({ id: userInfo.value.id })
+  const getUserProvinceJigsaw = async () => {
+    const res = await API.getUserProvinceJigsaw({ id: userInfo.value.id })
 
     if (res.code === 200) {
       provinceList.value = res.data
     }
   }
 
+  /**
+   * 获取当前用户走过的省份列表
+   */
+  const getUserRouteList = async () => {
+    const res = await API.getUserRouteList({ id: userInfo.value.id })
+
+    if (res.code === 200) {
+      routeList.value = res.data
+    }
+  }
+
+  /**
+   * 点击查看详情
+   *
+   * @param list_id
+   */
+  const routeDetail = (list_id) => {
+    uni.navigateTo({
+      url: `/pages/route-detail/index?list_id=${list_id}`,
+    })
+  }
+
+  getUserRouteList() // 获取用户步行记录列表
   getUserInfo() // 获取用户信息
-  // getUserProvince() // 获取当前用户走过的省份列表
-  // userGetCalendarHeatmap() // 获取用户的动态发布日历热力图
+  getUserProvinceJigsaw() // 获取当前用户走过的省份列表
 </script>
 
 <template>
@@ -130,37 +127,15 @@
           </div>
         </scroll-view>
 
-        <!-- 热力图 -->
-        <!-- v-if="calendarHeatmap && !showCalendarHeatmap" -->
-        <div class="heatmap-box">
-          <scroll-view
-            v-if="calendarHeatmap"
-            class="heatmap-scroll"
-            scroll-x
-            scroll-y
-            scroll-with-animation
-            :scroll-left="0"
+        <!-- 步行记录列表 -->
+        <div class="">
+          <div
+            v-for="(item, index) in routeList"
+            :key="index"
+            @click="routeDetail(item.list_id)"
           >
-            <!-- 热力图 -->
-            <div class="heatmap-wrapper">
-              <div
-                class="heatmap-column"
-                v-for="(columnItem, i) in calendarHeatmap"
-                :key="i"
-              >
-                <div
-                  class="heatmap-item"
-                  v-for="(item, index) in columnItem"
-                  :key="index"
-                  :style="{
-                    background: item.opacity
-                      ? `rgba(0, 102, 59, ${item.opacity})`
-                      : 'rgb(244, 245, 245)',
-                  }"
-                ></div>
-              </div>
-            </div>
-          </scroll-view>
+            {{ item.list_id }}
+          </div>
         </div>
       </div>
     </div>

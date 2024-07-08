@@ -43,10 +43,10 @@
     const { address, latitude, longitude, name } = res
 
     const result = await API.locationCreateRecord({
-      address,
+      // address,
+      // name,
       latitude,
       longitude,
-      name,
     })
 
     toast(result.message)

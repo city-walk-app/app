@@ -1,41 +1,47 @@
 <script setup>
   import { Api } from '@/api'
   import { ref } from 'vue'
-  // import {
-  //   showLoading,
-  //   hideLoading,
-  //   calculateCenter,
-  //   VUE_APP_API_URL,
-  // } from '@/utils'
+  import { onLoad } from '@dcloudio/uni-app'
+  import { getStorage } from '@/utils'
+  import { USER_INFO } from '@/enum'
 
   const API = new Api()
 
-  /** 标记点 */
-  const markers = ref()
-  /** 圆形标记点 */
-  const circles = ref()
-  /** 中心点纬度 */
-  const latitude = ref(0)
-  /** 中心点经度 */
-  const longitude = ref(0)
-  /** 设置地图的缩放级别 */
-  const scale = 14
+  const userInfo = ref(getStorage(USER_INFO))
+  /** 步行详情 */
+  const routeDetail = ref()
 
-  // getRouteHistory()
+  /**
+   * 获取用户步行记录列表
+   *
+   * @param list_id
+   */
+  const getUserRouteDetail = async (list_id) => {
+    const res = await API.getUserRouteDetail({
+      list_id,
+      user_id: userInfo.value.user_id,
+    })
+
+    if (res.code === 200) {
+      routeDetail.value = res.data
+    }
+  }
+
+  onLoad((options) => {
+    console.log(options)
+    getUserRouteDetail(options.list_id) // 获取用户步行记录列表
+  })
 </script>
 
 <template>
   <div class="route-detail">
+    <template v-if="routeDetail && routeDetail.length">
+      <div v-for="(item, index) in routeDetail" :key="index">
+        {{ item.province }} {{ item.city }}
+      </div>
+    </template>
     <!-- https://uniapp.dcloud.net.cn/component/map.html -->
-    <map class="map" :latitude="latitude" :longitude="longitude" />
-    <!-- <map
-      class="map"
-      :latitude="latitude"
-      :circles="circles"
-      :longitude="longitude"
-      :scale="scale"
-      :markers="markers"
-    /> -->
+    <!-- <map class="map" :latitude="latitude" :longitude="longitude" /> -->
   </div>
 </template>
 
