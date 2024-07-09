@@ -53,7 +53,7 @@
         if (res.confirm) {
           uni.clearStorage()
           uni.navigateTo({
-            url: '/pages/layout/index',
+            url: '/pages/home/index',
           })
         }
       },

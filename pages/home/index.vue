@@ -3,6 +3,7 @@
   import { ref } from 'vue'
   import { usePositioning, toast, getStorage } from '@/utils'
   import { USER_INFO } from '@/enum'
+  import { onShow } from '@dcloudio/uni-app'
 
   const API = new Api()
 
@@ -144,6 +145,62 @@
       url: '/pages/ranking/index',
     })
   }
+
+  /**
+   * 获取邀请详情
+   */
+  const getFriendInviteInfo = async (invite_id) => {
+    console.log('获取详情')
+    const res = await API.getFriendInviteInfo({ invite_id })
+
+    console.log(res)
+
+    if (res.code === 200) {
+      uni.showModal({
+        title: '好友申请',
+        content: `${res.data.name} 申请加你为好友，你同意吗？`,
+        showCancel: true,
+        cancelText: '拒绝',
+        confirmText: '同意',
+        success: async (res) => {
+          if (res.confirm) {
+            const result = await API.friendConfirmInvite({ invite_id })
+
+            if (result.code === 200) {
+              console.log(result)
+            }
+            console.log('同意')
+          } else if (res.cancel) {
+            console.log('用户点击取消')
+          }
+        },
+      })
+    }
+  }
+
+  /**
+   * 读取剪贴板
+   */
+  const getClipboardData = async () => {
+    try {
+      const res = await uni.getClipboardData()
+
+      if (res.errMsg === 'getClipboardData:ok') {
+        console.log('读取成功：', res.data)
+
+        if (res.data.includes('CityWalk:')) {
+          console.log(res.data.replace(/CityWalk:/g, ''))
+          getFriendInviteInfo(res.data.replace(/CityWalk:/g, '')) // 获取邀请详情
+        }
+      }
+    } catch (err) {
+      console.warn('剪贴板读取异常', err)
+    }
+  }
+
+  onShow(() => {
+    getClipboardData() // 读取剪贴板
+  })
 
   isLogin() // 是否登录
 </script>

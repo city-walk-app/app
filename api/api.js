@@ -6,6 +6,39 @@ export class Api extends Http {
   }
 
   /**
+   * 同意邀请
+   */
+  friendConfirmInvite = (data) => {
+    return this.request({
+      method: 'POST',
+      url: '/friend/confirm/invite',
+      data
+    })
+  }
+
+  /**
+   * 获取邀请详情
+   */
+  getFriendInviteInfo = (data) => {
+    return this.request({
+      method: 'POST',
+      url: '/friend/get/invite/info',
+      data
+    })
+  }
+
+  /**
+   * 邀请朋友
+   */
+  friendInvite = (data) => {
+    return this.request({
+      method: 'POST',
+      url: '/friend/invite',
+      data
+    })
+  }
+
+  /**
    * 获取用户步行记录列表
    */
   getUserRouteDetail = (data) => {
