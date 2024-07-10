@@ -1,1 +1,1 @@
-<view class="friends"><view class="header"><view>邀请朋友</view></view></view>
+<view class="friends"><view class="header"><view>邀请朋友</view><view bindtap="{{a}}">复制邀请链接</view></view></view>

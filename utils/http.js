@@ -1,15 +1,15 @@
 import { USER_INFO } from '@/enum'
 import { getStorage, toast } from '@/utils'
 
-// export const VUE_APP_API_URL = 'https://api.city-walk.top' // 生产环境
-export const VUE_APP_API_URL = 'http://localhost:1219' // 本地环境
+export const VUE_APP_API_URL = 'https://api.city-walk.top' // 生产环境
+// export const VUE_APP_API_URL = 'http://localhost:1219' // 本地环境
 // export const VUE_APP_API_URL = 'http://192.168.10.97:1219' // 公司 mac 本地环境
 // export const VUE_APP_API_URL = 'http://192.168.0.39:1219' // 家里
 // export const VUE_APP_API_URL = 'http://192.168.10.161:1219' // 公司
 // export const VUE_APP_API_URL = 'http://172.20.10.12:1219' // 手机热点
 
 export class Http {
-  request ({
+  request({
     url = '',
     data = {},
     method = 'GET',

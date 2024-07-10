@@ -6,6 +6,17 @@ export class Api extends Http {
   }
 
   /**
+   * 获取朋友列表
+   */
+  friendList = (data) => {
+    return this.request({
+      method: 'POST',
+      url: '/friend/list',
+      data
+    })
+  }
+
+  /**
    * 同意邀请
    */
   friendConfirmInvite = (data) => {
