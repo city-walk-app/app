@@ -18,6 +18,43 @@
       })
     }
   }
+
+  /**
+   * 获取微信二维码
+   */
+  const getWxQrCode = async (access_token) => {
+    uni.request({
+      url: 'https://api.weixin.qq.com/wxa/getwxacode',
+      data: {
+        access_token,
+      },
+      header,
+      method: 'POST',
+      success: (res) => {
+        if (res.statusCode === 200 || res.statusCode === 201) {
+          resolve(res.data)
+        } else {
+          toast(res.data.message)
+        }
+      },
+      fail: () => {
+        toast('网络连接失败')
+      },
+    })
+  }
+
+  /**
+   * 获取 AccessToken
+   */
+  const getWxAccessToken = async () => {
+    const res = await API.getWxAccessToken({})
+
+    if (res.code === 200) {
+      getWxQrCode(res.data.access_token)
+    }
+  }
+
+  getWxAccessToken()
 </script>
 
 <template>

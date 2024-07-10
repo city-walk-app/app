@@ -6,6 +6,17 @@ export class Api extends Http {
   }
 
   /**
+   * 获取 AccessToken
+   */
+  getWxAccessToken = (data) => {
+    return this.request({
+      method: 'POST',
+      url: '/wx/get/access_token',
+      data
+    })
+  }
+
+  /**
    * 拒绝加好友
    */
   friendRefuseInvite = (data) => {
