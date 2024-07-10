@@ -1,7 +1,7 @@
 <script setup>
   import { Api } from '@/api'
   import { ref } from 'vue'
-  import { usePositioning, toast, getStorage, getClipboardText } from '@/utils'
+  import { usePositioning, toast, getStorage } from '@/utils'
   import { USER_INFO } from '@/enum'
   import { onShow } from '@dcloudio/uni-app'
 
@@ -182,26 +182,20 @@
    * 读取剪贴板
    */
   const getClipboardData = async () => {
-    const res = getClipboardText()
+    try {
+      const res = await uni.getClipboardData()
 
-    console.log(res)
+      if (res.errMsg === 'getClipboardData:ok') {
+        console.log('读取成功：', res.data)
 
-    // try {
-    //   const res = await uni.getClipboardData()
-
-    //   uni.hideToast()
-
-    //   if (res.errMsg === 'getClipboardData:ok') {
-    //     console.log('读取成功：', res.data)
-
-    //     if (res.data.includes('CityWalk:')) {
-    //       console.log(res.data.replace(/CityWalk:/g, ''))
-    //       getFriendInviteInfo(res.data.replace(/CityWalk:/g, '')) // 获取邀请详情
-    //     }
-    //   }
-    // } catch (err) {
-    //   console.warn('剪贴板读取异常', err)
-    // }
+        if (res.data.includes('CityWalk:')) {
+          console.log(res.data.replace(/CityWalk:/g, ''))
+          getFriendInviteInfo(res.data.replace(/CityWalk:/g, '')) // 获取邀请详情
+        }
+      }
+    } catch (err) {
+      console.warn('剪贴板读取异常', err)
+    }
   }
 
   onShow(() => {
