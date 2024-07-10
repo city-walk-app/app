@@ -1,0 +1,1 @@
+"use strict";exports.getClipboardText=function(){try{if("iOS"==plus.os.name){var e=plus.ios.invoke("UIPasteboard","generalPasteboard");return plus.ios.invoke(e,"valueForPasteboardType:","public.utf8-plain-text")}var r=plus.android.runtimeMainActivity().getSystemService("clipboard");return plus.android.invoke(r,"getText")}catch(t){console.error("error @getClipboardText!!")}};
