@@ -1,22 +1,25 @@
 <script setup>
   import { ref } from 'vue'
   import { Api } from '@/api'
-  import { VUE_APP_API_URL, getStorage } from '@/utils'
-  import { USER_INFO } from '@/enum'
-
-  const userInfo = ref(getStorage(USER_INFO))
+  import { VUE_APP_API_URL } from '@/utils'
+  import { onLoad } from '@dcloudio/uni-app'
 
   const API = new Api()
+
+  /** 用户信息 */
+  const userInfo = ref()
   /** 省份列表 */
   const provinceList = ref()
   /** 步行记录列表 */
   const routeList = ref()
+  /** 用户 id */
+  const userId = ref()
 
   /**
    * 获取用户信息
    */
   const getUserInfo = async () => {
-    const res = await API.getUserInfo({ user_id: userInfo.value.user_id })
+    const res = await API.getUserInfo({ user_id: userId.value })
 
     if (res.code === 200) {
       userInfo.value = res.data
@@ -27,7 +30,7 @@
    * 获取当前用户走过的省份列表
    */
   const getUserProvinceJigsaw = async () => {
-    const res = await API.getUserProvinceJigsaw({ id: userInfo.value.id })
+    const res = await API.getUserProvinceJigsaw({ user_id: userId.value })
 
     if (res.code === 200) {
       provinceList.value = res.data
@@ -38,7 +41,7 @@
    * 获取当前用户走过的省份列表
    */
   const getUserRouteList = async () => {
-    const res = await API.getUserRouteList({ id: userInfo.value.id })
+    const res = await API.getUserRouteList({ user_id: userId.value })
 
     if (res.code === 200) {
       routeList.value = res.data
@@ -56,9 +59,13 @@
     })
   }
 
-  getUserRouteList() // 获取用户步行记录列表
-  getUserInfo() // 获取用户信息
-  getUserProvinceJigsaw() // 获取当前用户走过的省份列表
+  onLoad((options) => {
+    userId.value = options.user_id
+
+    getUserInfo() // 获取用户信息
+    getUserRouteList() // 获取用户步行记录列表
+    getUserProvinceJigsaw() // 获取当前用户走过的省份列表
+  })
 </script>
 
 <template>
@@ -190,7 +197,6 @@
       .body {
         width: 100vw;
         background-color: #fff;
-        // box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
         border-radius: 24px 24px 0 0;
         flex: 1;
 
@@ -314,48 +320,7 @@
             }
           }
         }
-
-        .heatmap-box {
-          position: relative;
-
-          // 热力图
-          .heatmap-scroll {
-            width: 100%;
-            // overflow-y: auto;
-            padding: 10px 14px;
-            box-sizing: border-box;
-            position: relative;
-
-            .heatmap-wrapper {
-              display: flex;
-              flex-wrap: nowrap;
-
-              // 每一列
-              .heatmap-column {
-                margin-right: 5px;
-
-                .heatmap-item {
-                  margin-bottom: 5px;
-                  width: 20px;
-                  height: 20px;
-                  background-color: rgb(244, 245, 245);
-                  border-radius: 4px;
-                  display: flex;
-                  justify-content: center;
-                  align-items: center;
-                  font-size: 14px;
-                }
-              }
-            }
-          }
-        }
       }
-    }
-
-    // 用户内容盒子
-    &-content-box {
-      padding: 20px 5px;
-      box-sizing: border-box;
     }
   }
 </style>

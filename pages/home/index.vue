@@ -9,10 +9,6 @@
 
   const { getAround } = usePositioning()
 
-  /** 解锁新的省份 */
-  const newPprovince = ref()
-  /** 对话框展示状态 */
-  const visible = ref(false)
   /** 顶部状态栏高度 */
   const statusBarHeight = ref(0)
 
@@ -96,7 +92,7 @@
    */
   const goMine = () => {
     uni.navigateTo({
-      url: '/pages/mine/index',
+      url: `/pages/mine/index?user_id=${userInfoStorage.value.user_id}`,
     })
   }
 

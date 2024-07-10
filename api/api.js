@@ -6,6 +6,28 @@ export class Api extends Http {
   }
 
   /**
+   * 拒绝加好友
+   */
+  friendRefuseInvite = (data) => {
+    return this.request({
+      method: 'POST',
+      url: '/friend/refuse/invite',
+      data
+    })
+  }
+
+  /**
+   * 获取朋友经验排名
+   */
+  getFriendExperienceRanking = (data) => {
+    return this.request({
+      method: 'POST',
+      url: '/friend/get/experience/ranking',
+      data
+    })
+  }
+
+  /**
    * 获取朋友列表
    */
   friendList = (data) => {
