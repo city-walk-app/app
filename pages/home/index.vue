@@ -24,6 +24,18 @@
 
   const userInfoStorage = ref(getStorage(USER_INFO))
 
+  const loginOpenId = async (wx_open_id) => {
+    const res = await API.loginOpenId({ wx_open_id })
+
+    if (res.code === 200) {
+      setStorage(USER_INFO, res.data)
+    } else {
+      uni.navigateTo({
+        url: '/pages/home/index',
+      })
+    }
+  }
+
   /**
    * 获取 open id
    */
@@ -31,9 +43,7 @@
     const res = await API.getOpenId({ code })
 
     if (res.code === 200) {
-      if (res.data) {
-      }
-      console.log('获取openid', res)
+      loginOpenId(res.data.openid)
     }
   }
 
@@ -44,10 +54,10 @@
       getOpenId(res.code)
     }
 
-    console.log(res)
+    // console.log(res)
   }
 
-  wxLogin()
+  // wxLogin()
 
   /**
    * 设置顶部栏高度
@@ -134,10 +144,19 @@
       getLocation() // 获取位置信息
     } else {
       console.log('未登录')
-      uni.navigateTo({
-        url: '/pages/login/index',
-      })
+      // uni.navigateTo({
+      //   url: '/pages/login/index',
+      // })
     }
+  }
+
+  /**
+   * 跳转登录
+   */
+  const goLogin = () => {
+    uni.navigateTo({
+      url: '/pages/login/index',
+    })
   }
 
   /**
@@ -219,9 +238,9 @@
     }
   }
 
-  onShow(() => {
-    getClipboardData() // 读取剪贴板
-  })
+  // onShow(() => {
+  //   getClipboardData() // 读取剪贴板
+  // })
 
   isLogin() // 是否登录
 </script>
@@ -241,6 +260,9 @@
         <i class="city-icon icon-ego-menu" />
       </div>
     </div>
+
+    <div @click="wxLogin">登录</div>
+    <div @click="goLogin">去登录</div>
 
     <!-- <map latitude="34.9592083" longitude="-116.419389" /> -->
 

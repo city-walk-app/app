@@ -6,6 +6,17 @@ export class Api extends Http {
   }
 
   /**
+   * open id 登录
+   */
+  loginOpenId = (data) => {
+    return this.request({
+      method: 'POST',
+      url: '/wx/login/open_id',
+      data
+    })
+  }
+
+  /**
    * 获取 open id
    */
   getOpenId = (data) => {
