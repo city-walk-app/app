@@ -6,9 +6,9 @@ export class Api extends Http {
   }
 
   /**
-   * 获取 AccessToken
+   * 获取邀请二维码
    */
-  getWxAccessToken = (data) => {
+  getInviteQrCode = (data) => {
     return this.request({
       method: 'POST',
       url: '/wx/get/invite/qr_code',
