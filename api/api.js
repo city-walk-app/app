@@ -6,12 +6,12 @@ export class Api extends Http {
   }
 
   /**
-   * 微信登录
+   * 获取 open id
    */
-  wechatLogin = (data) => {
+  getOpenId = (data) => {
     return this.request({
       method: 'POST',
-      url: '/wx/login',
+      url: '/wx/get/open_id',
       data
     })
   }

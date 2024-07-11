@@ -25,6 +25,31 @@
   const userInfoStorage = ref(getStorage(USER_INFO))
 
   /**
+   * 获取 open id
+   */
+  const getOpenId = async (code) => {
+    const res = await API.getOpenId({ code })
+
+    if (res.code === 200) {
+      if (res.data) {
+      }
+      console.log('获取openid', res)
+    }
+  }
+
+  const wxLogin = async () => {
+    const res = await uni.login()
+
+    if (res.errMsg === 'login:ok') {
+      getOpenId(res.code)
+    }
+
+    console.log(res)
+  }
+
+  wxLogin()
+
+  /**
    * 设置顶部栏高度
    */
   const getStatusBarHeight = () => {
