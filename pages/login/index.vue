@@ -286,22 +286,34 @@
     }
   )
 
-  /**
-   * 点击设置邮箱
-   */
-  // const setAssociateEmail = (email: string) => {
-  //   loginInfo.email = email
-  //   showAssociateEmail.value = false
+  const wxLogin = async () => {
+    const res = await uni.login()
 
-  //   sendEmail()
-  // }
+    console.log(res)
+  }
+
+  wxLogin()
 
   /**
-   * 邮箱文本框输入
+   * 手机号登录
    */
-  // const emailInput = () => {
-  //   showAssociateEmail.value = true
-  // }
+  const getphonenumber = async (evt) => {
+    console.log('获取手机号', evt)
+    if (evt.detail.errMsg === 'getPhoneNumber:ok') {
+      const mobileCode = evt.detail.code
+
+      const loginRes = await uni.login()
+
+      const res = await API.wechatLogin({
+        mobile_code: mobileCode,
+        open_id_code: loginRes.code,
+      })
+
+      if (res.code === 200) {
+        console.log(res)
+      }
+    }
+  }
 
   /**
    * 监听动画结束事件
@@ -349,6 +361,10 @@
 
           <h2 class="header-title">Login</h2>
         </div>
+
+        <button open-type="getPhoneNumber" @getphonenumber="getphonenumber">
+          快捷登录
+        </button>
 
         <div class="login-form">
           <div class="input-wrapper">

@@ -1,1 +1,1 @@
-<view class="friends"><view class="header"><view>排行榜</view></view></view>
+<view class="friends"><view class="header"><view>排行榜</view><block wx:if="{{a}}"><view wx:for="{{b}}" wx:for-item="item" wx:key="d" bindtap="{{item.e}}">{{item.a}} 经验值：{{item.b}}地点数：{{item.c}}</view></block></view></view>

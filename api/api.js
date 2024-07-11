@@ -6,6 +6,17 @@ export class Api extends Http {
   }
 
   /**
+   * 微信登录
+   */
+  wechatLogin = (data) => {
+    return this.request({
+      method: 'POST',
+      url: '/wx/login',
+      data
+    })
+  }
+
+  /**
    * 获取邀请二维码
    */
   getInviteQrCode = (data) => {
