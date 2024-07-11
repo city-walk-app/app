@@ -217,7 +217,7 @@
       </div>
     </div>
 
-    <map latitude="34.9592083" longitude="-116.419389" />
+    <!-- <map latitude="34.9592083" longitude="-116.419389" /> -->
 
     <!-- 底部卡片 -->
     <div class="footer">

@@ -11,7 +11,7 @@ export class Api extends Http {
   getWxAccessToken = (data) => {
     return this.request({
       method: 'POST',
-      url: '/wx/get/access_token',
+      url: '/wx/get/invite/qr_code',
       data
     })
   }
