@@ -11,7 +11,7 @@ export class Api extends Http {
   loginOpenId = (data) => {
     return this.request({
       method: 'POST',
-      url: '/wx/login/open_id',
+      url: '/user/login/open_id',
       data
     })
   }

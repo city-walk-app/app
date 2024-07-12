@@ -1,9 +1,9 @@
 <script setup>
   import { Api } from '@/api'
   import { ref } from 'vue'
-  import { usePositioning, toast, getStorage } from '@/utils'
+  import { usePositioning, toast, getStorage, setStorage } from '@/utils'
   import { USER_INFO } from '@/enum'
-  import { onShow } from '@dcloudio/uni-app'
+  // import { onShow } from '@dcloudio/uni-app'
 
   const API = new Api()
 
@@ -24,14 +24,20 @@
 
   const userInfoStorage = ref(getStorage(USER_INFO))
 
+  /**
+   * open id 登录
+   */
   const loginOpenId = async (wx_open_id) => {
     const res = await API.loginOpenId({ wx_open_id })
 
+    toast(res.message)
+
     if (res.code === 200) {
       setStorage(USER_INFO, res.data)
+      userInfoStorage.value = res.data
     } else {
       uni.navigateTo({
-        url: '/pages/home/index',
+        url: '/pages/login/index',
       })
     }
   }
@@ -53,11 +59,7 @@
     if (res.errMsg === 'login:ok') {
       getOpenId(res.code)
     }
-
-    // console.log(res)
   }
-
-  // wxLogin()
 
   /**
    * 设置顶部栏高度
