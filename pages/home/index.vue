@@ -257,9 +257,9 @@
     <div @click="wxLogin">登录</div>
     <div @click="goLogin">去登录</div>
 
+    <!-- layer-style="c29e758aea2d2a1873049aeb81dab986" -->
     <map
       class="map"
-      layer-style="c29e758aea2d2a1873049aeb81dab986"
       :latitude="latitude"
       :longitude="longitude"
       enable-satellite
