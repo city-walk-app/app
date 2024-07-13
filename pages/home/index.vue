@@ -99,6 +99,9 @@
     }
   })
 
+  const latitude = ref(39.909)
+  const longitude = ref(116.39742)
+
   /**
    * 获取位置信息
    */
@@ -107,7 +110,9 @@
       type: 'wgs84',
       success: async (res) => {
         console.log('获取用户位置信息成功:', res)
-        const { longitude, latitude } = res
+
+        longitude.value = res.longitude
+        latitude.value = res.latitude
       },
       fail: (res) => {
         console.log('获取用户位置信息失败:', res)
@@ -253,11 +258,13 @@
     <div @click="goLogin">去登录</div>
 
     <map
-      style="width: 100%; height: 300px"
-      :latitude="39.909"
-      :longitude="116.39742"
-    >
-    </map>
+      class="map"
+      layer-style="c29e758aea2d2a1873049aeb81dab986"
+      :latitude="latitude"
+      :longitude="longitude"
+      enable-satellite
+      show-location
+    />
 
     <!-- 底部卡片 -->
     <div class="footer">
@@ -288,6 +295,8 @@
       display: flex;
       justify-content: space-between;
       padding: 0 10px;
+      position: relative;
+      z-index: 20;
 
       .header-left-avatar {
         width: 50px;
@@ -306,6 +315,13 @@
           font-size: 22px;
         }
       }
+    }
+
+    .map {
+      width: 100vw;
+      height: 100vh;
+      position: fixed;
+      inset: 0;
     }
 
     .footer {
