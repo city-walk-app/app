@@ -3,6 +3,7 @@
   import { VUE_APP_API_URL, getStorage } from '@/utils'
   import { USER_INFO } from '@/enum'
   import { Api } from '@/api'
+  import { onShareAppMessage } from '@dcloudio/uni-app'
 
   const API = new Api()
 
@@ -13,9 +14,7 @@
     const res = await API.friendInvite()
 
     if (res.code === 200) {
-      await uni.setClipboardData({
-        data: 'CityWalk:' + res.data,
-      })
+      return res.data
     }
   }
 
@@ -32,7 +31,22 @@
     }
   }
 
-  getInviteQrCode() // 获取邀请二维码
+  // getInviteQrCode() // 获取邀请二维码
+
+  /**
+   * 分享
+   */
+  onShareAppMessage(async ({ from, target }) => {
+    // console.log(evt)
+    if (from === 'button') {
+      const inviteId = await friendInvite()
+      return {
+        title: '邀请你加我为好友',
+        path: `/pages/home/index?invite_id=${inviteId}`, // 邀请链接
+        imageUrl: 'https://docs.city-walk.top/Logo.png', // 分享时显示的图片
+      }
+    }
+  })
 </script>
 
 <template>
@@ -42,6 +56,8 @@
       <img :src="qrCodeBase64" alt="" />
 
       <div @click="friendInvite">复制邀请链接</div>
+
+      <button open-type="share">邀请</button>
     </div>
   </div>
 </template>

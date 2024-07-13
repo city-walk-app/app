@@ -3,7 +3,7 @@
   import { ref } from 'vue'
   import { usePositioning, toast, getStorage, setStorage } from '@/utils'
   import { USER_INFO } from '@/enum'
-  // import { onShow } from '@dcloudio/uni-app'
+  import { onLoad } from '@dcloudio/uni-app'
 
   const API = new Api()
 
@@ -220,25 +220,11 @@
     }
   }
 
-  /**
-   * 读取剪贴板
-   */
-  const getClipboardData = async () => {
-    try {
-      const res = await uni.getClipboardData()
-
-      if (res.errMsg === 'getClipboardData:ok') {
-        console.log('读取成功：', res.data)
-
-        if (res.data.includes('CityWalk:')) {
-          console.log(res.data.replace(/CityWalk:/g, ''))
-          getFriendInviteInfo(res.data.replace(/CityWalk:/g, '')) // 获取邀请详情
-        }
-      }
-    } catch (err) {
-      console.warn('剪贴板读取异常', err)
+  onLoad((options) => {
+    if (options.invite_id) {
+      getFriendInviteInfo(options.invite_id)
     }
-  }
+  })
 
   // onShow(() => {
   //   getClipboardData() // 读取剪贴板

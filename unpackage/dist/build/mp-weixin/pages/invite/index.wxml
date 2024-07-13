@@ -1,1 +1,1 @@
-<view class="friends"><view class="header"><view>邀请朋友</view><image src="{{a}}" alt=""/><view bindtap="{{b}}">复制邀请链接</view></view></view>
+<view class="friends"><view class="header"><view>邀请朋友</view><image src="{{a}}" alt=""/><view bindtap="{{b}}">复制邀请链接</view><button open-type="share">邀请</button></view></view>
