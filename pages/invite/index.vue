@@ -36,7 +36,7 @@
   /**
    * 分享
    */
-  onShareAppMessage(async ({ from, target }) => {
+  onShareAppMessage(async ({ from }) => {
     // console.log(evt)
     if (from === 'button') {
       const inviteId = await friendInvite()
@@ -53,7 +53,8 @@
   <div class="friends">
     <div class="header">
       <h1>邀请朋友</h1>
-      <img :src="qrCodeBase64" alt="" />
+      <!-- <img :src="qrCodeBase64" alt="" /> -->
+      <img src="/assets/images/qr-code.jpg" width="200" alt="" />
 
       <div @click="friendInvite">复制邀请链接</div>
 

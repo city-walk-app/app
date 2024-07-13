@@ -252,7 +252,12 @@
     <div @click="wxLogin">登录</div>
     <div @click="goLogin">去登录</div>
 
-    <!-- <map latitude="34.9592083" longitude="-116.419389" /> -->
+    <map
+      style="width: 100%; height: 300px"
+      :latitude="39.909"
+      :longitude="116.39742"
+    >
+    </map>
 
     <!-- 底部卡片 -->
     <div class="footer">

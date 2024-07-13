@@ -15,10 +15,7 @@
             "autoclose" : true,
             "delay" : 0
         },
-        "modules" : {
-            "Maps" : {},
-            "Geolocation" : {}
-        },
+        "modules" : {},
         "distribute" : {
             "android" : {
                 "permissions" : [
@@ -45,16 +42,16 @@
             },
             "ios" : {},
             "sdkConfigs" : {
-                "maps" : {
-                    "amap" : {
-                        "name" : "amap_15227241216AAaXLOCkI",
-                        "appkey_ios" : "4231c93e1ec8263a71396dea22f384a9",
-                        "appkey_android" : "4231c93e1ec8263a71396dea22f384a9"
-                    }
-                },
+                "maps" : {},
                 "geolocation" : {
                     "system" : {
                         "__platform__" : [ "ios", "android" ]
+                    },
+                    "amap" : {
+                        "name" : "",
+                        "__platform__" : [ "ios", "android" ],
+                        "appkey_ios" : "4231c93e1ec8263a71396dea22f384a9",
+                        "appkey_android" : "4231c93e1ec8263a71396dea22f384a9"
                     }
                 }
             }
@@ -87,5 +84,16 @@
         "enable" : false
     },
     "vueVersion" : "3",
-    "locale" : "zh-Hans"
+    "locale" : "zh-Hans",
+    "h5" : {
+        "sdkConfigs" : {
+            "maps" : {
+                "amap" : {
+                    "key" : "f8e6d4752456981ddedca592f56c8480",
+                    "securityJsCode" : "c8eda06dedae839eb09f19968b69e245",
+                    "serviceHost" : ""
+                }
+            }
+        }
+    }
 }
