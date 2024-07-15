@@ -3,7 +3,7 @@
   import { ref } from 'vue'
   import { usePositioning, toast, getStorage, setStorage } from '@/utils'
   import { USER_INFO } from '@/enum'
-  import { onLoad } from '@dcloudio/uni-app'
+  import { onLoad, onHide, onShow } from '@dcloudio/uni-app'
 
   const API = new Api()
 
@@ -229,6 +229,37 @@
     if (options.invite_id) {
       getFriendInviteInfo(options.invite_id)
     }
+  })
+
+  onShow(() => {
+    // 监听陀螺仪数据变化事件
+    uni.onGyroscopeChange((res) => {
+      console.log('陀螺仪.x = ' + res.x)
+      console.log('陀螺仪.y = ' + res.y)
+      console.log('陀螺仪.z = ' + res.z)
+    })
+
+    // 开始监听陀螺仪数据
+    uni.startGyroscope({
+      interval: 'normal',
+      success() {
+        console.log('success')
+      },
+      fail() {
+        console.log('fail')
+      },
+    })
+  })
+
+  onHide(() => {
+    uni.stopGyroscope({
+      success() {
+        console.log('stop success!')
+      },
+      fail() {
+        console.log('stop fail!')
+      },
+    })
   })
 
   // onShow(() => {
