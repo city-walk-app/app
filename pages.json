@@ -43,8 +43,8 @@
   ],
   "globalStyle": {
     "disableScroll": true,
-    "navigationBarBackgroundColor": "#ffffff", // 设置顶部栏颜色为红色
-    "navigationBarTextStyle": "black" // 设置顶部栏文字颜色为白色
+    "navigationBarBackgroundColor": "#ffffff",
+    "navigationBarTextStyle": "black"
   },
   "requiredPrivateInfos": [
     "getFuzzyLocation"

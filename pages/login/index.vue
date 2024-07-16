@@ -28,8 +28,6 @@
   const nickName = ref('')
   /** 用户身份信息 */
   const userInfo = ref()
-  /** 头像路径 */
-  const avatarUrl = ref('')
   /** 头像文件 */
   const avatarFile = ref()
   /** 按钮倒计时 */
@@ -38,23 +36,12 @@
   const getCodeButtonLoading = ref(false)
   /** 倒计时定时器 */
   let timeout
-  /** 是否显示联想建议邮箱 */
-  // const showAssociateEmail = ref(false)
+
   /** 验证码长度 */
-  const codeDigits = 6
+  // const codeDigits = 6
   /** 验证码聚焦索引 */
   const activeCodeIndex = ref(0)
-  /** 联想邮箱 */
-  // const emailAssociate = [
-  //   '@qq.com',
-  //   '@163.com',
-  //   '@gmail.com',
-  //   '@126.com',
-  //   '@yahoo.com',
-  //   '@sina.com',
-  //   '@hotmail.com',
-  //   '@foxmail.com',
-  // ]
+
   /** 当前需要聚焦的文本框索引 */
   const inputFouksIndex = ref(0)
   /** 验证码输入框是否聚焦 */
@@ -186,81 +173,81 @@
   /**
    * 设置名字
    */
-  const onSetName = async () => {
-    showLoading('处理中...')
+  // const onSetName = async () => {
+  //   showLoading('处理中...')
 
-    const res = await API.setUserInfo({
-      id: userInfo.value.id,
-      nick_name: nickName.value,
-    })
+  //   const res = await API.setUserInfo({
+  //     id: userInfo.value.id,
+  //     nick_name: nickName.value,
+  //   })
 
-    hideLoading()
+  //   hideLoading()
 
-    if (res.code === 200) {
-      toast('设置成功')
-      step.value = 3
-    }
-  }
+  //   if (res.code === 200) {
+  //     toast('设置成功')
+  //     step.value = 3
+  //   }
+  // }
 
   /**
    * 上传头像
    */
-  const upLoadAvatar = () => {
-    uni.chooseImage({
-      count: 1, // 文件个数
-      mediaType: ['image'], // 类型
-      sourceType: ['album', 'camera'], // 相册和拍照选择
-      camera: 'back', // 后置摄像头
-      success: (res) => {
-        avatarUrl.value = res.tempFilePaths[0]
-        avatarFile.value = res.tempFiles[0]
-      },
-    })
-  }
+  // const upLoadAvatar = () => {
+  //   uni.chooseImage({
+  //     count: 1, // 文件个数
+  //     mediaType: ['image'], // 类型
+  //     sourceType: ['album', 'camera'], // 相册和拍照选择
+  //     camera: 'back', // 后置摄像头
+  //     success: (res) => {
+  //       avatarUrl.value = res.tempFilePaths[0]
+  //       avatarFile.value = res.tempFiles[0]
+  //     },
+  //   })
+  // }
 
   /**
    * 提交头像，完成注册
    */
-  const onSubmit = () => {
-    showLoading('处理中...')
+  // const onSubmit = () => {
+  //   showLoading('处理中...')
 
-    uni.uploadFile({
-      url: VUE_APP_API_URL + '/user/info/up_avatar', // 上传文件的服务器地址
-      filePath: avatarUrl.value, // 本地文件路径
-      name: 'image', // 上传文件字段的名称
-      header: {
-        token: getStorage(USER_INFO).token,
-      }, // 表单数据
-      success: (response) => {
-        // 上传成功后的处理逻辑
-        const res = JSON.parse(response.data)
+  //   uni.uploadFile({
+  //     url: VUE_APP_API_URL + '/user/info/up_avatar', // 上传文件的服务器地址
+  //     filePath: avatarUrl.value, // 本地文件路径
+  //     name: 'image', // 上传文件字段的名称
+  //     header: {
+  //       token: getStorage(USER_INFO).token,
+  //     }, // 表单数据
+  //     success: (response) => {
+  //       // 上传成功后的处理逻辑
+  //       const res = JSON.parse(response.data)
 
-        hideLoading()
+  //       hideLoading()
 
-        if (res.code === 200) {
-          toast('设置成功')
+  //       if (res.code === 200) {
+  //         toast('设置成功')
 
-          if (confettiRef.value) {
-            // 播放完成注册庆祝烟花
-            confettiRef.value.play({
-              particleCount: 100,
-              spread: 70,
-              shapes: ['circle'],
-              origin: {
-                y: 0.6,
-              },
-            })
+  //         if (confettiRef.value) {
+  //           // 播放完成注册庆祝烟花
+  //           confettiRef.value.play({
+  //             particleCount: 100,
+  //             spread: 70,
+  //             shapes: ['circle'],
+  //             origin: {
+  //               y: 0.6,
+  //             },
+  //           })
 
-            setTimeout(() => {
-              uni.navigateTo({
-                url: '/pages/layout/index',
-              })
-            }, 1500)
-          }
-        }
-      },
-    })
-  }
+  //           setTimeout(() => {
+  //             uni.navigateTo({
+  //               url: '/pages/layout/index',
+  //             })
+  //           }, 1500)
+  //         }
+  //       }
+  //     },
+  //   })
+  // }
 
   /**
    * 监听验证码
@@ -331,13 +318,6 @@
    */
   const onBlur = () => {
     codeInputFouks.value = false
-  }
-
-  /**
-   * 点击验证码输入框聚焦
-   */
-  const codeInputClick = () => {
-    codeInputFouks.value = true
   }
 </script>
 
@@ -415,6 +395,7 @@
           </div> -->
 
         <input
+          class="input"
           type="number"
           v-model="loginInfo.code"
           maxlength="6"
@@ -440,6 +421,10 @@
     box-sizing: border-box;
     overflow: hidden;
     height: 100vh;
+
+    .input {
+      border: 1px solid #333;
+    }
 
     // 彩带飘落画板
     .canvas-fetti {

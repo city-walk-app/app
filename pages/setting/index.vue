@@ -19,7 +19,7 @@
   ])
 
   /** 用户信息 */
-  const userInfo = ref({})
+  const userInfo = ref()
   /** 缓存的当前用户信息 */
   const userInfoStorage = ref(getStorage(USER_INFO))
 
@@ -40,7 +40,7 @@
     }
   }
 
-  // getUserInfo()
+  getUserInfo()
 
   /**
    * 点击退出登录

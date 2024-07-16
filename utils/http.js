@@ -22,7 +22,7 @@ export class Http {
       header.token = userInfoStorage.token
     }
 
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
       uni.request({
         url: VUE_APP_API_URL + url,
         data,
