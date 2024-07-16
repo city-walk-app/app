@@ -1,0 +1,1 @@
+"use strict";require("../../common/vendor.js"),require("../../utils/wx.js");const e=require("../../api/api.js");require("../../utils/http.js"),require("../../enum/user.js");const r={__name:"index",setup:r=>(new e.Api,(e,r)=>({}))};wx.createPage(r);

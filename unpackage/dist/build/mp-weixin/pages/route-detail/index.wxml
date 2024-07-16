@@ -1,0 +1,1 @@
+<view class="route-detail"><block wx:if="{{a}}"><view wx:for="{{b}}" wx:for-item="item" wx:key="c">{{item.a}} {{item.b}}</view></block></view>

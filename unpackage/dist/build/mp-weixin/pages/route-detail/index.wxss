@@ -1,0 +1,1 @@
+.route-detail{position:fixed;inset:0;width:100vw;height:100vh}.route-detail .map{width:100vw;height:100vh}

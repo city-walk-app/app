@@ -1,0 +1,1 @@
+"use strict";const e=require("../common/vendor.js"),o=e.index.hideLoading;e.index.clearStorageSync,exports.getStorage=o=>e.index.getStorageSync(o),exports.hideLoading=o,exports.setStorage=(o,t)=>e.index.setStorageSync(o,t),exports.showLoading=(o="加载中...")=>{e.index.showLoading({title:o,mask:!0})},exports.toast=(o,t="none")=>{e.index.showToast({title:o,icon:t})};
