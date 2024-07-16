@@ -1,1 +1,0 @@
-<view class="chat"><view wx:for="{{a}}" wx:for-item="i" wx:key="b">聊天{{i.a}}</view></view>

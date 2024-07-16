@@ -1,1 +1,0 @@
-<view class="find"><view class="find-all"><view wx:for="{{a}}" wx:for-item="item" wx:key="d" class="find-item" bindtap="{{item.e}}"><image class="find-item-banner" src="{{item.a}}" alt=""/><view class="find-item-inner"><view class="find-item-address">{{item.b}}</view><view class="find-item-introduce">{{item.c}}</view></view></view></view></view>

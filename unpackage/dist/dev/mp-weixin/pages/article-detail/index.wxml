@@ -1,1 +1,0 @@
-<view wx:if="{{a}}" class="article-detail data-v-6cdcc2be"><image class="article-detail-image data-v-6cdcc2be" show-menu-by-longpress src="{{b}}" bindtap="{{c}}"/><view class="article-content data-v-6cdcc2be">{{d}}</view></view>

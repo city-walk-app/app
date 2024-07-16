@@ -22,6 +22,10 @@
       "path": "pages/route-detail/index"
     },
     {
+      "style": {
+        "disableScroll": true,
+        "navigationStyle": "custom"
+      },
       "path": "pages/setting/index"
     },
     {

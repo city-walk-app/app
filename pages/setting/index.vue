@@ -3,6 +3,7 @@
   import { VUE_APP_API_URL, getStorage } from '@/utils'
   import { USER_INFO } from '@/enum'
   import { Api } from '@/api'
+  import Sheet from '@/components/sheet'
 
   const API = new Api()
 
@@ -39,7 +40,7 @@
     }
   }
 
-  getUserInfo()
+  // getUserInfo()
 
   /**
    * 点击退出登录
@@ -70,40 +71,49 @@
     activeItem.active = true
     infoCards.value = _infoCards
   }
+
+  const visible = ref(false)
+
+  const close = () => {
+    visible.value = false
+  }
 </script>
 
 <template>
-  <scroll-view class="setting" scroll-y>
-    <div class="setting-wrapper" v-if="userInfo">
-      <div
-        class="setting-card"
-        v-for="(item, index) in infoCards"
-        :key="index"
-        :style="{ backdropFilter: `blur(${item.active ? 0 : 45}px)` }"
-        @longpress="handleLongPress(item)"
-      >
-        <div class="setting-card-title">{{ item.title }}</div>
-        <image
-          v-if="item.key === 'avatar'"
-          model="aspectFill"
-          class="user-avatar"
-          :src="VUE_APP_API_URL + userInfo.avatar"
-        />
-        <div v-else-if="Array.isArray(item.key)" class="setting-card-content">
-          {{ userInfo.province || '' }}{{ userInfo.city || '' }}
+  <Sheet :visible="visible" @on-close="close">
+    <scroll-view class="setting" scroll-y>
+      <div class="setting-wrapper" v-if="userInfo">
+        <div @click="visible = true">显示</div>
+        <div
+          class="setting-card"
+          v-for="(item, index) in infoCards"
+          :key="index"
+          :style="{ backdropFilter: `blur(${item.active ? 0 : 45}px)` }"
+          @longpress="handleLongPress(item)"
+        >
+          <div class="setting-card-title">{{ item.title }}</div>
+          <image
+            v-if="item.key === 'avatar'"
+            model="aspectFill"
+            class="user-avatar"
+            :src="VUE_APP_API_URL + userInfo.avatar"
+          />
+          <div v-else-if="Array.isArray(item.key)" class="setting-card-content">
+            {{ userInfo.province || '' }}{{ userInfo.city || '' }}
+          </div>
+          <div v-else class="setting-card-content">
+            {{ userInfo[item.key] || '未设置' }}
+          </div>
         </div>
-        <div v-else class="setting-card-content">
-          {{ userInfo[item.key] || '未设置' }}
-        </div>
-      </div>
 
-      <!-- 退出登录 -->
-      <div class="setting-card" @click="outLogin">
-        <div class="setting-card-title">账号</div>
-        <div class="setting-card-danger-content">退出登录</div>
+        <!-- 退出登录 -->
+        <div class="setting-card" @click="outLogin">
+          <div class="setting-card-title">账号</div>
+          <div class="setting-card-danger-content">退出登录</div>
+        </div>
       </div>
-    </div>
-  </scroll-view>
+    </scroll-view>
+  </Sheet>
 </template>
 
 <style lang="scss">

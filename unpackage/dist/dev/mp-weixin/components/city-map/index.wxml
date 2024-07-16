@@ -1,1 +1,0 @@
-<view class="city-map data-v-54e6e791"><qiun-data-charts wx:if="{{a}}" class="data-v-54e6e791" u-i="54e6e791-0" bind:__l="__l" u-p="{{a}}"/></view>

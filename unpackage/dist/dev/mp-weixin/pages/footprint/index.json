@@ -1,6 +1,0 @@
-{
-  "component": true,
-  "usingComponents": {
-    "city-map": "../../components/city-map/index"
-  }
-}
