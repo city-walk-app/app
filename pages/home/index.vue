@@ -101,6 +101,7 @@
 
   const latitude = ref(39.909)
   const longitude = ref(116.39742)
+  const markers = ref([])
 
   /**
    * 获取位置信息
@@ -113,6 +114,24 @@
 
         longitude.value = res.longitude
         latitude.value = res.latitude
+
+        markers.value.push({
+          id: 1,
+          longitude: res.longitude,
+          latitude: res.latitude,
+          iconPath:
+            'https://img1.baidu.com/it/u=1784112474,311889214&fm=253&fmt=auto&app=120&f=JPEG?w=500&h=500',
+          width: 50,
+          height: 50,
+          callout: {
+            content: '我现在在这里',
+            color: 'blue',
+            fontSize: 24,
+            borderRadius: 30,
+            bgColor: '#fff',
+            padding: 20,
+          },
+        })
       },
       fail: (res) => {
         console.log('获取用户位置信息失败:', res)
@@ -289,10 +308,12 @@
     <div @click="goLogin">去登录</div>
 
     <!-- layer-style="c29e758aea2d2a1873049aeb81dab986" -->
+    <!-- layer-style="e80910a0ee8d19937315ea3a22496777" -->
     <map
       class="map"
       :latitude="latitude"
       :longitude="longitude"
+      :markers="markers"
       enable-satellite
       show-location
     />
