@@ -1,1 +1,0 @@
-"use strict";const e=require("../../common/vendor.js"),o={__name:"index",props:{visible:{type:Boolean,required:!0}},emits:["on-close"],setup(o,{emit:s}){const n=()=>{s("on-close")};return(s,i)=>({a:e.n({"shee-wrapper-open":o.visible}),b:e.n({"shee-dialog-open":o.visible}),c:e.o(n)})}},s=e._export_sfc(o,[["__scopeId","data-v-d819edb6"]]);wx.createComponent(s);

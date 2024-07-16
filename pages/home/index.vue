@@ -1,16 +1,17 @@
 <script setup>
   import { Api } from '@/api'
   import { ref } from 'vue'
-  import { usePositioning, toast, getStorage, setStorage } from '@/utils'
+  import { toast, getStorage, setStorage } from '@/utils'
   import { USER_INFO } from '@/enum'
   import { onLoad, onHide, onShow } from '@dcloudio/uni-app'
 
   const API = new Api()
 
-  const { getAround } = usePositioning()
-
   /** 顶部状态栏高度 */
   const statusBarHeight = ref(0)
+  const latitude = ref(39.909)
+  const longitude = ref(116.39742)
+  const markers = ref([])
 
   // #ifdef MP-WEIXIN
   const capsuleStyle = uni.getMenuButtonBoundingClientRect()
@@ -73,68 +74,75 @@
   /**
    * 记录当前位置
    */
-  const onRecord = getAround(async (res) => {
-    const { address, latitude, longitude, name } = res
+  const onRecord = async () => {
+    const res = await uni.chooseLocation({ type: 'gcj02' })
 
+    if (res.errMsg !== 'chooseLocation:ok') {
+      toast('查看位置错误')
+      return
+    }
+
+    const { latitude, longitude, name, address } = res
+
+    /** 创建当前位置信息 */
     const result = await API.locationCreateRecord({
-      // address,
-      // name,
       latitude,
       longitude,
     })
-
-    toast(result.message)
 
     if (result.code === 200) {
       uni.navigateTo({
         url: '/pages/record-success/index',
       })
-      // console.log()
-      // // 判断是否解锁新的省份
-      // if (result.data.new_province) {
-      //   visible.value = true
-      //   newPprovince.value = result.data.new_province
-      // }
-      // getLocation() // 获取位置信息
     }
-  })
-
-  const latitude = ref(39.909)
-  const longitude = ref(116.39742)
-  const markers = ref([])
+  }
 
   /**
    * 获取位置信息
    */
-  const getLocation = () => {
-    uni.getLocation({
-      type: 'wgs84',
-      success: async (res) => {
-        console.log('获取用户位置信息成功:', res)
+  const getLocation = async () => {
+    /**
+     * @see getLocation https://developers.weixin.qq.com/miniprogram/dev/api/location/wx.getLocation.html
+     */
+    const res = await uni.getLocation({
+      type: 'gcj02',
+      isHighAccuracy: true,
+    })
 
-        longitude.value = res.longitude
-        latitude.value = res.latitude
+    if (res.errMsg !== 'getLocation:ok') {
+      toast('获取地理位置失败')
+      return
+    }
 
-        markers.value.push({
-          id: 1,
-          longitude: res.longitude,
-          latitude: res.latitude,
-          iconPath:
-            'https://img1.baidu.com/it/u=1784112474,311889214&fm=253&fmt=auto&app=120&f=JPEG?w=500&h=500',
-          width: 50,
-          height: 50,
-          callout: {
-            content: '我现在在这里',
-            color: 'blue',
-            fontSize: 24,
-            borderRadius: 30,
-            bgColor: '#fff',
-            padding: 20,
-          },
-        })
-      },
-      fail: (res) => {
-        console.log('获取用户位置信息失败:', res)
+    //加偏移
+    const x = res.latitude
+    const y = res.longitude
+    const x_pi = (3.14159265358979324 * 3000.0) / 180.0
+    const z = Math.sqrt(x * x + y * y) + 0.00002 * Math.sin(y * x_pi)
+    const theta = Math.atan2(y, x) + 0.000003 * Math.cos(x * x_pi)
+    const lngs = z * Math.cos(theta) + 0.0065
+    const lats = z * Math.sin(theta) + 0.006
+
+    console.log(lats, lats)
+
+    longitude.value = lngs
+    latitude.value = lats
+
+    markers.value.push({
+      id: 1,
+      longitude: lngs,
+      latitude: lats,
+      iconPath:
+        'https://img1.baidu.com/it/u=1784112474,311889214&fm=253&fmt=auto&app=120&f=JPEG?w=500&h=500',
+      width: 50,
+      height: 50,
+      callout: {
+        content: '我现在在这里',
+        color: 'blue',
+        fontSize: 24,
+        borderRadius: 30,
+        bgColor: '#fff',
+        padding: 20,
       },
     })
   }
@@ -252,10 +260,11 @@
 
   onShow(() => {
     // 监听陀螺仪数据变化事件
+    // #ifdef MP-WEIXIN
     uni.onGyroscopeChange((res) => {
-      console.log('陀螺仪.x = ' + res.x)
-      console.log('陀螺仪.y = ' + res.y)
-      console.log('陀螺仪.z = ' + res.z)
+      // console.log('陀螺仪.x = ' + res.x)
+      // console.log('陀螺仪.y = ' + res.y)
+      // console.log('陀螺仪.z = ' + res.z)
     })
 
     // 开始监听陀螺仪数据
@@ -268,9 +277,11 @@
         console.log('fail')
       },
     })
+    // #endif
   })
 
   onHide(() => {
+    // #ifdef MP-WEIXIN
     uni.stopGyroscope({
       success() {
         console.log('stop success!')
@@ -279,6 +290,7 @@
         console.log('stop fail!')
       },
     })
+    // #endif
   })
 
   // onShow(() => {
@@ -309,12 +321,12 @@
 
     <!-- layer-style="c29e758aea2d2a1873049aeb81dab986" -->
     <!-- layer-style="e80910a0ee8d19937315ea3a22496777" -->
+    <!-- enable-satellite -->
     <map
       class="map"
       :latitude="latitude"
       :longitude="longitude"
       :markers="markers"
-      enable-satellite
       show-location
     />
 
