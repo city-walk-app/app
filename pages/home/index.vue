@@ -121,24 +121,24 @@
       id: 1,
       latitude: res.latitude,
       longitude: res.longitude,
-      // iconPath:
-      //   'https://img1.baidu.com/it/u=1784112474,311889214&fm=253&fmt=auto&app=120&f=JPEG?w=500&h=500',
-      iconPath: '/assets/images/image.png',
-      width: 30,
-      height: 30,
-      callout: {
-        content: '我现在在这里',
-        color: '#333',
-        fontSize: 24,
-        borderRadius: 30,
-        bgColor: '#fff',
-        padding: 20,
-      },
-      label: {
-        content: '地点1',
-        color: 'red',
-        fontSize: 18,
-      },
+      iconPath:
+        'https://img1.baidu.com/it/u=1784112474,311889214&fm=253&fmt=auto&app=120&f=JPEG?w=500&h=500',
+      // iconPath: '/assets/images/image.png',
+      width: 50,
+      height: 50,
+      // callout: {
+      //   content: '我现在在这里',
+      //   color: '#333',
+      //   fontSize: 24,
+      //   borderRadius: 30,
+      //   bgColor: '#fff',
+      //   padding: 20,
+      // },
+      // label: {
+      //   content: '地点1',
+      //   color: 'red',
+      //   fontSize: 18,
+      // },
     })
   }
 
@@ -293,6 +293,13 @@
   // })
 
   isLogin() // 是否登录
+
+  /**
+   * 点击标记的点触发
+   */
+  const markertap = (evt) => {
+    console.log(evt)
+  }
 </script>
 
 <template>
@@ -319,8 +326,8 @@
       :latitude="latitude"
       :longitude="longitude"
       :markers="markers"
-    >
-    </map>
+      @markertap="markertap"
+    />
 
     <!-- 底部卡片 -->
     <div class="footer">
