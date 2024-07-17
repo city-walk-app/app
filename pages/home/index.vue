@@ -1,6 +1,6 @@
 <script setup>
   import { Api } from '@/api'
-  import { ref } from 'vue'
+  import { ref, nextTick } from 'vue'
   import { toast, getStorage, setStorage } from '@/utils'
   import { USER_INFO } from '@/enum'
   import { onLoad, onHide, onShow } from '@dcloudio/uni-app'
@@ -9,9 +9,10 @@
 
   /** 顶部状态栏高度 */
   const statusBarHeight = ref(0)
-  const latitude = ref(39.909)
-  const longitude = ref(116.39742)
+  const latitude = ref()
+  const longitude = ref()
   const markers = ref([])
+  const showLocation = ref(false)
 
   // #ifdef MP-WEIXIN
   const capsuleStyle = uni.getMenuButtonBoundingClientRect()
@@ -298,7 +299,37 @@
    * 点击标记的点触发
    */
   const markertap = (evt) => {
-    console.log(evt)
+    console.log('点击标记的点触发', evt)
+  }
+
+  /**
+   * 点击地图触发
+   */
+  const mapTap = (evt) => {
+    console.log('点击地图触发', evt)
+  }
+
+  /**
+   * 点击地图poi点时触发
+   */
+  const poitap = (evt) => {
+    console.log('点击地图poi点时触发', evt)
+  }
+
+  /**
+   *视野发生变化时触发
+   */
+  const regionchange = (evt) => {
+    console.log('视野发生变化时触发', evt)
+  }
+
+  /**
+   * 回到当前位置
+   */
+  const moveToCurrentLocation = async () => {
+    const mapContext = uni.createMapContext('map')
+
+    mapContext.moveToLocation()
   }
 </script>
 
@@ -322,11 +353,17 @@
     <div @click="goLogin">去登录</div>
 
     <map
+      v-if="latitude && longitude"
+      id="map"
       class="map"
       :latitude="latitude"
       :longitude="longitude"
       :markers="markers"
+      :show-location="showLocation"
       @markertap="markertap"
+      @tap="mapTap"
+      @poitap="poitap"
+      @regionchange="regionchange"
     />
 
     <!-- 底部卡片 -->
@@ -335,6 +372,7 @@
       <div class="footer-item" @click="onRecord">打卡</div>
       <div class="footer-item" @click="inviteFriends">邀请朋友</div>
       <div class="footer-item" @click="goRanking">排行榜</div>
+      <div class="footer-item" @click="moveToCurrentLocation">回到当前位置</div>
     </div>
   </div>
 </template>
