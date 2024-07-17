@@ -114,35 +114,30 @@
       return
     }
 
-    //加偏移
-    const x = res.latitude
-    const y = res.longitude
-    const x_pi = (3.14159265358979324 * 3000.0) / 180.0
-    const z = Math.sqrt(x * x + y * y) + 0.00002 * Math.sin(y * x_pi)
-    const theta = Math.atan2(y, x) + 0.000003 * Math.cos(x * x_pi)
-    const lngs = z * Math.cos(theta) + 0.0065
-    const lats = z * Math.sin(theta) + 0.006
-
-    console.log(lats, lats)
-
-    longitude.value = lngs
-    latitude.value = lats
+    longitude.value = res.longitude
+    latitude.value = res.latitude
 
     markers.value.push({
       id: 1,
-      longitude: lngs,
-      latitude: lats,
-      iconPath:
-        'https://img1.baidu.com/it/u=1784112474,311889214&fm=253&fmt=auto&app=120&f=JPEG?w=500&h=500',
-      width: 50,
-      height: 50,
+      latitude: res.latitude,
+      longitude: res.longitude,
+      // iconPath:
+      //   'https://img1.baidu.com/it/u=1784112474,311889214&fm=253&fmt=auto&app=120&f=JPEG?w=500&h=500',
+      iconPath: '/assets/images/image.png',
+      width: 30,
+      height: 30,
       callout: {
         content: '我现在在这里',
-        color: 'blue',
+        color: '#333',
         fontSize: 24,
         borderRadius: 30,
         bgColor: '#fff',
         padding: 20,
+      },
+      label: {
+        content: '地点1',
+        color: 'red',
+        fontSize: 18,
       },
     })
   }
@@ -175,7 +170,6 @@
       // #ifdef MP-WEIXIN
       getStatusBarHeight() // 设置顶部栏高度
       // #endif
-      getLocation() // 获取位置信息
     } else {
       console.log('未登录')
       // uni.navigateTo({
@@ -259,6 +253,7 @@
   })
 
   onShow(() => {
+    getLocation() // 获取位置信息
     // 监听陀螺仪数据变化事件
     // #ifdef MP-WEIXIN
     uni.onGyroscopeChange((res) => {
@@ -319,16 +314,13 @@
     <div @click="wxLogin">登录</div>
     <div @click="goLogin">去登录</div>
 
-    <!-- layer-style="c29e758aea2d2a1873049aeb81dab986" -->
-    <!-- layer-style="e80910a0ee8d19937315ea3a22496777" -->
-    <!-- enable-satellite -->
     <map
       class="map"
       :latitude="latitude"
       :longitude="longitude"
       :markers="markers"
-      show-location
-    />
+    >
+    </map>
 
     <!-- 底部卡片 -->
     <div class="footer">
