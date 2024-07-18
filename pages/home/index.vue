@@ -118,29 +118,29 @@
     longitude.value = res.longitude
     latitude.value = res.latitude
 
-    markers.value.push({
-      id: 1,
-      latitude: res.latitude,
-      longitude: res.longitude,
-      iconPath:
-        'https://img1.baidu.com/it/u=1784112474,311889214&fm=253&fmt=auto&app=120&f=JPEG?w=500&h=500',
-      // iconPath: '/assets/images/image.png',
-      width: 50,
-      height: 50,
-      // callout: {
-      //   content: '我现在在这里',
-      //   color: '#333',
-      //   fontSize: 24,
-      //   borderRadius: 30,
-      //   bgColor: '#fff',
-      //   padding: 20,
-      // },
-      // label: {
-      //   content: '地点1',
-      //   color: 'red',
-      //   fontSize: 18,
-      // },
-    })
+    // markers.value.push({
+    //   id: 1,
+    //   latitude: res.latitude,
+    //   longitude: res.longitude,
+    //   iconPath:
+    //     'https://img1.baidu.com/it/u=1784112474,311889214&fm=253&fmt=auto&app=120&f=JPEG?w=500&h=500',
+    //   // iconPath: '/assets/images/image.png',
+    //   width: 50,
+    //   height: 50,
+    //   // callout: {
+    //   //   content: '我现在在这里',
+    //   //   color: '#333',
+    //   //   fontSize: 24,
+    //   //   borderRadius: 30,
+    //   //   bgColor: '#fff',
+    //   //   padding: 20,
+    //   // },
+    //   // label: {
+    //   //   content: '地点1',
+    //   //   color: 'red',
+    //   //   fontSize: 18,
+    //   // },
+    // })
   }
 
   /**
@@ -356,10 +356,10 @@
       v-if="latitude && longitude"
       id="map"
       class="map"
+      show-location
       :latitude="latitude"
       :longitude="longitude"
       :markers="markers"
-      :show-location="showLocation"
       @markertap="markertap"
       @tap="mapTap"
       @poitap="poitap"
@@ -368,11 +368,26 @@
 
     <!-- 底部卡片 -->
     <div class="footer">
-      <div class="footer-item" @click="goFriends">我的朋友</div>
-      <div class="footer-item" @click="onRecord">打卡</div>
-      <div class="footer-item" @click="inviteFriends">邀请朋友</div>
-      <div class="footer-item" @click="goRanking">排行榜</div>
-      <div class="footer-item" @click="moveToCurrentLocation">回到当前位置</div>
+      <div class="footer-group">
+        <div class="footer-card footer-card-friends" @click="goFriends">
+          <div class="footer-card-title">我到朋友</div>
+          <div class="footer-card-content">My Friends</div>
+        </div>
+        <div class="footer-card footer-card-invite" @click="onRecord">
+          <div class="footer-card-title">邀请朋友</div>
+          <div class="footer-card-content">City Walk Together</div>
+        </div>
+      </div>
+      <div class="footer-group">
+        <div class="footer-card footer-card-record">
+          <div class="footer-card-title" @click="inviteFriends">打卡</div>
+          <div class="footer-card-content">Record location</div>
+        </div>
+        <div class="footer-card footer-card-ranking" @click="goRanking">
+          <div class="footer-card-title">排行榜</div>
+          <div class="footer-card-content">Ranking</div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -426,26 +441,87 @@
     }
 
     .footer {
-      display: grid;
-      width: 100%;
-      grid-template-columns: repeat(2, 1fr);
-      row-gap: 20px;
-      column-gap: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      column-gap: 24rpx;
       position: fixed;
       bottom: 40px;
       right: 0;
       left: 0;
-      padding: 0 32px;
+      padding: 32rpx;
       box-sizing: border-box;
 
-      .footer-item {
-        height: 80px;
-        padding: 15px;
-        box-sizing: border-box;
-        background: skyblue;
+      .footer-group {
+        flex: 1;
+        flex-shrink: 0;
         display: flex;
-        justify-content: center;
-        align-items: center;
+        flex-direction: column;
+        row-gap: 24rpx;
+
+        .footer-card {
+          padding: 28rpx 32rpx;
+          box-sizing: border-box;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+          align-items: flex-start;
+
+          // 主题
+          .footer-card-title {
+            font-family: Douyin Sans, Douyin Sans;
+            font-weight: bold;
+            font-size: 32rpx;
+            color: #ffffff;
+            line-height: 38rpx;
+          }
+
+          // 内容
+          .footer-card-content {
+            font-family: PingFang SC, PingFang SC;
+            font-weight: 400;
+            font-size: 24rpx;
+            color: #ffffff;
+            line-height: 34rpx;
+            max-width: 110rpx;
+          }
+        }
+
+        .footer-card-friends {
+          width: 332rpx;
+          height: 196rpx;
+          background: url('https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/home-friends.png')
+            no-repeat;
+          background-size: cover;
+          background-position: center;
+        }
+
+        .footer-card-record {
+          width: 330rpx;
+          height: 240rpx;
+          background: url('https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/home-record.png')
+            no-repeat;
+          background-size: cover;
+          background-position: center;
+        }
+
+        .footer-card-invite {
+          width: 332rpx;
+          height: 196rpx;
+          background: url('https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/home-invite.png')
+            no-repeat;
+          background-size: cover;
+          background-position: center;
+        }
+
+        .footer-card-ranking {
+          width: 330rpx;
+          height: 152rpx;
+          background: url('https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/home-ranking.png')
+            no-repeat;
+          background-size: cover;
+          background-position: center;
+        }
       }
     }
   }
