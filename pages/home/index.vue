@@ -1,6 +1,6 @@
 <script setup>
   import { Api } from '@/api'
-  import { ref, nextTick } from 'vue'
+  import { ref } from 'vue'
   import { toast, getStorage, setStorage } from '@/utils'
   import { USER_INFO } from '@/enum'
   import { onLoad, onHide, onShow } from '@dcloudio/uni-app'
