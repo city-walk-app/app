@@ -335,17 +335,34 @@
 
 <template>
   <div class="home" :style="{ paddingTop: (statusBarHeight || 90) + 'px' }">
-    <!-- 头部 -->
-    <div class="header">
-      <div class="header-left" @click="goMine">
-        <image
-          class="header-left-avatar"
-          src="https://img1.baidu.com/it/u=1784112474,311889214&fm=253&fmt=auto&app=120&f=JPEG?w=500&h=500"
-        />
-      </div>
+    <!-- 顶部模糊 -->
+    <div class="header-gaussian" />
 
-      <div class="hader-right" @click="goSetting">
-        <i class="city-icon icon-ego-menu" />
+    <!-- 头像 -->
+    <div class="avatar-wrapper">
+      <image
+        mode="aspectFill"
+        class="avatar-wrapper-image"
+        src="https://img1.baidu.com/it/u=1784112474,311889214&fm=253&fmt=auto&app=120&f=JPEG?w=500&h=500"
+      />
+    </div>
+
+    <!-- 操作按钮 -->
+    <div class="options-wrapper">
+      <!-- 进入设置页面 -->
+      <div class="options-button" @click="goSetting">
+        <image class="options-setting-icon" src="/assets/svg/setting.svg" />
+      </div>
+      <div class="options-group">
+        <!-- 地图设置 -->
+        <div class="options-group-item">
+          <image class="options-setting-icon" src="/assets/svg/map.svg" />
+        </div>
+        <div class="options-group-line" />
+        <!-- 回到当前位置 -->
+        <div class="options-group-item" @click="moveToCurrentLocation">
+          <image class="options-setting-icon" src="/assets/svg/position.svg" />
+        </div>
       </div>
     </div>
 
@@ -373,14 +390,14 @@
           <div class="footer-card-title">我到朋友</div>
           <div class="footer-card-content">My Friends</div>
         </div>
-        <div class="footer-card footer-card-invite" @click="onRecord">
+        <div class="footer-card footer-card-invite" @click="inviteFriends">
           <div class="footer-card-title">邀请朋友</div>
           <div class="footer-card-content">City Walk Together</div>
         </div>
       </div>
       <div class="footer-group">
-        <div class="footer-card footer-card-record">
-          <div class="footer-card-title" @click="inviteFriends">打卡</div>
+        <div class="footer-card footer-card-record" @click="onRecord">
+          <div class="footer-card-title">打卡</div>
           <div class="footer-card-content">Record location</div>
         </div>
         <div class="footer-card footer-card-ranking" @click="goRanking">
@@ -389,50 +406,116 @@
         </div>
       </div>
     </div>
+
+    <!-- 底部模糊 -->
+    <div class="footer-gaussian" />
   </div>
 </template>
 
 <style lang="scss">
   .home {
-    box-sizing: border-box;
     position: relative;
     overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
     width: 100vw;
     height: 100vh;
 
-    // 头部
-    .header {
-      width: 100%;
-      height: 50px;
-      box-sizing: border-box;
-      display: flex;
-      justify-content: space-between;
-      padding: 0 10px;
-      position: relative;
+    // 顶部高斯模糊
+    .header-gaussian {
+      width: 100vw;
+      height: 260rpx;
+      background: linear-gradient(
+        180deg,
+        #ffffff 20%,
+        rgba(153, 153, 153, 0) 49%
+      );
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 9;
+    }
+
+    // 头像
+    .avatar-wrapper {
+      width: 96rpx;
+      height: 96rpx;
+      border-radius: 50%;
+      position: fixed;
+      left: 32rpx;
+      top: 138rpx;
+      background-color: #ddd;
       z-index: 20;
 
-      .header-left-avatar {
-        width: 50px;
-        height: 50px;
-        border-radius: 50%;
+      .avatar-wrapper-image {
+        width: inherit;
+        height: inherit;
+        border-radius: inherit;
+      }
+    }
+
+    // 操作
+    .options-wrapper {
+      position: fixed;
+      top: 194rpx;
+      right: 32rpx;
+      z-index: 20;
+      display: flex;
+      flex-direction: column;
+      row-gap: 36rpx;
+
+      // 设置
+      .options-button {
+        width: 84rpx;
+        height: 84rpx;
+        background: rgba(255, 255, 255, 0.7);
+        box-shadow: 0rpx 4rpx 23rpx 4rpx rgba(0, 0, 0, 0.25);
+        border-radius: 16rpx;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        // icon
+        .options-setting-icon {
+          width: 44rpx;
+          height: 44rpx;
+          flex-shrink: 0;
+        }
       }
 
-      .hader-right {
-        width: 50px;
-        height: 50px;
+      // 组
+      .options-group {
+        width: 84rpx;
+        height: 168rpx;
+        background: rgba(255, 255, 255, 0.7);
+        box-shadow: 0rpx 4rpx 23rpx 4rpx rgba(0, 0, 0, 0.25);
+        border-radius: 16rpx;
         display: flex;
-        justify-content: center;
+        flex-direction: column;
         align-items: center;
 
-        .city-icon {
-          font-size: 22px;
+        .options-group-item {
+          flex: 1;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+
+          // icon
+          .options-setting-icon {
+            width: 44rpx;
+            height: 44rpx;
+            flex-shrink: 0;
+          }
+        }
+
+        .options-group-line {
+          width: 56rpx;
+          height: 2rpx;
+          background: #e4e4e4;
         }
       }
     }
 
+    // 地图
     .map {
       width: 100vw;
       height: 100vh;
@@ -440,6 +523,7 @@
       inset: 0;
     }
 
+    // 底部操作栏
     .footer {
       display: flex;
       justify-content: center;
@@ -451,7 +535,9 @@
       left: 0;
       padding: 32rpx;
       box-sizing: border-box;
+      z-index: 30;
 
+      // 组
       .footer-group {
         flex: 1;
         flex-shrink: 0;
@@ -523,6 +609,27 @@
           background-position: center;
         }
       }
+    }
+
+    // 底部模糊
+    .footer-gaussian {
+      width: 100vw;
+      height: 740rpx;
+      background: linear-gradient(
+        180deg,
+        rgba(255, 255, 255, 0) 20%,
+        #ffffff 43%
+      );
+      background: linear-gradient(
+        180deg,
+        rgba(255, 255, 255, 0) 20%,
+        #ffffff 43%
+      );
+      position: fixed;
+      z-index: 9;
+      right: 0;
+      left: 0;
+      bottom: 0;
     }
   }
 </style>
