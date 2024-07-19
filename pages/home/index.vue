@@ -3,7 +3,7 @@
   import { ref } from 'vue'
   import { toast, getStorage, setStorage } from '@/utils'
   import { USER_INFO } from '@/enum'
-  import { onLoad, onHide, onShow } from '@dcloudio/uni-app'
+  import { onLoad, onShow } from '@dcloudio/uni-app'
 
   const API = new Api()
 
@@ -255,43 +255,7 @@
 
   onShow(() => {
     getLocation() // 获取位置信息
-    // 监听陀螺仪数据变化事件
-    // #ifdef MP-WEIXIN
-    uni.onGyroscopeChange((res) => {
-      // console.log('陀螺仪.x = ' + res.x)
-      // console.log('陀螺仪.y = ' + res.y)
-      // console.log('陀螺仪.z = ' + res.z)
-    })
-
-    // 开始监听陀螺仪数据
-    uni.startGyroscope({
-      interval: 'normal',
-      success() {
-        console.log('success')
-      },
-      fail() {
-        console.log('fail')
-      },
-    })
-    // #endif
   })
-
-  onHide(() => {
-    // #ifdef MP-WEIXIN
-    uni.stopGyroscope({
-      success() {
-        console.log('stop success!')
-      },
-      fail() {
-        console.log('stop fail!')
-      },
-    })
-    // #endif
-  })
-
-  // onShow(() => {
-  //   getClipboardData() // 读取剪贴板
-  // })
 
   isLogin() // 是否登录
 
@@ -339,7 +303,7 @@
     <div class="header-gaussian" />
 
     <!-- 头像 -->
-    <div class="avatar-wrapper">
+    <div class="avatar-wrapper" @click="goMine">
       <image
         mode="aspectFill"
         class="avatar-wrapper-image"
@@ -382,6 +346,12 @@
       @poitap="poitap"
       @regionchange="regionchange"
     />
+    <!-- <div
+      class="map"
+      style="
+        background: url('https://wxls-cms.oss-cn-hangzhou.aliyuncs.com/online/2024-04-18/218da022-f4bf-456a-99af-5cb8e157f7b8.jpg');
+      "
+    ></div> -->
 
     <!-- 底部卡片 -->
     <div class="footer">
@@ -467,7 +437,9 @@
       .options-button {
         width: 84rpx;
         height: 84rpx;
-        background: rgba(255, 255, 255, 0.7);
+        background: hsla(0, 0%, 100%, 0.2);
+        -webkit-backdrop-filter: blur(25rpx);
+        backdrop-filter: blur(25rpx);
         box-shadow: 0rpx 4rpx 23rpx 4rpx rgba(0, 0, 0, 0.25);
         border-radius: 16rpx;
         display: flex;
@@ -486,7 +458,9 @@
       .options-group {
         width: 84rpx;
         height: 168rpx;
-        background: rgba(255, 255, 255, 0.7);
+        background: hsla(0, 0%, 100%, 0.2);
+        -webkit-backdrop-filter: blur(25rpx);
+        backdrop-filter: blur(25rpx);
         box-shadow: 0rpx 4rpx 23rpx 4rpx rgba(0, 0, 0, 0.25);
         border-radius: 16rpx;
         display: flex;
@@ -614,17 +588,20 @@
     // 底部模糊
     .footer-gaussian {
       width: 100vw;
-      height: 740rpx;
+      height: 420rpx;
+      // background: linear-gradient(180deg, transparent, #fff 43%);
       background: linear-gradient(
         180deg,
         rgba(255, 255, 255, 0) 20%,
         #ffffff 43%
       );
-      background: linear-gradient(
-        180deg,
-        rgba(255, 255, 255, 0) 20%,
-        #ffffff 43%
-      );
+      // background-color: transparent;
+      // background: hsla(0, 0%, 100%, 0.75);
+      // -webkit-backdrop-filter: blur(5px);
+      // backdrop-filter: blur(5px);
+      // background: hsla(0, 0%, 100%, 0.2);
+      -webkit-backdrop-filter: blur(25rpx);
+      backdrop-filter: blur(25rpx);
       position: fixed;
       z-index: 9;
       right: 0;
