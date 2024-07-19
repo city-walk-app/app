@@ -124,7 +124,7 @@
     //   longitude: res.longitude,
     //   iconPath:
     //     'https://img1.baidu.com/it/u=1784112474,311889214&fm=253&fmt=auto&app=120&f=JPEG?w=500&h=500',
-    //   // iconPath: '/assets/images/image.png',
+    //   // iconPath: '/assets/images/city-walk/image.png',
     //   width: 50,
     //   height: 50,
     //   // callout: {
@@ -550,7 +550,7 @@
         .footer-card-friends {
           width: 332rpx;
           height: 196rpx;
-          background: url('https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/home-friends.png')
+          background: url('https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/city-walk/home-friends.png')
             no-repeat;
           background-size: cover;
           background-position: center;
@@ -559,7 +559,7 @@
         .footer-card-record {
           width: 330rpx;
           height: 240rpx;
-          background: url('https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/home-record.png')
+          background: url('https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/city-walk/home-record.png')
             no-repeat;
           background-size: cover;
           background-position: center;
@@ -568,7 +568,7 @@
         .footer-card-invite {
           width: 332rpx;
           height: 196rpx;
-          background: url('https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/home-invite.png')
+          background: url('https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/city-walk/home-invite.png')
             no-repeat;
           background-size: cover;
           background-position: center;
@@ -577,7 +577,7 @@
         .footer-card-ranking {
           width: 330rpx;
           height: 152rpx;
-          background: url('https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/home-ranking.png')
+          background: url('https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/city-walk/home-ranking.png')
             no-repeat;
           background-size: cover;
           background-position: center;
