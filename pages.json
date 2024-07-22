@@ -29,7 +29,11 @@
       }
     },
     {
-      "path": "pages/mine/index"
+      "path": "pages/mine/index",
+      "style": {
+        "disableScroll": true,
+        "navigationStyle": "custom"
+      }
     },
     {
       "path": "pages/invite/index"

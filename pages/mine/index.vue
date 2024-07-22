@@ -88,256 +88,338 @@
 </script>
 
 <template>
-  <!-- 背景图 -->
-  <div class="user-background">
-    <!-- 视差背景 -->
-    <div class="background-wrapper" v-if="userInfo">
-      <div
-        class="background-image"
-        :style="{
-          background: `url(${VUE_APP_API_URL + userInfo.avatar}) no-repeat`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-        }"
-      />
+  <div class="main">
+    <!-- 背景 -->
+    <image
+      class="main-blank"
+      src="https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/city-walk/main-blank.png"
+    />
+
+    <!-- 头部信息 -->
+    <div class="header">
+      <!-- 头像 -->
+      <div class="header-avatar-box">
+        <image
+          class="header-avatar-image"
+          mode="aspectFill"
+          src="https://img1.baidu.com/it/u=1784112474,311889214&fm=253&fmt=auto&app=120&f=JPEG?w=500&h=500"
+        />
+      </div>
+
+      <!-- 昵称 -->
+      <div class="header-nick-name">{{ userInfo.nick_name }}</div>
+
+      <!-- 签名 -->
+      <div class="header-signature">{{ userInfo.signature }}</div>
     </div>
-  </div>
-  <!-- 内容部分 -->
-  <scroll-view class="user">
-    <div class="user-main">
-      <!-- 透明占位图 -->
-      <div class="header" />
 
-      <!-- 主要滚动的容器 -->
-      <div class="body">
-        <!-- 用户信息 -->
-        <div class="info" v-if="userInfo">
-          <!-- 头像 -->
+    <!-- 省份版图列表 -->
+    <scroll-view
+      v-if="provinceList && provinceList.length"
+      class="jigsaw-scroll"
+      scroll-x
+      :scroll-y="false"
+    >
+      <div class="jigsaw-wrapper">
+        <div
+          class="jigsaw-item"
+          v-for="(item, index) in provinceList"
+          :key="index"
+        >
           <image
-            model="aspectFill"
-            class="user-avatar"
-            :src="VUE_APP_API_URL + userInfo.avatar"
+            class="jigsaw-image"
+            :src="`${VUE_APP_API_URL}/images/province/${item.province_code}.png`"
           />
+        </div>
+      </div>
+    </scroll-view>
 
-          <!-- 用户信息 -->
-          <div class="user-nick-name">{{ userInfo.nick_name }}</div>
-          <!-- 签名 -->
-          <div class="user-signature" v-if="userInfo.signature">
-            {{ userInfo.signature }}
+    <!-- 热力图 -->
+    <div class="heatmap">
+      <!-- 头部切换日期 -->
+      <div class="heatmap-header">
+        <div class="heatmap-header-pick">2024年07月</div>
+      </div>
+
+      <!-- 主要内容 -->
+      <div class="heatmap-body">
+        <!-- 左侧标识 -->
+        <div class="heatmap-body-left">
+          <div class="heatmap-body-left-item">
+            <image
+              class="heatmap-body-left-item-icon"
+              src="https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/city-walk/main-heatmap-1.png"
+            />
+            <div class="heatmap-body-left-item-text">打卡多</div>
           </div>
-          <!-- 城市 -->
-          <div class="user-city" v-if="userInfo.province">
-            {{ userInfo.province }}
-            <template v-if="userInfo.city"> - {{ userInfo.city }} </template>
+          <div class="heatmap-body-left-item">
+            <image
+              class="heatmap-body-left-item-icon"
+              src="https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/city-walk/main-heatmap-2.png"
+            />
+            <div class="heatmap-body-left-item-text">打卡少</div>
+          </div>
+          <div class="heatmap-body-left-item">
+            <image
+              class="heatmap-body-left-item-icon"
+              src="https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/city-walk/main-heatmap-3.png"
+            />
+            <div class="heatmap-body-left-item-text">未打卡</div>
           </div>
         </div>
 
-        <!-- 省份版图列表 -->
-        <scroll-view
-          v-if="provinceList && provinceList.length"
-          class="plate-scroll"
-          scroll-x
-          :scroll-y="false"
-        >
-          <div class="plate-wrapper">
-            <div
-              class="plate-item"
-              v-for="(item, index) in provinceList"
-              :key="index"
-            >
-              <image
-                class="plate-node"
-                :src="`${VUE_APP_API_URL}/images/province/${item.province_code}.png`"
-              />
-            </div>
-          </div>
-        </scroll-view>
-
-        <!-- 步行记录列表 -->
-        <div class="">
+        <!-- 右侧图表 -->
+        <div class="heatmap-body-right">
           <div
-            v-for="(item, index) in routeList"
+            class="heatmap-body-right-item-wrapper"
+            v-for="(item, index) in heatmap"
             :key="index"
-            @click="routeDetail(item.list_id)"
           >
-            {{ item.list_id }}
+            <div class="heatmap-body-right-item"></div>
           </div>
         </div>
       </div>
     </div>
-  </scroll-view>
+
+    <!-- 步行记录列表 -->
+    <div class="routes">
+      <div class="routes-item" v-for="(item, index) in routeList" :key="index">
+        <div class="routes-item-count">地点x{{ item.count }}</div>
+        <div class="routes-item-date">
+          {{ getCurrentDateFormatted(item.create_at) }}
+        </div>
+        <div class="routes-item-shadow"></div>
+      </div>
+    </div>
+  </div>
 </template>
 
-<style lang="scss">
-  .user-background {
-    position: fixed;
-    inset: 0;
-
-    .background-wrapper {
-      width: 100vw;
-      height: 200px;
-      overflow: hidden;
-
-      .background-image {
-        width: 100vw;
-        height: inherit;
-        filter: blur(22px);
-        position: relative;
-        transform: scale(1.4);
-        position: absolute;
-        inset: 0;
-        z-index: -1;
-      }
-    }
-  }
-
-  .user {
-    overflow-y: auto;
-    overflow-x: hidden;
+<style lang="scss" scoped>
+  .main {
     width: 100vw;
-    height: 100%;
-    position: fixed;
-    inset: 0;
-    z-index: 10;
-    box-sizing: border-box;
+    height: 100vh;
+    overflow: auto;
+    position: relative;
 
-    .user-main {
+    // 背景
+    .main-blank {
+      width: 100vw;
+      height: 440rpx;
+      position: absolute;
+      top: 0;
+      right: 0;
+      left: 0;
+    }
+
+    // 头部信息
+    .header {
       display: flex;
       flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 154rpx 34rpx 0 34rpx;
+      box-sizing: border-box;
 
-      // 头部背景
-      .header {
-        width: 100vw;
-        height: 160px;
-        background-color: transparent;
+      // 头像
+      .header-avatar-box {
+        width: 148rpx;
+        height: 148rpx;
+        border-radius: 50%;
+
+        .header-avatar-image {
+          width: inherit;
+          height: inherit;
+          border-radius: inherit;
+        }
       }
 
-      // 身体主要内容
-      .body {
-        width: 100vw;
-        background-color: #fff;
-        border-radius: 24px 24px 0 0;
-        flex: 1;
+      // 昵称
+      .header-nick-name {
+        font-family: PingFang SC, PingFang SC;
+        font-weight: 400;
+        font-size: 36rpx;
+        color: #333333;
+        line-height: 42rpx;
+        margin-top: 32rpx;
+      }
 
-        // 用户信息
-        .info {
+      // 签名
+      .header-signature {
+        font-family: PingFang SC, PingFang SC;
+        font-weight: 400;
+        font-size: 28rpx;
+        color: #666666;
+        line-height: 33rpx;
+        margin-top: 16rpx;
+      }
+    }
+
+    // 版图列表
+    .jigsaw-scroll {
+      width: 100vw;
+      height: 310rpx;
+
+      .jigsaw-wrapper {
+        width: inherit;
+        height: inherit;
+        padding: 48rpx 34rpx;
+        box-sizing: border-box;
+        display: flex;
+        flex-wrap: nowrap;
+        column-gap: 22rpx;
+
+        .jigsaw-item {
+          width: 214rpx;
+          height: 214rpx;
+
+          .jigsaw-image {
+            width: inherit;
+            height: inherit;
+          }
+        }
+      }
+    }
+
+    // 热力图
+    .heatmap {
+      padding: 0 32rpx;
+      box-sizing: border-box;
+
+      // 头部
+      .heatmap-header {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+
+        .heatmap-header-pick {
+          height: 52rpx;
+          background: #f3f3f3;
+          border-radius: 4rpx 4rpx 4rpx 4rpx;
+          padding: 0 16rpx;
+          box-sizing: border-box;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-family: PingFang SC, PingFang SC;
+          font-weight: 400;
+          font-size: 24rpx;
+          color: #9a9a9a;
+          line-height: 44rpx;
+        }
+      }
+
+      // 内容部分
+      .heatmap-body {
+        display: flex;
+        margin-top: 34rpx;
+        align-items: flex-start;
+
+        // 左侧图例
+        .heatmap-body-left {
+          width: 180rpx;
+          flex-shrink: 0;
           display: flex;
           flex-direction: column;
-          justify-content: center;
-          position: relative;
-          top: -45px;
-          padding: 0 30px;
-          box-sizing: border-box;
+          row-gap: 60rpx;
 
-          // 头像
-          .user-avatar {
-            width: 99px;
-            height: 99px;
-            border-radius: 50%;
-            border: 4px solid #eee;
-          }
-
-          // 昵称
-          .user-nick-name {
-            font-size: 22px;
-            color: #222;
-            font-weight: bold;
-            margin-top: 10px;
-          }
-
-          // 签名
-          .user-signature {
-            font-size: 16px;
-            margin-top: 10px;
-          }
-
-          // 城市
-          .user-city {
-            font-size: 13px;
-            margin-top: 5px;
-          }
-
-          .active-list {
-            margin-top: 15px;
+          .heatmap-body-left-item {
             display: flex;
             align-items: center;
-            justify-content: space-between;
+            column-gap: 14rpx;
 
-            .active-item {
-              display: flex;
-              align-items: center;
-              margin-bottom: 5px;
-              flex: 1;
+            .heatmap-body-left-item-icon {
+              width: 30rpx;
+              height: 34rpx;
               flex-shrink: 0;
+            }
 
-              .active-icon {
-                width: 28px;
-                height: 28px;
-                border-radius: 50%;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                margin-right: 5px;
-
-                .city-icon {
-                  color: #fff;
-                }
-
-                .active-icon-img {
-                  display: none;
-                  width: 16px;
-                  height: 16px;
-                }
-
-                .province-banner {
-                  width: 16px;
-                  height: 16px;
-                  position: relative;
-                  overflow: hidden;
-                  background: #fff;
-                }
-              }
-
-              &:nth-child(1) .active-icon {
-                background-color: #fe6ab4;
-              }
-
-              &:nth-child(2) .active-icon {
-                background-color: #1bd4b2;
-              }
-
-              &:nth-child(3) .active-icon {
-                background-color: #77b0f7;
-              }
+            .heatmap-body-left-item-text {
+              font-family: PingFang SC, PingFang SC;
+              font-weight: 400;
+              font-size: 28rpx;
+              color: #666666;
+              line-height: 33rpx;
             }
           }
         }
 
-        // 图表
-        .plate-scroll {
-          width: 100%;
-          overflow-y: auto;
-          padding: 10px 14px;
-          box-sizing: border-box;
+        // 右侧热力图
+        .heatmap-body-right {
+          flex: 1;
+          display: grid;
+          grid-template-columns: repeat(7, 1fr);
+          row-gap: 24rpx;
 
-          .plate-wrapper {
-            display: flex;
-            align-items: center;
-            flex-wrap: nowrap;
+          .heatmap-body-right-item-wrapper {
+            width: 54rpx;
+            height: 52rpx;
+            border-radius: 8rpx;
+            background: url('/assets/svg/main-heatmap-check.svg') no-repeat;
+            background-position: center;
+            background-size: cover;
 
-            .plate-item {
-              width: 120px;
-              height: 120px;
-              display: flex;
-              justify-content: center;
-              align-items: center;
-
-              .plate-node {
-                width: 100px;
-                height: 100px;
-              }
+            .heatmap-body-right-item {
+              width: inherit;
+              height: inherit;
+              border-radius: inherit;
             }
           }
+        }
+      }
+    }
+
+    // 步行记录
+    .routes {
+      width: 100vw;
+      padding: 48rpx 32rpx;
+      box-sizing: border-box;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+
+      .routes-item {
+        width: 326rpx;
+        height: 232rpx;
+        background: #af52dd;
+        border-radius: 16rpx;
+        position: relative;
+        overflow: hidden;
+
+        .routes-item-count {
+          font-family: PingFang SC, PingFang SC;
+          font-weight: 500;
+          font-size: 32rpx;
+          color: #ffffff;
+          line-height: 38rpx;
+          position: absolute;
+          top: 55rpx;
+          right: 32rpx;
+        }
+
+        .routes-item-date {
+          font-family: PingFang SC, PingFang SC;
+          font-weight: 400;
+          font-size: 28rpx;
+          color: #ffffff;
+          line-height: 33rpx;
+          position: absolute;
+          right: 32rpx;
+          bottom: 22rpx;
+        }
+
+        .routes-item-shadow {
+          width: 326rpx;
+          height: 127rpx;
+          background: rgba(255, 255, 255, 0.05);
+          border-image: linear-gradient(
+              169deg,
+              rgba(255, 255, 255, 1),
+              rgba(153, 153, 153, 0)
+            )
+            1 1;
+          position: absolute;
+          right: 0;
+          left: 0;
+          bottom: 0;
         }
       }
     }
