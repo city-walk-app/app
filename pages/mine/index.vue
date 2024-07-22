@@ -106,7 +106,7 @@
     <div class="back" @click="back"></div>
 
     <!-- 头部信息 -->
-    <div class="header">
+    <div class="header" v-if="userInfo">
       <!-- 头像 -->
       <div class="header-avatar-box">
         <image
@@ -117,10 +117,14 @@
       </div>
 
       <!-- 昵称 -->
-      <div class="header-nick-name">{{ userInfo.nick_name }}</div>
+      <div class="header-nick-name" v-if="userInfo.nick_name">
+        {{ userInfo.nick_name }}
+      </div>
 
       <!-- 签名 -->
-      <div class="header-signature">{{ userInfo.signature }}</div>
+      <div class="header-signature" v-if="userInfo.signature">
+        {{ userInfo.signature }}
+      </div>
     </div>
 
     <!-- 省份版图列表 -->
@@ -179,7 +183,7 @@
         </div>
 
         <!-- 右侧图表 -->
-        <div class="heatmap-body-right">
+        <div class="heatmap-body-right" v-if="heatmap && heatmap.length">
           <div
             class="heatmap-body-right-item-wrapper"
             v-for="(item, index) in heatmap"
@@ -197,7 +201,7 @@
     </div>
 
     <!-- 步行记录列表 -->
-    <div class="routes">
+    <div class="routes" v-if="routeList && routeList.length">
       <div
         class="routes-item"
         v-for="(item, index) in routeList"

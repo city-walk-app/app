@@ -175,7 +175,7 @@
    */
   const goMine = () => {
     uni.navigateTo({
-      url: `/pages/mine/index?user_id=${userInfoStorage.value.user_id}`,
+      url: `/pages/mine/index?user_id=${userInfoStorage.value.user_info.user_id}`,
     })
   }
 
