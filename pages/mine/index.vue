@@ -74,6 +74,13 @@
     })
   }
 
+  /**
+   * 返回
+   */
+  const back = () => {
+    uni.navigateBack({ delta: 1 })
+  }
+
   onLoad((options) => {
     userId.value = options.user_id
 
@@ -94,6 +101,9 @@
       class="main-blank"
       src="https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/city-walk/main-blank.png"
     />
+
+    <!-- 返回按钮 -->
+    <div class="back" @click="back"></div>
 
     <!-- 头部信息 -->
     <div class="header">
@@ -175,7 +185,12 @@
             v-for="(item, index) in heatmap"
             :key="index"
           >
-            <div class="heatmap-body-right-item"></div>
+            <div
+              class="heatmap-body-right-item"
+              :style="{
+                background: item.heatmap_color ? item.heatmap_color : 'none',
+              }"
+            ></div>
           </div>
         </div>
       </div>
@@ -183,7 +198,12 @@
 
     <!-- 步行记录列表 -->
     <div class="routes">
-      <div class="routes-item" v-for="(item, index) in routeList" :key="index">
+      <div
+        class="routes-item"
+        v-for="(item, index) in routeList"
+        :key="index"
+        @click="routeDetail(item.list_id)"
+      >
         <div class="routes-item-count">地点x{{ item.count }}</div>
         <div class="routes-item-date">
           {{ getCurrentDateFormatted(item.create_at) }}
@@ -200,6 +220,18 @@
     height: 100vh;
     overflow: auto;
     position: relative;
+
+    .back {
+      width: 68rpx;
+      height: 68rpx;
+      background: rgba(255, 255, 255, 0.7);
+      box-shadow: 0rpx 2rpx 23rpx 0rpx rgba(158, 158, 158, 0.25);
+      border-radius: 50%;
+      position: fixed;
+      z-index: 10;
+      top: 134rpx;
+      left: 32rpx;
+    }
 
     // 背景
     .main-blank {
