@@ -6,6 +6,28 @@ export class Api extends Http {
   }
 
   /**
+   * 获取周边热门地点
+   */
+  getLocationPopularRecommend = (data) => {
+    return this.request({
+      method: 'POST',
+      url: '/location/get/popular/recommend',
+      data
+    })
+  }
+
+  /**
+   * 获取用户指定月份打卡热力图
+   */
+  getLocationUserHeatmap = (data) => {
+    return this.request({
+      method: 'POST',
+      url: '/location/get/user/heatmap',
+      data
+    })
+  }
+
+  /**
    * open id 登录
    */
   loginOpenId = (data) => {

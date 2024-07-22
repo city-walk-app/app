@@ -99,6 +99,20 @@
   }
 
   /**
+   * 获取周边热门地点
+   */
+  const getLocationPopularRecommend = async () => {
+    const res = await API.getLocationPopularRecommend({
+      longitude: longitude.value,
+      latitude: latitude.value,
+    })
+
+    if (res.code === 200) {
+      return res.data
+    }
+  }
+
+  /**
    * 获取位置信息
    */
   const getLocation = async () => {
@@ -117,6 +131,10 @@
 
     longitude.value = res.longitude
     latitude.value = res.latitude
+
+    const recommends = await getLocationPopularRecommend() // 获取周边热门地点
+
+    console.log(recommends)
 
     // markers.value.push({
     //   id: 1,

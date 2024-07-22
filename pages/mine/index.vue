@@ -1,8 +1,8 @@
 <script setup>
   import { ref } from 'vue'
   import { Api } from '@/api'
-  import { VUE_APP_API_URL } from '@/utils'
-  import { onLoad } from '@dcloudio/uni-app'
+  import { VUE_APP_API_URL, getCurrentDateFormatted } from '@/utils'
+  import { onLoad, onShow } from '@dcloudio/uni-app'
 
   const API = new Api()
 
@@ -14,6 +14,8 @@
   const routeList = ref()
   /** 用户 id */
   const userId = ref()
+  /** 热力图 */
+  const heatmap = ref()
 
   /**
    * 获取用户信息
@@ -23,6 +25,19 @@
 
     if (res.code === 200) {
       userInfo.value = res.data
+    }
+  }
+
+  /**
+   * 获取用户指定月份打卡热力图
+   */
+  const getLocationUserHeatmap = async () => {
+    const res = await API.getLocationUserHeatmap({
+      date: getCurrentDateFormatted(),
+    })
+
+    if (res.code === 200) {
+      heatmap.value = res.data
     }
   }
 
@@ -65,6 +80,10 @@
     getUserInfo() // 获取用户信息
     getUserRouteList() // 获取用户步行记录列表
     getUserProvinceJigsaw() // 获取当前用户走过的省份列表
+  })
+
+  onShow(() => {
+    getLocationUserHeatmap() // 获取用户指定月份打卡热力图
   })
 </script>
 
