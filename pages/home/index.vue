@@ -153,30 +153,6 @@
     latitude.value = res.latitude
 
     getLocationPopularRecommend() // 获取周边热门地点
-
-    // markers.value.push({
-    //   id: 1,
-    //   latitude: res.latitude,
-    //   longitude: res.longitude,
-    //   iconPath:
-    //     'https://img1.baidu.com/it/u=1784112474,311889214&fm=253&fmt=auto&app=120&f=JPEG?w=500&h=500',
-    //   // iconPath: '/assets/images/city-walk/image.png',
-    //   width: 50,
-    //   height: 50,
-    //   // callout: {
-    //   //   content: '我现在在这里',
-    //   //   color: '#333',
-    //   //   fontSize: 24,
-    //   //   borderRadius: 30,
-    //   //   bgColor: '#fff',
-    //   //   padding: 20,
-    //   // },
-    //   // label: {
-    //   //   content: '地点1',
-    //   //   color: 'red',
-    //   //   fontSize: 18,
-    //   // },
-    // })
   }
 
   /**
@@ -198,6 +174,7 @@
   }
 
   const isLogin = () => {
+    console.log(userInfoStorage.value)
     if (
       userInfoStorage &&
       userInfoStorage.value &&
