@@ -1,4 +1,6 @@
 {
+  "disableScroll": true,
+  "navigationStyle": "custom",
   "usingComponents": {
     "i-confetti": "../../uni_modules/lime-confetti/components/l-confetti/l-confetti"
   }

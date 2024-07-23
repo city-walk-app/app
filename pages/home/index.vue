@@ -4,25 +4,18 @@
   import { toast, getStorage, setStorage } from '@/utils'
   import { USER_INFO } from '@/enum'
   import { onLoad, onShow } from '@dcloudio/uni-app'
+  import { useGlobalStore } from '@/store'
 
   const API = new Api()
+  const useGlobal = useGlobalStore()
+
+  console.log(useGlobal)
 
   /** 顶部状态栏高度 */
   const statusBarHeight = ref(0)
   const latitude = ref()
   const longitude = ref()
   const markers = ref()
-  const showLocation = ref(false)
-
-  // #ifdef MP-WEIXIN
-  const capsuleStyle = uni.getMenuButtonBoundingClientRect()
-  // #endif
-
-  // #ifdef H5
-  const capsuleStyle = {
-    top: 58,
-  }
-  // #endif
 
   const userInfoStorage = ref(getStorage(USER_INFO))
 
