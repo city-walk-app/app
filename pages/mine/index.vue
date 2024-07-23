@@ -16,6 +16,8 @@
   const userId = ref()
   /** 热力图 */
   const heatmap = ref()
+  /** 步行记录详情列表 */
+  const routeDetailList = ref()
 
   /**
    * 获取用户信息
@@ -36,8 +38,13 @@
       date: getCurrentDateFormatted(),
     })
 
-    if (res.code === 200) {
-      heatmap.value = res.data
+    if (res.code === 200 && res.data && res.data.length) {
+      heatmap.value = res.data.map((item) => {
+        return {
+          ...item,
+          _active: false,
+        }
+      })
     }
   }
 
@@ -60,6 +67,20 @@
 
     if (res.code === 200) {
       routeList.value = res.data
+    }
+  }
+
+  /**
+   * 热力图每一项点击
+   */
+  const heatmapItemClick = (item) => {
+    item._active = !item._active
+    console.log(item)
+
+    if (item._active) {
+      routeDetailList.value = item.routes
+    } else {
+      routeDetailList.value = []
     }
   }
 
@@ -188,13 +209,44 @@
             class="heatmap-body-right-item-wrapper"
             v-for="(item, index) in heatmap"
             :key="index"
+            @click="heatmapItemClick(item)"
           >
             <div
-              class="heatmap-body-right-item"
+              :class="[
+                'heatmap-body-right-item',
+                {
+                  'heatmap-body-right-item-active': item._active,
+                },
+              ]"
               :style="{
                 background: item.heatmap_color ? item.heatmap_color : 'none',
               }"
             ></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 详情步行 -->
+    <div class="details" v-if="routeDetailList && routeDetailList.length">
+      <div class="details-left"></div>
+      <div class="details-right">
+        <div
+          class="details-right-item"
+          v-for="(item, index) in routeDetailList"
+          :key="index"
+        >
+          <div class="details-right-item-header">
+            <!-- 头部左侧 -->
+            <div class="details-right-item-header-left">
+              <div class="details-right-item-header-time">
+                {{ item.create_at }}
+              </div>
+              <div class="details-right-item-header-address">
+                {{ item.address || item.city }}
+              </div>
+            </div>
+            <div class="details-right-item-header-left"></div>
           </div>
         </div>
       </div>
@@ -222,7 +274,7 @@
   .main {
     width: 100vw;
     height: 100vh;
-    overflow: auto;
+    overflow-y: auto;
     position: relative;
 
     .back {
@@ -385,6 +437,7 @@
           display: grid;
           grid-template-columns: repeat(7, 1fr);
           row-gap: 24rpx;
+          position: relative;
 
           .heatmap-body-right-item-wrapper {
             width: 54rpx;
@@ -398,6 +451,18 @@
               width: inherit;
               height: inherit;
               border-radius: inherit;
+              transition: 0.3s;
+
+              // 选中状态
+              &.heatmap-body-right-item-active {
+                width: 100%;
+                height: 100%;
+                position: absolute;
+                top: 0;
+                right: 0;
+                left: 0;
+                bottom: 0;
+              }
             }
           }
         }
@@ -411,6 +476,8 @@
       box-sizing: border-box;
       display: grid;
       grid-template-columns: repeat(2, 1fr);
+      column-gap: 34rpx;
+      row-gap: 26rpx;
 
       .routes-item {
         width: 326rpx;

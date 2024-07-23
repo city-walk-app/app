@@ -13,13 +13,25 @@
       }
     },
     {
-      "path": "pages/login/index"
+      "path": "pages/login/index",
+      "style": {
+        "disableScroll": true,
+        "navigationStyle": "custom"
+      }
     },
     {
-      "path": "pages/ranking/index"
+      "path": "pages/ranking/index",
+      "style": {
+        "disableScroll": true,
+        "navigationStyle": "custom"
+      }
     },
     {
-      "path": "pages/route-detail/index"
+      "path": "pages/route-detail/index",
+      "style": {
+        "disableScroll": true,
+        "navigationStyle": "custom"
+      }
     },
     {
       "path": "pages/setting/index",
@@ -36,13 +48,25 @@
       }
     },
     {
-      "path": "pages/invite/index"
+      "path": "pages/invite/index",
+      "style": {
+        "disableScroll": true,
+        "navigationStyle": "custom"
+      }
     },
     {
-      "path": "pages/friends/index"
+      "path": "pages/friends/index",
+      "style": {
+        "disableScroll": true,
+        "navigationStyle": "custom"
+      }
     },
     {
-      "path": "pages/record-success/index"
+      "path": "pages/record-success/index",
+      "style": {
+        "disableScroll": true,
+        "navigationStyle": "custom"
+      }
     }
   ],
   "globalStyle": {
