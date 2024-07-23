@@ -11,7 +11,7 @@
   const statusBarHeight = ref(0)
   const latitude = ref()
   const longitude = ref()
-  const markers = ref([])
+  const markers = ref()
   const showLocation = ref(false)
 
   // #ifdef MP-WEIXIN
@@ -99,6 +99,26 @@
   }
 
   /**
+   * 设置地图标点
+   */
+  const setMarkers = (data) => {
+    console.log(data)
+    const markerList = data.map((item, index) => {
+      return {
+        iconPath:
+          'https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/city-walk/home-markers.svg',
+        width: 50,
+        height: 50,
+        id: index,
+        latitude: item.latitude,
+        longitude: item.longitude,
+      }
+    })
+
+    markers.value = markerList
+  }
+
+  /**
    * 获取周边热门地点
    */
   const getLocationPopularRecommend = async () => {
@@ -107,8 +127,8 @@
       latitude: latitude.value,
     })
 
-    if (res.code === 200) {
-      return res.data
+    if (res.code === 200 && res.data && res.data.length) {
+      setMarkers(res.data)
     }
   }
 
@@ -132,9 +152,7 @@
     longitude.value = res.longitude
     latitude.value = res.latitude
 
-    const recommends = await getLocationPopularRecommend() // 获取周边热门地点
-
-    console.log(recommends)
+    getLocationPopularRecommend() // 获取周边热门地点
 
     // markers.value.push({
     //   id: 1,
@@ -348,8 +366,10 @@
       </div>
     </div>
 
-    <div @click="wxLogin">登录</div>
-    <div @click="goLogin">去登录</div>
+    <div class="demo">
+      <button @click="wxLogin">登录</button>
+      <button @click="goLogin">去登录</button>
+    </div>
 
     <map
       v-if="latitude && longitude"
@@ -401,6 +421,14 @@
 </template>
 
 <style lang="scss">
+  .demo {
+    position: fixed;
+    top: 200rpx;
+    right: 0;
+    left: 0;
+    z-index: 40;
+  }
+
   .home {
     position: relative;
     overflow: hidden;
