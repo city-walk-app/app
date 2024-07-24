@@ -37,7 +37,24 @@
         :class="['ranking-item', { 'ranking-item-first': index === 0 }]"
       >
         <!-- 名次 -->
-        <div class="ranking-item-count">{{ index + 1 }}</div>
+        <div class="ranking-item-count">
+          <image
+            v-if="index === 0"
+            class="ranking-item-count-icon"
+            src="/assets/svg/ranking-1.svg"
+          />
+          <image
+            v-else-if="index === 1"
+            class="ranking-item-count-icon"
+            src="/assets/svg/ranking-2.svg"
+          />
+          <image
+            v-else-if="index === 2"
+            class="ranking-item-count-icon"
+            src="/assets/svg/ranking-3.svg"
+          />
+          <div v-else class="ranking-item-count-text">{{ index + 1 }}</div>
+        </div>
 
         <!-- 头像 -->
         <image
@@ -52,9 +69,12 @@
           <div class="ranking-item-info-content">
             今日共打卡
             <div class="ranking-item-info-count">17</div>
-            个地方
+            个地点
           </div>
         </div>
+
+        <!-- 经验值 -->
+        <div class="ranking-item-num">1423</div>
       </div>
     </div>
   </StickyScroll>
@@ -87,6 +107,7 @@
     .ranking-item {
       width: 100%;
       height: 160rpx;
+      position: relative;
       flex-shrink: 0;
       background: rgba(255, 255, 255, 0.3);
       box-shadow: 0rpx 2rpx 11rpx 0rpx rgba(186, 186, 186, 0.2);
@@ -123,13 +144,21 @@
         width: 50rpx;
         height: 56rpx;
         flex-shrink: 0;
-        font-weight: 400;
-        font-size: 32rpx;
-        color: #333333;
-        line-height: 38rpx;
         display: flex;
         align-items: center;
         justify-content: center;
+
+        .ranking-item-count-text {
+          font-weight: 400;
+          font-size: 32rpx;
+          color: #333333;
+          line-height: 38rpx;
+        }
+
+        .ranking-item-count-icon {
+          width: inherit;
+          height: inherit;
+        }
       }
 
       // 头像
@@ -174,6 +203,17 @@
             line-height: 33rpx;
           }
         }
+      }
+
+      // 经验值
+      .ranking-item-num {
+        font-weight: 500;
+        font-size: 60rpx;
+        color: #f8d035;
+        line-height: 70rpx;
+        position: absolute;
+        top: 16rpx;
+        right: 32rpx;
       }
     }
   }
