@@ -366,23 +366,55 @@
     <!-- 底部卡片 -->
     <div class="footer">
       <div class="footer-group">
-        <div class="footer-card footer-card-friends" @click="goFriends">
-          <div class="footer-card-title">我到朋友</div>
-          <div class="footer-card-content">My Friends</div>
+        <div
+          class="footer-card footer-card-friends"
+          style="
+            --img: url('https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/city-walk/home-friends.png');
+          "
+          @click="goFriends"
+        >
+          <div class="footer-card-background">
+            <div class="footer-card-title">我到朋友</div>
+            <div class="footer-card-content">My Friends</div>
+          </div>
         </div>
-        <div class="footer-card footer-card-invite" @click="inviteFriends">
-          <div class="footer-card-title">邀请朋友</div>
-          <div class="footer-card-content">City Walk Together</div>
+        <div
+          class="footer-card footer-card-invite"
+          style="
+            --img: url('https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/city-walk/home-invite.png');
+          "
+          @click="inviteFriends"
+        >
+          <div class="footer-card-background">
+            <div class="footer-card-title">邀请朋友</div>
+            <div class="footer-card-content">City Walk Together</div>
+          </div>
         </div>
       </div>
       <div class="footer-group">
-        <div class="footer-card footer-card-record" @click="onRecord">
-          <div class="footer-card-title">打卡</div>
-          <div class="footer-card-content">Record location</div>
+        <div
+          class="footer-card footer-card-record"
+          style="
+            --img: url('https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/city-walk/home-record.png');
+          "
+          @click="onRecord"
+        >
+          <div class="footer-card-background">
+            <div class="footer-card-title">打卡</div>
+            <div class="footer-card-content">Record location</div>
+          </div>
         </div>
-        <div class="footer-card footer-card-ranking" @click="goRanking">
-          <div class="footer-card-title">排行榜</div>
-          <div class="footer-card-content">Ranking</div>
+        <div
+          class="footer-card footer-card-ranking"
+          style="
+            --img: url('https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/city-walk/home-ranking.png');
+          "
+          @click="goRanking"
+        >
+          <div class="footer-card-background">
+            <div class="footer-card-title">排行榜</div>
+            <div class="footer-card-content">Ranking</div>
+          </div>
         </div>
       </div>
     </div>
@@ -542,12 +574,36 @@
         row-gap: 24rpx;
 
         .footer-card {
-          padding: 28rpx 32rpx;
-          box-sizing: border-box;
-          display: flex;
-          flex-direction: column;
-          justify-content: space-between;
-          align-items: flex-start;
+          position: relative;
+          z-index: 10;
+
+          .footer-card-background {
+            position: absolute;
+            padding: 28rpx 32rpx;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: flex-start;
+            inset: 0;
+            z-index: 30;
+            background: var(--img) no-repeat;
+            background-size: cover;
+            background-position: center;
+          }
+
+          // 模糊背景
+          &::before {
+            content: '';
+            border-radius: 20rpx;
+            position: absolute;
+            inset: 0;
+            top: 10rpx;
+            z-index: -1;
+            background: var(--img);
+            background-size: cover;
+            filter: blur(6rpx) brightness(1.1);
+          }
 
           // 主题
           .footer-card-title {
@@ -572,37 +628,21 @@
         .footer-card-friends {
           width: 332rpx;
           height: 196rpx;
-          background: url('https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/city-walk/home-friends.png')
-            no-repeat;
-          background-size: cover;
-          background-position: center;
         }
 
         .footer-card-record {
           width: 330rpx;
           height: 240rpx;
-          background: url('https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/city-walk/home-record.png')
-            no-repeat;
-          background-size: cover;
-          background-position: center;
         }
 
         .footer-card-invite {
           width: 332rpx;
           height: 196rpx;
-          background: url('https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/city-walk/home-invite.png')
-            no-repeat;
-          background-size: cover;
-          background-position: center;
         }
 
         .footer-card-ranking {
           width: 330rpx;
           height: 152rpx;
-          background: url('https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/city-walk/home-ranking.png')
-            no-repeat;
-          background-size: cover;
-          background-position: center;
         }
       }
     }
