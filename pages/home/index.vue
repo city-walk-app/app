@@ -100,8 +100,8 @@
       return {
         iconPath:
           'https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/city-walk/home-markers.svg',
-        width: 50,
-        height: 50,
+        width: 35,
+        height: 42,
         id: index,
         latitude: item.latitude,
         longitude: item.longitude,

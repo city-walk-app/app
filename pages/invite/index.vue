@@ -1,10 +1,9 @@
 <script setup>
   import { ref } from 'vue'
-  import { VUE_APP_API_URL, getStorage } from '@/utils'
-  import { USER_INFO } from '@/enum'
   import { Api } from '@/api'
   import { onShareAppMessage } from '@dcloudio/uni-app'
   import { useGlobalStore } from '@/store'
+  import StickyScroll from '@/components/sticky-scroll'
 
   const API = new Api()
   const useGlobal = useGlobalStore()
@@ -37,17 +36,9 @@
   }
 
   /**
-   * 返回
-   */
-  const back = () => {
-    uni.navigateBack({ delta: 1 })
-  }
-
-  /**
    * 分享
    */
   onShareAppMessage(async ({ from }) => {
-    // console.log(evt)
     if (from === 'button') {
       const inviteId = await friendInvite()
 
@@ -58,74 +49,13 @@
       }
     }
   })
-
-  const styleDiff = ref(0)
-  const startSize = ref(56)
-  const endSize = ref(34)
-
-  /**
-   * 页面滚动
-   */
-  const scroll = (evt) => {
-    const marginTop = useGlobal.navBarHeight + 16 - useGlobal.headerBtnPosi.top
-    const diff = evt.detail.scrollTop / marginTop
-    const diffFormat = parseFloat(diff.toFixed(2))
-
-    if (diffFormat >= 1) {
-      styleDiff.value = 1
-    } else {
-      styleDiff.value = diffFormat
-    }
-
-    console.log(
-      '字体大小',
-      startSize.value + (endSize.value - startSize.value) * styleDiff.value
-    )
-    console.log(startSize.value, endSize.value, styleDiff.value)
-  }
 </script>
 
 <template>
-  <div class="invite">
-    <scroll-view
-      class="invite-scroll"
-      :scroll-x="false"
-      scroll-y
-      @scroll="scroll"
-    >
-      <div
-        class="main"
-        :style="{ marginTop: useGlobal.navBarHeight + 16 + 'px' }"
-      >
-        <!-- 顶部菜单 -->
-        <div
-          class="invite-nav-bar"
-          :style="{
-            height: useGlobal.navBarHeight + 'px',
-            opacity: styleDiff,
-          }"
-        />
-
-        <!-- 头部操作 -->
-        <div
-          class="header"
-          :style="{
-            top: useGlobal.headerBtnPosi.top + 'px',
-          }"
-        >
-          <!-- 返回按钮 -->
-          <div class="back" @click="back">⬅️</div>
-          <div
-            class="title"
-            :style="{
-              fontSize: startSize + (endSize - startSize) * styleDiff + 'rpx',
-            }"
-          >
-            邀请朋友
-          </div>
-        </div>
-
-        <!-- 内容 -->
+  <StickyScroll title="邀请朋友">
+    <div class="invite">
+      <!-- 内容 -->
+      <div class="main">
         <div class="body">
           <div class="body-banner"></div>
           <div class="body-footer">
@@ -144,8 +74,8 @@
         <button open-type="share" class="footer-button-link">分享链接</button>
         <div class="footer-button-image">分享海报</div>
       </div>
-    </scroll-view>
-  </div>
+    </div>
+  </StickyScroll>
 </template>
 
 <style lang="scss">
@@ -154,148 +84,131 @@
     height: 100vh;
     position: relative;
     overflow: hidden;
+    padding: 0 32rpx 94rpx 32rpx;
+    box-sizing: border-box;
 
-    // 顶部栏
-    .invite-nav-bar {
-      width: 100vw;
-      position: fixed;
-      top: 0;
-      right: 0;
-      left: 0;
-      backdrop-filter: blur(10px);
-      z-index: 5;
-    }
-
-    .invite-scroll {
-      padding: 0 32rpx 94rpx 32rpx;
+    .main {
       box-sizing: border-box;
-      width: 100vw;
-      height: 100vh;
-      overflow-y: auto;
-      position: relative;
 
-      .main {
-        box-sizing: border-box;
+      // 头部
+      .header {
+        display: flex;
+        align-items: center;
+        column-gap: 32rpx;
+        position: sticky;
+        z-index: 50;
 
-        // 头部
-        .header {
-          display: flex;
-          align-items: center;
-          column-gap: 32rpx;
-          position: sticky;
-          z-index: 50;
-
-          .title {
-            font-family: Douyin Sans, Douyin Sans;
-            font-weight: bold;
-            transition: 0.09s;
-            font-size: 56rpx;
-            color: #333333;
-            line-height: 66rpx;
-          }
-
-          .back {
-            width: 68rpx;
-            height: 68rpx;
-            background: rgba(255, 255, 255, 0.7);
-            box-shadow: 0rpx 2rpx 23rpx 0rpx rgba(158, 158, 158, 0.25);
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-          }
+        .title {
+          font-family: Douyin Sans, Douyin Sans;
+          font-weight: bold;
+          transition: 0.09s;
+          font-size: 56rpx;
+          color: #333333;
+          line-height: 66rpx;
         }
 
-        // 内容
-        .body {
-          margin-top: 44rpx;
-          width: 100%;
-          height: 1120rpx;
-          border-radius: 44rpx;
-          background-color: #fff;
-          display: flex;
-          flex-direction: column;
+        .back {
+          width: 68rpx;
+          height: 68rpx;
+          background: rgba(255, 255, 255, 0.7);
           box-shadow: 0rpx 2rpx 23rpx 0rpx rgba(158, 158, 158, 0.25);
-
-          .body-banner {
-            width: 100%;
-            height: 806rpx;
-            border-radius: 44rpx 44rpx 0 0;
-            background: url('https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/demos/invite-banner.png')
-              no-repeat;
-            background-position: center;
-            background-size: cover;
-          }
-
-          .body-footer {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            row-gap: 24rpx;
-            flex: 1;
-
-            .body-footer-qr-code {
-              width: 188rpx;
-              height: 188rpx;
-              flex-shrink: 0;
-            }
-
-            .body-footer-text {
-              font-family: PingFang SC, PingFang SC;
-              font-weight: 400;
-              font-size: 28rpx;
-              color: #666666;
-              line-height: 33rpx;
-            }
-          }
+          border-radius: 50%;
+          display: flex;
+          justify-content: center;
+          align-items: center;
         }
       }
 
-      // 底部操作
-      .footer {
+      // 内容
+      .body {
+        margin-top: 44rpx;
+        width: 100%;
+        height: 1120rpx;
+        border-radius: 44rpx;
+        background-color: #fff;
+        display: flex;
+        overflow: hidden;
+        flex-direction: column;
+        box-shadow: 0rpx 2rpx 23rpx 0rpx rgba(158, 158, 158, 0.25);
+
+        .body-banner {
+          width: 100%;
+          height: 806rpx;
+          border-radius: 44rpx 44rpx 0 0;
+          background: url('https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/demos/invite-banner.png')
+            no-repeat;
+          background-position: center;
+          background-size: cover;
+        }
+
+        .body-footer {
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          row-gap: 24rpx;
+          flex: 1;
+
+          .body-footer-qr-code {
+            width: 188rpx;
+            height: 188rpx;
+            flex-shrink: 0;
+          }
+
+          .body-footer-text {
+            font-family: PingFang SC, PingFang SC;
+            font-weight: 400;
+            font-size: 28rpx;
+            color: #666666;
+            line-height: 33rpx;
+          }
+        }
+      }
+    }
+
+    // 底部操作
+    .footer {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      column-gap: 46rpx;
+      position: fixed;
+      bottom: 94rpx;
+      right: 0;
+      left: 0;
+
+      .footer-button-link {
         display: flex;
         justify-content: center;
         align-items: center;
-        column-gap: 46rpx;
-        position: fixed;
-        bottom: 94rpx;
-        right: 0;
-        left: 0;
+        width: 320rpx;
+        height: 96rpx;
+        padding: 0;
+        margin: 0;
+        border-radius: 28rpx;
+        border: 3rpx solid #f3943f;
+        font-family: PingFang SC, PingFang SC;
+        font-weight: 400;
+        font-size: 32rpx;
+        color: #f3943f;
+        line-height: 38rpx;
+        background-color: #fff;
+      }
 
-        .footer-button-link {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          width: 320rpx;
-          height: 96rpx;
-          padding: 0;
-          margin: 0;
-          border-radius: 28rpx;
-          border: 3rpx solid #f3943f;
-          font-family: PingFang SC, PingFang SC;
-          font-weight: 400;
-          font-size: 32rpx;
-          color: #f3943f;
-          line-height: 38rpx;
-          background-color: #fff;
-        }
-
-        .footer-button-image {
-          width: 320rpx;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          height: 96rpx;
-          background: #f3943f;
-          border-radius: 28rpx;
-          border: 3rpx solid #f3943f;
-          font-family: PingFang SC, PingFang SC;
-          font-weight: 400;
-          font-size: 32rpx;
-          color: #ffffff;
-          line-height: 38rpx;
-        }
+      .footer-button-image {
+        width: 320rpx;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 96rpx;
+        background: #f3943f;
+        border-radius: 28rpx;
+        border: 3rpx solid #f3943f;
+        font-family: PingFang SC, PingFang SC;
+        font-weight: 400;
+        font-size: 32rpx;
+        color: #ffffff;
+        line-height: 38rpx;
       }
     }
   }

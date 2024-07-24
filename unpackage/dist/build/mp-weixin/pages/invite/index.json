@@ -1,5 +1,7 @@
 {
   "disableScroll": true,
   "navigationStyle": "custom",
-  "usingComponents": {}
+  "usingComponents": {
+    "sticky-scroll": "../../components/sticky-scroll/index"
+  }
 }

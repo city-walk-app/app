@@ -124,7 +124,9 @@
     />
 
     <!-- 返回按钮 -->
-    <div class="back" @click="back"></div>
+    <div class="back" @click="back">
+      <image class="back-icon" src="/assets/svg/left.svg" />
+    </div>
 
     <!-- 头部信息 -->
     <div class="header" v-if="userInfo">
@@ -287,6 +289,12 @@
       z-index: 10;
       top: 134rpx;
       left: 32rpx;
+
+      .back-icon {
+        width: 50rpx;
+        height: 50rpx;
+        flex-shrink: 0;
+      }
     }
 
     // 背景
