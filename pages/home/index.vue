@@ -368,6 +368,7 @@
       <div class="footer-group">
         <div
           class="footer-card footer-card-friends"
+          hover-class="footer-card-hover"
           style="
             --img: url('https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/city-walk/home-friends.png');
           "
@@ -380,6 +381,7 @@
         </div>
         <div
           class="footer-card footer-card-invite"
+          hover-class="footer-card-hover"
           style="
             --img: url('https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/city-walk/home-invite.png');
           "
@@ -394,6 +396,7 @@
       <div class="footer-group">
         <div
           class="footer-card footer-card-record"
+          hover-class="footer-card-hover"
           style="
             --img: url('https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/city-walk/home-record.png');
           "
@@ -406,6 +409,7 @@
         </div>
         <div
           class="footer-card footer-card-ranking"
+          hover-class="footer-card-hover"
           style="
             --img: url('https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/city-walk/home-ranking.png');
           "
@@ -558,10 +562,10 @@
       align-items: center;
       column-gap: 24rpx;
       position: fixed;
-      bottom: 40px;
+      bottom: 0;
       right: 0;
       left: 0;
-      padding: 32rpx;
+      padding: 32rpx 32rpx calc(16px + env(safe-area-inset-bottom)) 32rpx;
       box-sizing: border-box;
       z-index: 30;
 
@@ -576,6 +580,11 @@
         .footer-card {
           position: relative;
           z-index: 10;
+          transition: transform 0.26s;
+
+          &.footer-card-hover {
+            transform: scale(0.96);
+          }
 
           .footer-card-background {
             position: absolute;
@@ -602,7 +611,7 @@
             z-index: -1;
             background: var(--img);
             background-size: cover;
-            filter: blur(6rpx) brightness(1.1);
+            filter: blur(10rpx) brightness(1.1);
           }
 
           // 主题
