@@ -1,5 +1,4 @@
 import App from './App'
-import './styles/index.scss'
 import { createPinia } from 'pinia'
 import { createSSRApp } from 'vue'
 

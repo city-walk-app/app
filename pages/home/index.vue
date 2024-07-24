@@ -147,7 +147,7 @@
     longitude.value = res.longitude
     latitude.value = res.latitude
 
-    getLocationPopularRecommend() // 获取周边热门地点
+    // getLocationPopularRecommend() // 获取周边热门地点
   }
 
   /**
@@ -409,6 +409,7 @@
     overflow: hidden;
     width: 100vw;
     height: 100vh;
+    box-sizing: border-box;
 
     // 顶部高斯模糊
     .header-gaussian {
