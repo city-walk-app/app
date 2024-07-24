@@ -12,7 +12,7 @@
     setStorage,
   } from '@/utils'
   import { USER_INFO } from '@/enum'
-  import IConfetti from '@/uni_modules/lime-confetti/components/l-confetti/l-confetti.vue'
+  // import IConfetti from '@/uni_modules/lime-confetti/components/l-confetti/l-confetti.vue'
 
   const API = new Api()
 
@@ -324,7 +324,7 @@
 <template>
   <div class="login">
     <!-- 散花效果 -->
-    <IConfetti ref="confettiRef" class="canvas-fetti" />
+    <!-- <IConfetti ref="confettiRef" class="canvas-fetti" /> -->
 
     <div
       class="swiper-container"

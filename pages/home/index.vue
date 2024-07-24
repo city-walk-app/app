@@ -5,6 +5,7 @@
   import { USER_INFO } from '@/enum'
   import { onLoad, onShow } from '@dcloudio/uni-app'
   import { useGlobalStore } from '@/store'
+  import FilterPopup from '@/components/filter-popup'
 
   const API = new Api()
   const useGlobal = useGlobalStore()
@@ -16,6 +17,7 @@
   const latitude = ref()
   const longitude = ref()
   const markers = ref()
+  const visible = ref(true)
 
   const userInfoStorage = ref(getStorage(USER_INFO))
 
@@ -388,6 +390,9 @@
     <!-- 底部模糊 -->
     <div class="footer-gaussian" />
   </div>
+
+  <!-- 弹出层 -->
+  <!-- <FilterPopup :visible="visible"></FilterPopup> -->
 </template>
 
 <style lang="scss">

@@ -41,17 +41,17 @@
           <image
             v-if="index === 0"
             class="ranking-item-count-icon"
-            src="/assets/svg/ranking-1.svg"
+            src="https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/city-walk/ranking-1.svg"
           />
           <image
             v-else-if="index === 1"
             class="ranking-item-count-icon"
-            src="/assets/svg/ranking-2.svg"
+            src="https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/city-walk/ranking-2.svg"
           />
           <image
             v-else-if="index === 2"
             class="ranking-item-count-icon"
-            src="/assets/svg/ranking-3.svg"
+            src="https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/city-walk/ranking-3.svg"
           />
           <div v-else class="ranking-item-count-text">{{ index + 1 }}</div>
         </div>
