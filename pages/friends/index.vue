@@ -1,6 +1,7 @@
 <script setup>
   import { ref } from 'vue'
   import { Api } from '@/api'
+  import StickyScroll from '@/components/sticky-scroll'
 
   const API = new Api()
 
@@ -22,7 +23,8 @@
 </script>
 
 <template>
-  <div class="friends">
+  <StickyScroll title="我的朋友"></StickyScroll>
+  <!-- <div class="friends">
     <div class="header">
       <h1>我的朋友</h1>
       <template v-if="friends && friends.length">
@@ -31,7 +33,7 @@
         </div>
       </template>
     </div>
-  </div>
+  </div> -->
 </template>
 
 <style lang="scss"></style>
