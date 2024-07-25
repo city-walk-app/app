@@ -424,7 +424,8 @@
   </div>
 
   <!-- 登录提示弹出层 -->
-  <FilterPopup :visible="!(userInfoStorage && userInfoStorage.user_id)">
+  <!-- <FilterPopup :visible="!(userInfoStorage && userInfoStorage.user_id)"> -->
+  <FilterPopup :visible="false">
     <div class="home-popup-login">
       <!-- 头部 logo -->
       <div class="home-popup-login-header">
