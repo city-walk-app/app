@@ -36,7 +36,7 @@
   </div>
 </template>
 
-<style scoped lang="scss">
+<style lang="scss">
   .sheet {
     width: 100vw;
     height: 100vh;

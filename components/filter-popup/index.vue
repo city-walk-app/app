@@ -27,7 +27,7 @@
   </div>
 </template>
 
-<style lang="scss" scoped>
+<style lang="scss">
   .filter-popup {
     position: fixed;
     z-index: 90;
