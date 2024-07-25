@@ -272,7 +272,7 @@
   </div>
 </template>
 
-<style lang="scss" scoped>
+<style lang="scss">
   .main {
     width: 100vw;
     height: 100vh;
@@ -451,9 +451,8 @@
             width: 54rpx;
             height: 52rpx;
             border-radius: 8rpx;
-            background: url('/assets/svg/main-heatmap-check.svg') no-repeat;
-            background-position: center;
-            background-size: cover;
+            background: url('https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/city-walk/main-heatmap-check.svg')
+              no-repeat center / cover;
 
             .heatmap-body-right-item {
               width: inherit;

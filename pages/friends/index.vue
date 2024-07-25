@@ -83,7 +83,7 @@
   </div> -->
 </template>
 
-<style lang="scss" scoped>
+<style lang="scss">
   .friends {
     padding: 46rpx 32rpx;
     box-sizing: border-box;

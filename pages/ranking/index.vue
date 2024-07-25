@@ -96,7 +96,7 @@
   </div> -->
 </template>
 
-<style lang="scss" scoped>
+<style lang="scss">
   .ranking {
     padding: 46rpx 32rpx 32rpx 32rpx;
     box-sizing: border-box;

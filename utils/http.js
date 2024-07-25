@@ -8,7 +8,7 @@ export class Http {
   request({
     url = '',
     data = {},
-    method = 'GET',
+    method = 'POST',
     header = { token: '' }
   } = {}) {
     const userInfoStorage = getStorage(USER_INFO)

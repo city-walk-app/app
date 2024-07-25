@@ -135,9 +135,7 @@
           height: 806rpx;
           border-radius: 44rpx 44rpx 0 0;
           background: url('https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/demos/invite-banner.png')
-            no-repeat;
-          background-position: center;
-          background-size: cover;
+            no-repeat center / cover;
         }
 
         .body-footer {
