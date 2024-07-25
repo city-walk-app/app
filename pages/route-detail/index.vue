@@ -40,8 +40,6 @@
         {{ item.province }} {{ item.city }}
       </div>
     </template>
-    <!-- https://uniapp.dcloud.net.cn/component/map.html -->
-    <!-- <map class="map" :latitude="latitude" :longitude="longitude" /> -->
   </div>
 </template>
 

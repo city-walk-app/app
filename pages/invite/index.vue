@@ -61,7 +61,7 @@
           <div class="body-footer">
             <image
               class="body-footer-qr-code"
-              src="/assets/images/qr-code.jpg"
+              src="https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/city-walk/qr-code.jpg"
             />
             <div class="body-footer-text">长按识别二维码加我好友</div>
           </div>

@@ -1,35 +1,22 @@
 <script setup>
   import { reactive, ref, watch } from 'vue'
   import { Api } from '@/api'
-  import { isValidEmail } from '@/utils'
   import { onShow } from '@dcloudio/uni-app'
-  import {
-    VUE_APP_API_URL,
-    toast,
-    showLoading,
-    hideLoading,
-    getStorage,
-    setStorage,
-  } from '@/utils'
+  import { toast, showLoading, hideLoading, setStorage } from '@/utils'
   import { USER_INFO } from '@/enum'
-  // import IConfetti from '@/uni_modules/lime-confetti/components/l-confetti/l-confetti.vue'
 
   const API = new Api()
 
-  /** 菜单礼花元素节点 */
-  const confettiRef = ref()
+  const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/
+
   /** 登录按钮禁用状态 */
   const disabled = ref(false)
   /** 登陆信息 */
   const loginInfo = reactive({ email: '', code: '' })
   /** 步骤 */
   const step = ref(0)
-  /** 昵称 */
-  const nickName = ref('')
   /** 用户身份信息 */
   const userInfo = ref()
-  /** 头像文件 */
-  const avatarFile = ref()
   /** 按钮倒计时 */
   const timmer = ref(60)
   /**获取验证码按钮禁用状态 */
@@ -64,7 +51,7 @@
     }
 
     // 邮箱不正确
-    if (!isValidEmail(loginInfo.email)) {
+    if (!emailRegex.test(loginInfo.email)) {
       toast('输入正确邮箱之后再获取')
       return
     }
@@ -110,7 +97,7 @@
    */
   const onLogin = async () => {
     // 邮箱不正确
-    if (!isValidEmail(loginInfo.email)) {
+    if (!emailRegex.test(loginInfo.email)) {
       toast('邮箱格式不正确')
       return
     }
@@ -139,115 +126,11 @@
         url: '/pages/home/index',
       })
 
-      // // 如果是新用户，则进行下一步
-      // if (res.data.is_new_user) {
-      //   toast('注册成功，请完善信息')
-      //   step.value = 2
-      // } else {
-      //   toast(res.message)
-
-      //   if (confettiRef.value) {
-      //     // 播放完成注册庆祝烟花
-      //     confettiRef.value.play({
-      //       particleCount: 100,
-      //       spread: 70,
-      //       shapes: ['circle'],
-      //       origin: {
-      //         y: 0.6,
-      //       },
-      //     })
-
-      //     setTimeout(() => {
-      //       uni.navigateTo({
-      //         url: '/pages/layout/index',
-      //       })
-      //     }, 1500)
-      //   }
-      // }
       return
     }
 
     toast(res.message)
   }
-
-  /**
-   * 设置名字
-   */
-  // const onSetName = async () => {
-  //   showLoading('处理中...')
-
-  //   const res = await API.setUserInfo({
-  //     id: userInfo.value.id,
-  //     nick_name: nickName.value,
-  //   })
-
-  //   hideLoading()
-
-  //   if (res.code === 200) {
-  //     toast('设置成功')
-  //     step.value = 3
-  //   }
-  // }
-
-  /**
-   * 上传头像
-   */
-  // const upLoadAvatar = () => {
-  //   uni.chooseImage({
-  //     count: 1, // 文件个数
-  //     mediaType: ['image'], // 类型
-  //     sourceType: ['album', 'camera'], // 相册和拍照选择
-  //     camera: 'back', // 后置摄像头
-  //     success: (res) => {
-  //       avatarUrl.value = res.tempFilePaths[0]
-  //       avatarFile.value = res.tempFiles[0]
-  //     },
-  //   })
-  // }
-
-  /**
-   * 提交头像，完成注册
-   */
-  // const onSubmit = () => {
-  //   showLoading('处理中...')
-
-  //   uni.uploadFile({
-  //     url: VUE_APP_API_URL + '/user/info/up_avatar', // 上传文件的服务器地址
-  //     filePath: avatarUrl.value, // 本地文件路径
-  //     name: 'image', // 上传文件字段的名称
-  //     header: {
-  //       token: getStorage(USER_INFO).token,
-  //     }, // 表单数据
-  //     success: (response) => {
-  //       // 上传成功后的处理逻辑
-  //       const res = JSON.parse(response.data)
-
-  //       hideLoading()
-
-  //       if (res.code === 200) {
-  //         toast('设置成功')
-
-  //         if (confettiRef.value) {
-  //           // 播放完成注册庆祝烟花
-  //           confettiRef.value.play({
-  //             particleCount: 100,
-  //             spread: 70,
-  //             shapes: ['circle'],
-  //             origin: {
-  //               y: 0.6,
-  //             },
-  //           })
-
-  //           setTimeout(() => {
-  //             uni.navigateTo({
-  //               url: '/pages/layout/index',
-  //             })
-  //           }, 1500)
-  //         }
-  //       }
-  //     },
-  //   })
-  // }
 
   /**
    * 监听验证码
@@ -323,9 +206,6 @@
 
 <template>
   <div class="login">
-    <!-- 散花效果 -->
-    <!-- <IConfetti ref="confettiRef" class="canvas-fetti" /> -->
-
     <div
       class="swiper-container"
       :style="{ transform: `translateX(-${step * 100}vw)` }"
@@ -424,15 +304,6 @@
 
     .input {
       border: 1px solid #333;
-    }
-
-    // 彩带飘落画板
-    .canvas-fetti {
-      position: fixed;
-      inset: 0;
-      width: 100vw;
-      height: 100vh;
-      z-index: -10;
     }
 
     // 登录表单轮播图
@@ -597,25 +468,6 @@
           margin-top: 40px;
           color: #5a7cec;
           font-size: 14px;
-        }
-
-        // 头像选择
-        .up-avatar {
-          width: 200px;
-          height: 200px;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          border-radius: 50%;
-          background-color: #eee;
-
-          // 图片元素
-          .up-avatar-img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            border-radius: 50%;
-          }
         }
       }
     }

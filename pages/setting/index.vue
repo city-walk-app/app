@@ -104,9 +104,7 @@
           class="user-avatar"
           :src="VUE_APP_API_URL + userInfo.avatar"
         />
-        <div v-else-if="Array.isArray(item.key)" class="setting-card-content">
-          {{ userInfo.province || '' }}{{ userInfo.city || '' }}
-        </div>
+     
         <div v-else class="setting-card-content">
           {{ userInfo[item.key] || '未设置' }}
         </div>
