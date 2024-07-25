@@ -1,7 +1,0 @@
-{
-  "disableScroll": true,
-  "navigationStyle": "custom",
-  "usingComponents": {
-    "filter-popup": "../../components/filter-popup/index"
-  }
-}

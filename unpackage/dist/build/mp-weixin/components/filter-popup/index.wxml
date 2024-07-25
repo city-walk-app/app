@@ -1,1 +1,0 @@
-<view wx:if="{{a}}" class="filter-popup data-v-6fa8ed37"><view class="filter-popup-mask data-v-6fa8ed37"/><view class="filter-popup-wrapper data-v-6fa8ed37"><view class="filter-popup-gradient-blur data-v-6fa8ed37"/><view class="filter-popup-body data-v-6fa8ed37"><slot/></view></view></view>

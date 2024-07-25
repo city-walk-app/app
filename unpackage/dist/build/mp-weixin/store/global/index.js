@@ -1,1 +1,0 @@
-"use strict";const e=require("../../common/vendor.js"),o=e.defineStore("global",(()=>{const o=e.ref(0),t=e.ref(0),n=e.index.getSystemInfoSync();return t.value=n.statusBarHeight+44,console.log("顶部菜单栏高度",t.value),o.value=e.index.getMenuButtonBoundingClientRect(),console.log("胶囊配置",o.value),{navBarHeight:t,headerBtnPosi:o}}));exports.useGlobalStore=o;
