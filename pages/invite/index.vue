@@ -99,7 +99,6 @@
         z-index: 50;
 
         .title {
-          font-family: Douyin Sans, Douyin Sans;
           font-weight: bold;
           transition: 0.09s;
           font-size: 56rpx;
@@ -156,7 +155,6 @@
           }
 
           .body-footer-text {
-            font-family: PingFang SC, PingFang SC;
             font-weight: 400;
             font-size: 28rpx;
             color: #666666;
@@ -187,7 +185,6 @@
         margin: 0;
         border-radius: 28rpx;
         border: 3rpx solid #f3943f;
-        font-family: PingFang SC, PingFang SC;
         font-weight: 400;
         font-size: 32rpx;
         color: #f3943f;
@@ -204,7 +201,6 @@
         background: #f3943f;
         border-radius: 28rpx;
         border: 3rpx solid #f3943f;
-        font-family: PingFang SC, PingFang SC;
         font-weight: 400;
         font-size: 32rpx;
         color: #ffffff;

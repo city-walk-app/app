@@ -1,14 +1,16 @@
-<script lang="ts" setup>
+<script setup>
   const prop = defineProps({
     visible: {
       type: Boolean,
       required: true,
     },
   })
+
+  console.log('12', prop)
 </script>
 
 <template>
-  <div class="filter-popup">
+  <div v-if="visible" class="filter-popup">
     <!-- 遮罩层 -->
     <div class="filter-popup-mask" />
 
@@ -64,12 +66,14 @@
           mask-image: linear-gradient(0deg, #fff 40%, transparent);
           backdrop-filter: blur(60px);
         }
+      }
 
-        .filter-popup-body {
-          position: absolute;
-          z-index: 20;
-          inset: 0;
-        }
+      // 主要内容
+      .filter-popup-body {
+        position: absolute;
+        z-index: 20;
+        inset: 0;
+        display: flex;
       }
     }
   }

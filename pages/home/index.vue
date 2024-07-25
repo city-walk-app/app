@@ -262,10 +262,9 @@
   })
 
   onShow(() => {
+    isLogin() // 是否登录
     getLocation() // 获取位置信息
   })
-
-  isLogin() // 是否登录
 
   /**
    * 点击标记的点触发
@@ -303,6 +302,12 @@
 
     mapContext.moveToLocation()
   }
+
+  // const isLogin = computed(() => {
+  //   return !(userInfoStorage.value && userInfoStorage.value.user_id)
+  // })
+
+  // console.log(isLogin)
 </script>
 
 <template>
@@ -336,11 +341,6 @@
           <image class="options-setting-icon" src="/assets/svg/position.svg" />
         </div>
       </div>
-    </div>
-
-    <div class="demo">
-      <button @click="wxLogin">登录</button>
-      <button @click="goLogin">去登录</button>
     </div>
 
     <map
@@ -423,28 +423,38 @@
     <!-- <div class="footer-gaussian" /> -->
   </div>
 
-  <!-- 弹出层 -->
-  <FilterPopup :visible="visible">
-    <h1>dad</h1>
-    <h1>dad</h1>
-    <h1>dad</h1>
-    <h1>dad</h1>
-    <h1>dad</h1>
-    <h1>dad</h1>
-    <h1>dad</h1>
-    <h1>dad</h1>
+  <!-- 登录提示弹出层 -->
+  <FilterPopup :visible="!(userInfoStorage && userInfoStorage.user_id)">
+    <div class="home-popup-login">
+      <!-- 头部 logo -->
+      <div class="home-popup-login-header">
+        <image
+          mode="aspectFill"
+          class="home-popup-login-header-logo"
+          src="https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/city-walk/logo.jpg"
+        />
+      </div>
+
+      <!-- 内容 -->
+      <div class="home-popup-login-body">
+        <div>当前尚未登录</div>
+        <div>登录后体验完整功能</div>
+      </div>
+
+      <!-- 操作 -->
+      <div class="home-popup-login-footer">
+        <div class="home-popup-login-footer-email" @click="goLogin">
+          邮箱登录
+        </div>
+        <div class="home-popup-login-footer-vite" @click="wxLogin">
+          快捷登录
+        </div>
+      </div>
+    </div>
   </FilterPopup>
 </template>
 
 <style lang="scss">
-  .demo {
-    position: fixed;
-    top: 200rpx;
-    right: 0;
-    left: 0;
-    z-index: 40;
-  }
-
   .home {
     position: relative;
     overflow: hidden;
@@ -679,6 +689,77 @@
       right: 0;
       left: 0;
       bottom: 0;
+    }
+  }
+
+  // 登录提示弹出层
+  .home-popup-login {
+    padding: 110rpx 34rpx calc(34rpx + env(safe-area-inset-bottom)) 34rpx;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    justify-content: space-between;
+    flex: 1;
+
+    // 头部 logo
+    .home-popup-login-header {
+      width: 300rpx;
+      height: 300rpx;
+      border-radius: 50%;
+
+      .home-popup-login-header-logo {
+        width: inherit;
+        height: inherit;
+        border-radius: inherit;
+      }
+    }
+
+    // 内容
+    .home-popup-login-body {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    // 底部操作
+    .home-popup-login-footer {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      column-gap: 46rpx;
+
+      .home-popup-login-footer-email {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 320rpx;
+        height: 96rpx;
+        border-radius: 28rpx;
+        border: 3rpx solid #f3943f;
+        font-weight: 400;
+        font-size: 32rpx;
+        color: #f3943f;
+        line-height: 38rpx;
+        background-color: #fff;
+      }
+
+      .home-popup-login-footer-vite {
+        width: 320rpx;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 96rpx;
+        background: #f3943f;
+        border-radius: 28rpx;
+        border: 3rpx solid #f3943f;
+        font-weight: 400;
+        font-size: 32rpx;
+        color: #ffffff;
+        line-height: 38rpx;
+      }
     }
   }
 </style>

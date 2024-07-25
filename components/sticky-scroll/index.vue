@@ -122,7 +122,6 @@
         box-sizing: border-box;
 
         .title {
-          font-family: Douyin Sans, Douyin Sans;
           font-weight: bold;
           transition: 0.09s;
           font-size: 56rpx;
