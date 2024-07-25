@@ -1,5 +1,7 @@
 {
   "disableScroll": true,
   "navigationStyle": "custom",
-  "usingComponents": {}
+  "usingComponents": {
+    "filter-popup": "../../components/filter-popup/index"
+  }
 }

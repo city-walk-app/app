@@ -1,0 +1,1 @@
+"use strict";const e=require("../../common/vendor.js"),o=e.defineComponent({__name:"index",props:{visible:{type:Boolean,required:!0}},setup:e=>(e,o)=>({})}),n=e._export_sfc(o,[["__scopeId","data-v-339e91b0"]]);wx.createComponent(n);

@@ -368,7 +368,6 @@
       <div class="footer-group">
         <div
           class="footer-card footer-card-friends"
-          hover-class="footer-card-hover"
           style="
             --img: url('https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/city-walk/home-friends.png');
           "
@@ -381,7 +380,6 @@
         </div>
         <div
           class="footer-card footer-card-invite"
-          hover-class="footer-card-hover"
           style="
             --img: url('https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/city-walk/home-invite.png');
           "
@@ -396,7 +394,6 @@
       <div class="footer-group">
         <div
           class="footer-card footer-card-record"
-          hover-class="footer-card-hover"
           style="
             --img: url('https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/city-walk/home-record.png');
           "
@@ -409,7 +406,6 @@
         </div>
         <div
           class="footer-card footer-card-ranking"
-          hover-class="footer-card-hover"
           style="
             --img: url('https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/city-walk/home-ranking.png');
           "
@@ -424,11 +420,20 @@
     </div>
 
     <!-- 底部模糊 -->
-    <div class="footer-gaussian" />
+    <!-- <div class="footer-gaussian" /> -->
   </div>
 
   <!-- 弹出层 -->
-  <!-- <FilterPopup :visible="visible"></FilterPopup> -->
+  <FilterPopup :visible="visible">
+    <h1>dad</h1>
+    <h1>dad</h1>
+    <h1>dad</h1>
+    <h1>dad</h1>
+    <h1>dad</h1>
+    <h1>dad</h1>
+    <h1>dad</h1>
+    <h1>dad</h1>
+  </FilterPopup>
 </template>
 
 <style lang="scss">
@@ -582,10 +587,6 @@
           z-index: 10;
           transition: transform 0.26s;
 
-          &.footer-card-hover {
-            transform: scale(0.96);
-          }
-
           .footer-card-background {
             position: absolute;
             padding: 28rpx 32rpx;
@@ -611,7 +612,7 @@
             z-index: -1;
             background: var(--img);
             background-size: cover;
-            filter: blur(10rpx) brightness(1.1);
+            filter: blur(12rpx) brightness(1.1);
           }
 
           // 主题
