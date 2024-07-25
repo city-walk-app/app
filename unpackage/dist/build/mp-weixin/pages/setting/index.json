@@ -1,7 +1,5 @@
 {
   "disableScroll": true,
   "navigationStyle": "custom",
-  "usingComponents": {
-    "sheet": "../../components/sheet/index"
-  }
+  "usingComponents": {}
 }
