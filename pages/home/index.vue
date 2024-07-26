@@ -18,9 +18,18 @@
   const longitude = ref()
   const markers = ref()
   const visible = ref(true)
+  /** 是否开启卫星图 */
+  const enableSatellite = ref(true)
 
   const userInfoStorage = ref(getStorage(USER_INFO))
   const userTokenStorage = ref(getStorage(USER_TOKEN))
+
+  /**
+   * 切换是否开启卫星图
+   */
+  const changeEnableSatellite = () => {
+    enableSatellite.value = !enableSatellite.value
+  }
 
   /**
    * 是否为已经登录状态
@@ -327,10 +336,21 @@
 <template>
   <div class="home" :style="{ paddingTop: (statusBarHeight || 90) + 'px' }">
     <!-- 顶部模糊 -->
-    <div class="header-gaussian" />
+    <div
+      class="header-gaussian"
+      :style="{
+        height: useGlobal.navBarHeight + 'px',
+      }"
+    />
 
     <!-- 头像 -->
-    <div class="avatar-wrapper" @click="goMine">
+    <div
+      class="avatar-wrapper"
+      :style="{
+        top: useGlobal.navBarHeight + 16 + 'px',
+      }"
+      @click="goMine"
+    >
       <image
         mode="aspectFill"
         class="avatar-wrapper-image"
@@ -339,14 +359,19 @@
     </div>
 
     <!-- 操作按钮 -->
-    <div class="options-wrapper">
+    <div
+      class="options-wrapper"
+      :style="{
+        top: useGlobal.navBarHeight + 16 + 'px',
+      }"
+    >
       <!-- 进入设置页面 -->
       <div class="options-button" @click="goSetting">
         <image class="options-setting-icon" src="/assets/svg/setting.svg" />
       </div>
       <div class="options-group">
         <!-- 地图设置 -->
-        <div class="options-group-item">
+        <div class="options-group-item" @click="changeEnableSatellite">
           <image class="options-setting-icon" src="/assets/svg/map.svg" />
         </div>
         <div class="options-group-line" />
@@ -365,6 +390,7 @@
       :latitude="latitude"
       :longitude="longitude"
       :markers="markers"
+      :enable-satellite="enableSatellite"
       @markertap="markertap"
       @tap="mapTap"
       @poitap="poitap"
@@ -434,7 +460,7 @@
     </div>
 
     <!-- 底部模糊 -->
-    <!-- <div class="footer-gaussian" /> -->
+    <div class="footer-gaussian" />
   </div>
 
   <!-- 登录提示弹出层 -->
@@ -480,17 +506,18 @@
     // 顶部高斯模糊
     .header-gaussian {
       width: 100vw;
-      height: 260rpx;
-      background: linear-gradient(
-        180deg,
-        #ffffff 20%,
-        rgba(153, 153, 153, 0) 49%
-      );
       position: fixed;
       top: 0;
       left: 0;
       right: 0;
       z-index: 9;
+      mask-image: linear-gradient(
+        180deg,
+        #fff 0%,
+        rgb(255, 255, 255, 0.8) 64%,
+        transparent
+      );
+      backdrop-filter: blur(80px);
     }
 
     // 头像
@@ -500,7 +527,6 @@
       border-radius: 50%;
       position: fixed;
       left: 32rpx;
-      top: 138rpx;
       background-color: #ddd;
       z-index: 20;
 
@@ -514,7 +540,6 @@
     // 操作
     .options-wrapper {
       position: fixed;
-      top: 194rpx;
       right: 32rpx;
       z-index: 20;
       display: flex;
@@ -622,23 +647,21 @@
             align-items: flex-start;
             inset: 0;
             z-index: 30;
-            background: var(--img) no-repeat;
-            background-size: cover;
-            background-position: center;
+            background: var(--img) no-repeat center / cover;
           }
 
-          // 模糊背景
-          &::before {
-            content: '';
-            border-radius: 20rpx;
-            position: absolute;
-            inset: 0;
-            top: 10rpx;
-            z-index: -1;
-            background: var(--img);
-            background-size: cover;
-            filter: blur(12rpx) brightness(1.1);
-          }
+          // // 模糊背景
+          // &::before {
+          //   content: '';
+          //   border-radius: 20rpx;
+          //   position: absolute;
+          //   inset: 0;
+          //   top: 10rpx;
+          //   z-index: -1;
+          //   background: var(--img);
+          //   background-size: cover;
+          //   filter: blur(12rpx) brightness(1.1);
+          // }
 
           // 主题
           .footer-card-title {
@@ -685,25 +708,32 @@
     // 底部模糊
     .footer-gaussian {
       width: 100vw;
-      height: 420rpx;
+      height: 380rpx;
       // background: linear-gradient(180deg, transparent, #fff 43%);
-      background: linear-gradient(
-        180deg,
-        rgba(255, 255, 255, 0) 20%,
-        #ffffff 43%
-      );
-      // background-color: transparent;
-      // background: hsla(0, 0%, 100%, 0.75);
-      // -webkit-backdrop-filter: blur(5px);
-      // backdrop-filter: blur(5px);
-      // background: hsla(0, 0%, 100%, 0.2);
-      -webkit-backdrop-filter: blur(25rpx);
-      backdrop-filter: blur(25rpx);
+      // background: linear-gradient(
+      //   180deg,
+      //   rgba(255, 255, 255, 0) 20%,
+      //   #ffffff 43%
+      // );
+      // // background-color: transparent;
+      // // background: hsla(0, 0%, 100%, 0.75);
+      // // -webkit-backdrop-filter: blur(5px);
+      // // backdrop-filter: blur(5px);
+      // // background: hsla(0, 0%, 100%, 0.2);
+      // -webkit-backdrop-filter: blur(25rpx);
+      // backdrop-filter: blur(25rpx);
       position: fixed;
       z-index: 9;
       right: 0;
       left: 0;
       bottom: 0;
+      mask-image: linear-gradient(
+        0deg,
+        #fff 0%,
+        rgb(255, 255, 255, 0.8) 84%,
+        transparent
+      );
+      backdrop-filter: blur(30px);
     }
   }
 
