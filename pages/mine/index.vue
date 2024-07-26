@@ -1,7 +1,7 @@
 <script setup>
   import { ref } from 'vue'
   import { Api } from '@/api'
-  import { VUE_APP_API_URL, getCurrentDateFormatted } from '@/utils'
+  import { getCurrentDateFormatted } from '@/utils'
   import { onLoad, onShow } from '@dcloudio/uni-app'
 
   const API = new Api()
@@ -61,8 +61,6 @@
           province_url: `https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/provinces/${item.province_code}.png`,
         }
       })
-
-      console.log(provinceList.value)
     }
   }
 
@@ -173,23 +171,10 @@
           <div
             class="jigsaw-image"
             :style="{
-              mask: `url('${VUE_APP_API_URL}/images/province/${item.province_code}.png') 0 0 / cover no-repeat`,
-              '-webkit-mask': `url('${VUE_APP_API_URL}/images/province/${item.province_code}.png') 0 0 / cover no-repeat`,
-            }"
-          ></div>
-          <!-- <div
-            class="jigsaw-image"
-            :style="{
-              mask: `${item.province_url} 0 0 / cover no-repeat`,
-              '-webkit-mask': `${item.province_url} 0 0 / cover no-repeat`,
-            }"
-          ></div> -->
-          <!-- <div
-            class="jigsaw-image"
-            :style="{
               '--province': `url('${item.province_url}')`,
+              '--background': `#f8d035`,
             }"
-          ></div> -->
+          />
         </div>
       </div>
     </scroll-view>
@@ -394,9 +379,9 @@
           .jigsaw-image {
             width: inherit;
             height: inherit;
-            background: var(--province) no-repeat center / cover;
-            mask: var(--province) no-repeat center / cover;
-            background: -webkit-linear-gradient(815deg, #395ce3 10%, #5ee0dd);
+            mask: var(--province) 0 0 / cover no-repeat;
+            -webkit-mask: var(--province) 0 0 / cover no-repeat;
+            background: var(--background);
           }
         }
       }
