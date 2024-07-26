@@ -1,4 +1,4 @@
-import { USER_INFO } from '@/enum'
+import { USER_TOKEN } from '@/enum'
 import { getStorage, toast } from '@/utils'
 
 export const VUE_APP_API_URL = 'https://api.city-walk.top' // 生产环境
@@ -11,11 +11,11 @@ export class Http {
     method = 'POST',
     header = { token: '' }
   } = {}) {
-    const userInfoStorage = getStorage(USER_INFO)
+    const userTokenStorage = getStorage(USER_TOKEN)
 
     // 在请求头设置 token
-    if (userInfoStorage) {
-      header.token = userInfoStorage.token
+    if (userTokenStorage) {
+      header.token = userTokenStorage
     }
 
     return new Promise((resolve) => {

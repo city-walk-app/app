@@ -3,7 +3,7 @@
   import { Api } from '@/api'
   import { onShow } from '@dcloudio/uni-app'
   import { toast, showLoading, hideLoading, setStorage } from '@/utils'
-  import { USER_INFO } from '@/enum'
+  import { USER_INFO, USER_TOKEN } from '@/enum'
 
   const API = new Api()
 
@@ -109,23 +109,23 @@
     }
 
     showLoading('处理中...')
+
     disabled.value = true
 
     const res = await API.emailLogin(loginInfo)
 
     hideLoading()
+
     disabled.value = false
 
     if (res.code === 200) {
       disabled.value = false
 
       userInfo.value = res.data
-      setStorage(USER_INFO, res.data)
+      setStorage(USER_INFO, res.data.user_info)
+      setStorage(USER_TOKEN, res.data.token)
 
-      uni.navigateTo({
-        url: '/pages/home/index',
-      })
-
+      uni.redirectTo({ url: '/pages/home/index' })
       return
     }
 

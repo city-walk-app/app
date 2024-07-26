@@ -1,8 +1,8 @@
 <script setup>
   import { Api } from '@/api'
-  import { ref } from 'vue'
+  import { ref, computed } from 'vue'
   import { toast, getStorage, setStorage } from '@/utils'
-  import { USER_INFO } from '@/enum'
+  import { USER_INFO, USER_TOKEN } from '@/enum'
   import { onLoad, onShow } from '@dcloudio/uni-app'
   import { useGlobalStore } from '@/store'
   import FilterPopup from '@/components/filter-popup'
@@ -20,6 +20,18 @@
   const visible = ref(true)
 
   const userInfoStorage = ref(getStorage(USER_INFO))
+  const userTokenStorage = ref(getStorage(USER_TOKEN))
+
+  /**
+   * 是否为已经登录状态
+   */
+  const isLoginState = computed(() => {
+    return !!(
+      userTokenStorage.value &&
+      userInfoStorage.value &&
+      userInfoStorage.value.user_id
+    )
+  })
 
   /**
    * open id 登录
@@ -163,28 +175,21 @@
    * 跳转我的
    */
   const goMine = () => {
+    if (!userInfoStorage.value || !userInfoStorage.value.user_id) {
+      toast('未登录')
+    }
+
     uni.navigateTo({
-      url: `/pages/mine/index?user_id=${userInfoStorage.value.user_info.user_id}`,
+      url: `/pages/mine/index?user_id=${userInfoStorage.value.user_id}`,
     })
   }
 
-  const isLogin = () => {
-    console.log(userInfoStorage.value)
-    if (
-      userInfoStorage &&
-      userInfoStorage.value &&
-      userInfoStorage.value.user_id
-    ) {
-      console.log('已经登录')
-      // #ifdef MP-WEIXIN
-      getStatusBarHeight() // 设置顶部栏高度
-      // #endif
-    } else {
-      console.log('未登录')
-      // uni.navigateTo({
-      //   url: '/pages/login/index',
-      // })
-    }
+  /**
+   * 获取本地缓存数据
+   */
+  const getStorageData = () => {
+    userInfoStorage.value = getStorage(USER_INFO)
+    userTokenStorage.value = getStorage(USER_TOKEN)
   }
 
   /**
@@ -262,8 +267,17 @@
   })
 
   onShow(() => {
-    isLogin() // 是否登录
-    getLocation() // 获取位置信息
+    getStorageData() // 是否登录
+
+    console.log(isLoginState.value)
+
+    if (
+      (userInfoStorage.value,
+      userInfoStorage.value.user_id,
+      userTokenStorage.value)
+    ) {
+      getLocation() // 获取位置信息
+    }
   })
 
   /**
@@ -425,7 +439,7 @@
 
   <!-- 登录提示弹出层 -->
   <!-- <FilterPopup :visible="!(userInfoStorage && userInfoStorage.user_id)"> -->
-  <FilterPopup :visible="false">
+  <FilterPopup v-model:visible="isLoginState">
     <div class="home-popup-login">
       <!-- 头部 logo -->
       <div class="home-popup-login-header">
