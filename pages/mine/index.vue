@@ -2,12 +2,10 @@
   import { ref } from 'vue'
   import { Api } from '@/api'
   import { getCurrentDateFormatted } from '@/utils'
-  import { useGlobalStore } from '@/store'
   import { onLoad, onShow } from '@dcloudio/uni-app'
   import StickyScroll from '@/components/sticky-scroll'
 
   const API = new Api()
-  const useGlobal = useGlobalStore()
 
   /** 用户信息 */
   const userInfo = ref()
@@ -132,30 +130,17 @@
 
 <template>
   <StickyScroll
-    :title-info="{
-      name: '你到名字',
-      avatar:
-        'https://img1.baidu.com/it/u=1784112474,311889214&fm=253&fmt=auto&app=120&f=JPEG?w=500&h=500',
-    }"
+    :title-info="
+      userInfo
+        ? {
+            name: userInfo.nick_name,
+            avatar:
+              'https://img1.baidu.com/it/u=1784112474,311889214&fm=253&fmt=auto&app=120&f=JPEG?w=500&h=500',
+          }
+        : null
+    "
   >
-    <!-- <template #title>
-      <div class="main-title">
-  
-      </div>
-    </template> -->
-
     <div class="main">
-      <!-- 背景 -->
-      <!-- <image
-        class="main-blank"
-        src="https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/city-walk/main-blank.png"
-      /> -->
-
-      <!-- 返回按钮 -->
-      <!-- <div class="back" @click="back">
-        <image class="back-icon" src="/assets/svg/left.svg" />
-      </div> -->
-
       <!-- 头部信息 -->
       <div class="header" v-if="userInfo">
         <!-- 头像 -->
@@ -309,16 +294,6 @@
 <style lang="scss">
   .main {
     position: relative;
-
-    // 背景
-    .main-blank {
-      width: 100vw;
-      height: 440rpx;
-      position: absolute;
-      top: 0;
-      right: 0;
-      left: 0;
-    }
 
     // 头部信息
     .header {

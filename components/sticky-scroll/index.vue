@@ -37,11 +37,11 @@
       styleDiff.value = diffFormat
     }
 
-    console.log(
-      '字体大小',
-      startSize.value + (endSize.value - startSize.value) * styleDiff.value
-    )
-    console.log(startSize.value, endSize.value, styleDiff.value)
+    // console.log(
+    //   '字体大小',
+    //   startSize.value + (endSize.value - startSize.value) * styleDiff.value
+    // )
+    // console.log(startSize.value, endSize.value, styleDiff.value)
   }
 </script>
 
@@ -90,16 +90,16 @@
         </div>
 
         <!-- 信息 -->
-        <div v-if="titleInfo" class="title-info">
+        <div v-if="titleInfo && styleDiff >= 1" class="title-info">
           <div class="title-info-avatar-wrapper">
             <image
-              class="title-info-wrapper"
+              class="title-info-avatar"
               mode="aspectFill"
-              src="https://img1.baidu.com/it/u=1784112474,311889214&fm=253&fmt=auto&app=120&f=JPEG?w=500&h=500"
+              :src="titleInfo.avatar"
             />
           </div>
 
-          <div class="title-info-name">你的名字</div>
+          <div class="title-info-name">{{ titleInfo.name }}</div>
         </div>
       </div>
 
@@ -117,8 +117,6 @@
     position: relative;
     background: url('https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/city-walk/main-blank.png')
       no-repeat;
-    // background-position: top center;
-    // background-size: cover;
 
     .sticky-scroll-main {
       box-sizing: border-box;
@@ -162,10 +160,11 @@
         .title-info {
           display: flex;
           align-items: center;
+          column-gap: 13rpx;
 
           .title-info-avatar-wrapper {
-            width: 50rpx;
-            height: 50rpx;
+            width: 52rpx;
+            height: 52rpx;
             border-radius: 50%;
 
             .title-info-avatar {
@@ -178,6 +177,9 @@
           // 名字
           .title-info-name {
             font-size: 20rpx;
+            color: #333333;
+            font-size: 28rpx;
+            font-weight: 600;
           }
         }
 
