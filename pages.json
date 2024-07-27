@@ -2,10 +2,6 @@
   "pages": [
     {
       "path": "pages/home/index",
-      "style": {
-        "disableScroll": true,
-        "navigationStyle": "custom"
-      },
       "permissions": {
         "scope.userLocation": {
           "desc": "你的应用需要获取您的地理位置信息以提供相关功能"
@@ -13,69 +9,32 @@
       }
     },
     {
-      "path": "pages/login/index",
-      "style": {
-        "disableScroll": true,
-        "navigationStyle": "custom"
-      }
+      "path": "pages/login/index"
     },
     {
-      "path": "pages/ranking/index",
-      "style": {
-        "disableScroll": true,
-        "navigationStyle": "custom"
-      }
+      "path": "pages/ranking/index"
     },
     {
-      "path": "pages/route-detail/index",
-      "style": {
-        "disableScroll": true,
-        "navigationStyle": "custom"
-      }
+      "path": "pages/route-detail/index"
     },
     {
-      "path": "pages/setting/index",
-      "style": {
-        "disableScroll": true,
-        "navigationStyle": "custom"
-      }
+      "path": "pages/setting/index"
     },
     {
-      "path": "pages/mine/index",
-      "style": {
-        "disableScroll": true,
-        "navigationStyle": "custom"
-      }
+      "path": "pages/mine/index"
     },
     {
-      "path": "pages/invite/index",
-      "style": {
-        "disableScroll": true,
-        "navigationStyle": "custom"
-      }
+      "path": "pages/invite/index"
     },
     {
-      "path": "pages/friends/index",
-      "style": {
-        "disableScroll": true,
-        "navigationStyle": "custom"
-      }
-    },
-    {
-      "path": "pages/record-success/index",
-      "style": {
-        "disableScroll": true,
-        "navigationStyle": "custom"
-      }
+      "path": "pages/friends/index"
     }
   ],
   "globalStyle": {
     "disableScroll": true,
-    "navigationBarBackgroundColor": "#ffffff",
-    "navigationBarTextStyle": "black"
+    "navigationStyle": "custom"
   },
   "requiredPrivateInfos": [
     "getFuzzyLocation"
-  ],
-  "uniIdRouter": {}
+  ]
 }
