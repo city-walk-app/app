@@ -80,15 +80,6 @@
   }
 
   /**
-   * 设置顶部栏高度
-   */
-  const getStatusBarHeight = () => {
-    const systemInfo = uni.getSystemInfoSync()
-
-    statusBarHeight.value = systemInfo.statusBarHeight + 44
-  }
-
-  /**
    * 记录当前位置
    */
   const onRecord = async () => {
@@ -325,12 +316,6 @@
 
     mapContext.moveToLocation()
   }
-
-  // const isLogin = computed(() => {
-  //   return !(userInfoStorage.value && userInfoStorage.value.user_id)
-  // })
-
-  // console.log(isLogin)
 </script>
 
 <template>
@@ -464,7 +449,6 @@
   </div>
 
   <!-- 登录提示弹出层 -->
-  <!-- <FilterPopup :visible="!(userInfoStorage && userInfoStorage.user_id)"> -->
   <FilterPopup v-model:visible="isLoginState">
     <div class="home-popup-login">
       <!-- 头部 logo -->

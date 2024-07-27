@@ -58,7 +58,9 @@
       provinceList.value = res.data.map((item) => {
         return {
           ...item,
-          province_url: `https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/provinces/${item.province_code}.png`,
+          province_url: item.province_code
+            ? `https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/provinces/${item.province_code}.png`
+            : '',
         }
       })
     }
@@ -95,6 +97,11 @@
    * @param list_id
    */
   const routeDetail = (list_id) => {
+    if (!list_id) {
+      toast('无法查看')
+      return
+    }
+
     uni.navigateTo({
       url: `/pages/route-detail/index?list_id=${list_id}`,
     })
@@ -172,7 +179,7 @@
             class="jigsaw-image"
             :style="{
               '--province': `url('${item.province_url}')`,
-              '--background': `#f8d035`,
+              '--background': item.background_color,
             }"
           />
         </div>
@@ -229,7 +236,9 @@
                 },
               ]"
               :style="{
-                background: item.heatmap_color ? item.heatmap_color : 'none',
+                background: item.background_color
+                  ? item.background_color
+                  : 'none',
               }"
             ></div>
           </div>
