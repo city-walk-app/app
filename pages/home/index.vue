@@ -25,6 +25,27 @@
   const visibleSheet = ref(false)
   /** 打开信息详情 */
   const recordDetail = ref()
+  /** 心情颜色 */
+  const moodColors = ref([
+    { color: '', borderColor: '', key: '', type: '' },
+    { color: '', borderColor: '', key: '', type: '' },
+    { color: '', borderColor: '', key: '', type: '' },
+    { color: '', borderColor: '', key: '', type: '' },
+    { color: '', borderColor: '', key: '', type: '' },
+    { color: '', borderColor: '', key: '', type: '' },
+    { color: '', borderColor: '', key: '', type: '' },
+  ])
+  /** 出行方式 */
+  const travelMode = ref([
+    { icon: '', key: '', type: '公交' },
+    { icon: '', key: '', type: '地铁' },
+    { icon: '', key: '', type: '自行车' },
+    { icon: '', key: '', type: '步行' },
+    { icon: '', key: '', type: '开车' },
+    { icon: '', key: '', type: '火车' },
+    { icon: '', key: '', type: '飞机' },
+    { icon: '', key: '', type: '船' },
+  ])
 
   const userInfoStorage = ref(getStorage(USER_INFO))
   const userTokenStorage = ref(getStorage(USER_TOKEN))
