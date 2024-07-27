@@ -6,6 +6,7 @@
   import { onLoad, onShow } from '@dcloudio/uni-app'
   import { useGlobalStore } from '@/store'
   import FilterPopup from '@/components/filter-popup'
+  import Sheet from '@/components/sheet'
 
   const API = new Api()
   const useGlobal = useGlobalStore()
@@ -20,6 +21,10 @@
   const visible = ref(true)
   /** 是否开启卫星图 */
   const enableSatellite = ref(true)
+  /** 是否显示对话框 */
+  const visibleSheet = ref(false)
+  /** 打开信息详情 */
+  const recordDetail = ref()
 
   const userInfoStorage = ref(getStorage(USER_INFO))
   const userTokenStorage = ref(getStorage(USER_TOKEN))
@@ -71,12 +76,30 @@
     }
   }
 
+  /**
+   * 微信登录
+   */
   const wxLogin = async () => {
     const res = await uni.login()
 
     if (res.errMsg === 'login:ok') {
       getOpenId(res.code)
     }
+  }
+
+  /**
+   * 关闭对话框
+   */
+  const closeSheet = () => {
+    visibleSheet.value = false
+    recordDetail.value = null
+  }
+
+  /**
+   * 打开对话框
+   */
+  const openSheet = () => {
+    visibleSheet.value = true
   }
 
   /**
@@ -99,10 +122,18 @@
     })
 
     if (result.code === 200) {
-      uni.navigateTo({
-        url: '/pages/record-success/index',
-      })
+      recordDetail.value = {
+        ...result.data,
+        province_url: result.data.province_code
+          ? `https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/provinces/${result.data.province_code}.png`
+          : '',
+      }
+
+      openSheet() // 打开对话框
+      return
     }
+
+    toast(result.message)
   }
 
   /**
@@ -166,9 +197,7 @@
    * 跳转设置页面
    */
   const goSetting = () => {
-    uni.navigateTo({
-      url: '/pages/setting/index',
-    })
+    uni.navigateTo({ url: '/pages/setting/index' })
   }
 
   /**
@@ -196,36 +225,28 @@
    * 跳转登录
    */
   const goLogin = () => {
-    uni.navigateTo({
-      url: '/pages/login/index',
-    })
+    uni.navigateTo({ url: '/pages/login/index' })
   }
 
   /**
    * 跳转朋友列表
    */
   const goFriends = () => {
-    uni.navigateTo({
-      url: '/pages/friends/index',
-    })
+    uni.navigateTo({ url: '/pages/friends/index' })
   }
 
   /**
    *邀请朋友
    */
   const inviteFriends = () => {
-    uni.navigateTo({
-      url: '/pages/invite/index',
-    })
+    uni.navigateTo({ url: '/pages/invite/index' })
   }
 
   /**
    * 排行榜
    */
   const goRanking = () => {
-    uni.navigateTo({
-      url: '/pages/ranking/index',
-    })
+    uni.navigateTo({ url: '/pages/ranking/index' })
   }
 
   /**
@@ -319,134 +340,156 @@
 </script>
 
 <template>
-  <div class="home" :style="{ paddingTop: (statusBarHeight || 90) + 'px' }">
-    <!-- 顶部模糊 -->
-    <div
-      class="header-gaussian"
-      :style="{
-        height: useGlobal.navBarHeight + 'px',
-      }"
-    />
-
-    <!-- 头像 -->
-    <div
-      class="avatar-wrapper"
-      :style="{
-        top: useGlobal.navBarHeight + 16 + 'px',
-      }"
-      @click="goMine"
-    >
-      <image
-        mode="aspectFill"
-        class="avatar-wrapper-image"
-        src="https://img1.baidu.com/it/u=1784112474,311889214&fm=253&fmt=auto&app=120&f=JPEG?w=500&h=500"
+  <Sheet v-model:visible="visibleSheet" @on-close="closeSheet">
+    <!-- 首页内容 -->
+    <div class="home" :style="{ paddingTop: (statusBarHeight || 90) + 'px' }">
+      <!-- 顶部模糊 -->
+      <div
+        class="header-gaussian"
+        :style="{
+          height: useGlobal.navBarHeight + 'px',
+        }"
       />
-    </div>
 
-    <!-- 操作按钮 -->
-    <div
-      class="options-wrapper"
-      :style="{
-        top: useGlobal.navBarHeight + 16 + 'px',
-      }"
-    >
-      <!-- 进入设置页面 -->
-      <div class="options-button" @click="goSetting">
-        <image class="options-setting-icon" src="/assets/svg/setting.svg" />
+      <!-- 头像 -->
+      <div
+        class="avatar-wrapper"
+        :style="{
+          top: useGlobal.navBarHeight + 16 + 'px',
+        }"
+        @click="goMine"
+      >
+        <image
+          mode="aspectFill"
+          class="avatar-wrapper-image"
+          src="https://img1.baidu.com/it/u=1784112474,311889214&fm=253&fmt=auto&app=120&f=JPEG?w=500&h=500"
+        />
       </div>
-      <div class="options-group">
-        <!-- 地图设置 -->
-        <div class="options-group-item" @click="changeEnableSatellite">
-          <image class="options-setting-icon" src="/assets/svg/map.svg" />
-        </div>
-        <div class="options-group-line" />
-        <!-- 回到当前位置 -->
-        <div class="options-group-item" @click="moveToCurrentLocation">
-          <image class="options-setting-icon" src="/assets/svg/position.svg" />
-        </div>
-      </div>
-    </div>
 
-    <map
-      v-if="latitude && longitude"
-      id="map"
-      class="map"
-      show-location
-      :latitude="latitude"
-      :longitude="longitude"
-      :markers="markers"
-      :enable-satellite="enableSatellite"
-      @markertap="markertap"
-      @tap="mapTap"
-      @poitap="poitap"
-      @regionchange="regionchange"
-    />
-    <!-- <div
+      <!-- 操作按钮 -->
+      <div
+        class="options-wrapper"
+        :style="{
+          top: useGlobal.navBarHeight + 16 + 'px',
+        }"
+      >
+        <!-- 进入设置页面 -->
+        <div class="options-button" @click="goSetting">
+          <image class="options-setting-icon" src="/assets/svg/setting.svg" />
+        </div>
+        <div class="options-group">
+          <!-- 地图设置 -->
+          <div class="options-group-item" @click="changeEnableSatellite">
+            <image class="options-setting-icon" src="/assets/svg/map.svg" />
+          </div>
+          <div class="options-group-line" />
+          <!-- 回到当前位置 -->
+          <div class="options-group-item" @click="moveToCurrentLocation">
+            <image
+              class="options-setting-icon"
+              src="/assets/svg/position.svg"
+            />
+          </div>
+        </div>
+      </div>
+
+      <map
+        v-if="latitude && longitude"
+        id="map"
+        class="map"
+        show-location
+        :latitude="latitude"
+        :longitude="longitude"
+        :markers="markers"
+        :enable-satellite="enableSatellite"
+        @markertap="markertap"
+        @tap="mapTap"
+        @poitap="poitap"
+        @regionchange="regionchange"
+      />
+      <!-- <div
       class="map"
       style="
         background: url('https://wxls-cms.oss-cn-hangzhou.aliyuncs.com/online/2024-04-18/218da022-f4bf-456a-99af-5cb8e157f7b8.jpg');
       "
     ></div> -->
 
-    <!-- 底部卡片 -->
-    <div class="footer">
-      <div class="footer-group">
-        <div
-          class="footer-card footer-card-friends"
-          style="
-            --img: url('https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/city-walk/home-friends.png');
-          "
-          @click="goFriends"
-        >
-          <div class="footer-card-background">
-            <div class="footer-card-title">我到朋友</div>
-            <div class="footer-card-content">My Friends</div>
+      <!-- 底部卡片 -->
+      <div class="footer">
+        <div class="footer-group">
+          <div
+            class="footer-card footer-card-friends"
+            style="
+              --img: url('https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/city-walk/home-friends.png');
+            "
+            @click="goFriends"
+          >
+            <div class="footer-card-background">
+              <div class="footer-card-title">我到朋友</div>
+              <div class="footer-card-content">My Friends</div>
+            </div>
+          </div>
+          <div
+            class="footer-card footer-card-invite"
+            style="
+              --img: url('https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/city-walk/home-invite.png');
+            "
+            @click="inviteFriends"
+          >
+            <div class="footer-card-background">
+              <div class="footer-card-title">邀请朋友</div>
+              <div class="footer-card-content">City Walk Together</div>
+            </div>
           </div>
         </div>
-        <div
-          class="footer-card footer-card-invite"
-          style="
-            --img: url('https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/city-walk/home-invite.png');
-          "
-          @click="inviteFriends"
-        >
-          <div class="footer-card-background">
-            <div class="footer-card-title">邀请朋友</div>
-            <div class="footer-card-content">City Walk Together</div>
+        <div class="footer-group">
+          <div
+            class="footer-card footer-card-record"
+            style="
+              --img: url('https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/city-walk/home-record.png');
+            "
+            @click="onRecord"
+          >
+            <div class="footer-card-background">
+              <div class="footer-card-title">打卡</div>
+              <div class="footer-card-content">Record location</div>
+            </div>
+          </div>
+          <div
+            class="footer-card footer-card-ranking"
+            style="
+              --img: url('https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/city-walk/home-ranking.png');
+            "
+            @click="goRanking"
+          >
+            <div class="footer-card-background">
+              <div class="footer-card-title">排行榜</div>
+              <div class="footer-card-content">Ranking</div>
+            </div>
           </div>
         </div>
       </div>
-      <div class="footer-group">
-        <div
-          class="footer-card footer-card-record"
-          style="
-            --img: url('https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/city-walk/home-record.png');
-          "
-          @click="onRecord"
-        >
-          <div class="footer-card-background">
-            <div class="footer-card-title">打卡</div>
-            <div class="footer-card-content">Record location</div>
-          </div>
-        </div>
-        <div
-          class="footer-card footer-card-ranking"
-          style="
-            --img: url('https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/city-walk/home-ranking.png');
-          "
-          @click="goRanking"
-        >
-          <div class="footer-card-background">
-            <div class="footer-card-title">排行榜</div>
-            <div class="footer-card-content">Ranking</div>
-          </div>
-        </div>
-      </div>
+
+      <!-- 底部模糊 -->
+      <div class="footer-gaussian" />
     </div>
 
-    <!-- 底部模糊 -->
-    <div class="footer-gaussian" />
-  </div>
+    <!-- 弹窗内容 -->
+    <template #content>
+      <div v-if="recordDetail" class="home-sheet">
+        <!-- 版图 -->
+        <div class="home-sheet-jigsaw">
+          <div
+            class="home-sheet-jigsaw-image"
+            :style="{
+              '--province': `url('${recordDetail.province_url}')`,
+              '--background': recordDetail.background_color,
+            }"
+          />
+        </div>
+      </div>
+    </template>
+  </Sheet>
 
   <!-- 登录提示弹出层 -->
   <FilterPopup v-model:visible="isLoginState">
@@ -480,6 +523,7 @@
 </template>
 
 <style lang="scss">
+  // 首页
   .home {
     position: relative;
     overflow: hidden;
@@ -788,6 +832,27 @@
         font-size: 32rpx;
         color: #ffffff;
         line-height: 38rpx;
+      }
+    }
+  }
+
+  // 弹窗内容
+  .home-sheet {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+
+    // 版图
+    .home-sheet-jigsaw {
+      width: 214rpx;
+      height: 214rpx;
+
+      .home-sheet-jigsaw-image {
+        width: inherit;
+        height: inherit;
+        mask: var(--province) 0 0 / cover no-repeat;
+        -webkit-mask: var(--province) 0 0 / cover no-repeat;
+        background: var(--background);
       }
     }
   }

@@ -45,7 +45,8 @@
       return {
         title: '邀请你加我为好友',
         path: `/pages/home/index?invite_id=${inviteId}`, // 邀请链接
-        imageUrl: 'https://docs.city-walk.top/Logo.png', // 分享时显示的图片
+        imageUrl:
+          'https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/city-walk/home-invite.png', // 分享时显示的图片
       }
     }
   })

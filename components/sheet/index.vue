@@ -26,12 +26,7 @@
       :class="['sheet-dialog', { 'shee-dialog-open': visible }]"
       @click="close"
     >
-      <div>对话框内容</div>
-      <div>对话框内容</div>
-      <div>对话框内容</div>
-      <div>对话框内容</div>
-      <div>对话框内容</div>
-      <div>对话框内容</div>
+      <slot name="content" />
     </div>
   </div>
 </template>
