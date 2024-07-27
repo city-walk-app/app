@@ -5,7 +5,9 @@
   defineProps({
     title: {
       type: String,
-      required: true,
+    },
+    titleInfo: {
+      type: Object,
     },
   })
   const useGlobal = useGlobalStore()
@@ -74,13 +76,30 @@
         <div class="back" @click="back">
           <image class="back-icon" src="/assets/svg/left.svg" />
         </div>
-        <div
-          class="title"
-          :style="{
-            fontSize: startSize + (endSize - startSize) * styleDiff + 'rpx',
-          }"
-        >
-          {{ title }}
+
+        <!-- 页面标题 -->
+        <div v-if="title" class="title-page">
+          <div
+            class="title"
+            :style="{
+              fontSize: startSize + (endSize - startSize) * styleDiff + 'rpx',
+            }"
+          >
+            {{ title }}
+          </div>
+        </div>
+
+        <!-- 信息 -->
+        <div v-if="titleInfo" class="title-info">
+          <div class="title-info-avatar-wrapper">
+            <image
+              class="title-info-wrapper"
+              mode="aspectFill"
+              src="https://img1.baidu.com/it/u=1784112474,311889214&fm=253&fmt=auto&app=120&f=JPEG?w=500&h=500"
+            />
+          </div>
+
+          <div class="title-info-name">你的名字</div>
         </div>
       </div>
 
@@ -96,6 +115,10 @@
     height: 100vh;
     overflow-y: auto;
     position: relative;
+    background: url('https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/city-walk/main-blank.png')
+      no-repeat;
+    // background-position: top center;
+    // background-size: cover;
 
     .sticky-scroll-main {
       box-sizing: border-box;
@@ -121,12 +144,41 @@
         padding: 0 32rpx;
         box-sizing: border-box;
 
-        .title {
-          font-weight: bold;
-          transition: 0.09s;
-          font-size: 56rpx;
-          color: #333333;
-          line-height: 66rpx;
+        // 页面
+        .title-page {
+          display: flex;
+          align-items: center;
+
+          .title {
+            font-weight: bold;
+            transition: 0.09s;
+            font-size: 56rpx;
+            color: #333333;
+            line-height: 66rpx;
+          }
+        }
+
+        // 信息
+        .title-info {
+          display: flex;
+          align-items: center;
+
+          .title-info-avatar-wrapper {
+            width: 50rpx;
+            height: 50rpx;
+            border-radius: 50%;
+
+            .title-info-avatar {
+              width: inherit;
+              height: inherit;
+              border-radius: inherit;
+            }
+          }
+
+          // 名字
+          .title-info-name {
+            font-size: 20rpx;
+          }
         }
 
         .back {

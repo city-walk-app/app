@@ -68,7 +68,6 @@
         }
       }
 
-      // 主要内容
       .filter-popup-body {
         position: absolute;
         z-index: 20;

@@ -227,8 +227,8 @@
     longitude.value = res.longitude
     latitude.value = res.latitude
 
-    getLocationPopularRecommend() // 获取周边热门地点
-    getWeatherInfo() // 获取天气信息
+    // getLocationPopularRecommend() // 获取周边热门地点
+    // getWeatherInfo() // 获取天气信息
   }
 
   /**
@@ -431,6 +431,7 @@
         </div>
       </div>
 
+      <!-- 地图 -->
       <map
         v-if="latitude && longitude"
         id="map"
@@ -454,8 +455,17 @@
 
       <!-- 天气 -->
       <div v-if="weatherInfo" class="weather">
-        <div class="weather-header">{{ weatherInfo.weather }}</div>
-        <div class="weather-body">{{ weatherInfo.humidity }}</div>
+        <div class="weather-header">
+          <div class="weather-header-text">{{ weatherInfo.weather }}</div>
+        </div>
+        <div class="weather-body">{{ weatherInfo.temperature }}度</div>
+      </div>
+
+      <div v-else class="weather">
+        <div class="weather-header">
+          <div class="weather-header-text">多云</div>
+        </div>
+        <div class="weather-body">31度</div>
       </div>
 
       <!-- 底部卡片 -->
@@ -693,6 +703,7 @@
       justify-content: center;
       align-items: center;
 
+      // 天气信息
       .weather-header {
         width: 81rpx;
         height: 83rpx;
@@ -700,8 +711,28 @@
         box-shadow: 0rpx 0rpx 9rpx 2rpx rgba(255, 185, 57, 0.3);
         border-radius: 50%;
         border: 2rpx solid #ffffff;
+        display: flex;
+        justify-content: center;
+        overflow: hidden;
+        position: relative;
+
+        // 天气文字描述
+        .weather-header-text {
+          align-items: center;
+          font-size: 24rpx;
+          color: #fe8718;
+          font-weight: 600;
+          white-space: nowrap;
+          position: absolute;
+          top: 20rpx;
+          margin: auto;
+          max-width: 80rpx;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
       }
 
+      // 天气气温
       .weather-body {
         width: 100rpx;
         height: 38rpx;
@@ -717,7 +748,7 @@
         color: #ffffff;
         line-height: 23rpx;
         position: relative;
-        top: -27rpx;
+        top: -25rpx;
       }
     }
 

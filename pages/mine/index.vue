@@ -2,9 +2,12 @@
   import { ref } from 'vue'
   import { Api } from '@/api'
   import { getCurrentDateFormatted } from '@/utils'
+  import { useGlobalStore } from '@/store'
   import { onLoad, onShow } from '@dcloudio/uni-app'
+  import StickyScroll from '@/components/sticky-scroll'
 
   const API = new Api()
+  const useGlobal = useGlobalStore()
 
   /** 用户信息 */
   const userInfo = ref()
@@ -128,194 +131,184 @@
 </script>
 
 <template>
-  <div class="main">
-    <!-- 背景 -->
-    <image
-      class="main-blank"
-      src="https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/city-walk/main-blank.png"
-    />
-
-    <!-- 返回按钮 -->
-    <div class="back" @click="back">
-      <image class="back-icon" src="/assets/svg/left.svg" />
-    </div>
-
-    <!-- 头部信息 -->
-    <div class="header" v-if="userInfo">
-      <!-- 头像 -->
-      <div class="header-avatar-box">
-        <image
-          class="header-avatar-image"
-          mode="aspectFill"
-          src="https://img1.baidu.com/it/u=1784112474,311889214&fm=253&fmt=auto&app=120&f=JPEG?w=500&h=500"
-        />
+  <StickyScroll
+    :title-info="{
+      name: '你到名字',
+      avatar:
+        'https://img1.baidu.com/it/u=1784112474,311889214&fm=253&fmt=auto&app=120&f=JPEG?w=500&h=500',
+    }"
+  >
+    <!-- <template #title>
+      <div class="main-title">
+  
       </div>
+    </template> -->
 
-      <!-- 昵称 -->
-      <div class="header-nick-name" v-if="userInfo.nick_name">
-        {{ userInfo.nick_name }}
-      </div>
+    <div class="main">
+      <!-- 背景 -->
+      <!-- <image
+        class="main-blank"
+        src="https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/city-walk/main-blank.png"
+      /> -->
 
-      <!-- 签名 -->
-      <div class="header-signature" v-if="userInfo.signature">
-        {{ userInfo.signature }}
-      </div>
-    </div>
+      <!-- 返回按钮 -->
+      <!-- <div class="back" @click="back">
+        <image class="back-icon" src="/assets/svg/left.svg" />
+      </div> -->
 
-    <!-- 省份版图列表 -->
-    <scroll-view
-      v-if="provinceList && provinceList.length"
-      class="jigsaw-scroll"
-      scroll-x
-      :scroll-y="false"
-    >
-      <div class="jigsaw-wrapper">
-        <div
-          class="jigsaw-item"
-          v-for="(item, index) in provinceList"
-          :key="index"
-        >
-          <div
-            class="jigsaw-image"
-            :style="{
-              '--province': `url('${item.province_url}')`,
-              '--background': item.background_color,
-            }"
+      <!-- 头部信息 -->
+      <div class="header" v-if="userInfo">
+        <!-- 头像 -->
+        <div class="header-avatar-box">
+          <image
+            class="header-avatar-image"
+            mode="aspectFill"
+            src="https://img1.baidu.com/it/u=1784112474,311889214&fm=253&fmt=auto&app=120&f=JPEG?w=500&h=500"
           />
         </div>
-      </div>
-    </scroll-view>
 
-    <!-- 热力图 -->
-    <div class="heatmap">
-      <!-- 头部切换日期 -->
-      <div class="heatmap-header">
-        <div class="heatmap-header-pick">2024年07月</div>
-      </div>
-
-      <!-- 主要内容 -->
-      <div class="heatmap-body">
-        <!-- 左侧标识 -->
-        <div class="heatmap-body-left">
-          <div class="heatmap-body-left-item">
-            <image
-              class="heatmap-body-left-item-icon"
-              src="https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/city-walk/main-heatmap-1.png"
-            />
-            <div class="heatmap-body-left-item-text">打卡多</div>
-          </div>
-          <div class="heatmap-body-left-item">
-            <image
-              class="heatmap-body-left-item-icon"
-              src="https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/city-walk/main-heatmap-2.png"
-            />
-            <div class="heatmap-body-left-item-text">打卡少</div>
-          </div>
-          <div class="heatmap-body-left-item">
-            <image
-              class="heatmap-body-left-item-icon"
-              src="https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/city-walk/main-heatmap-3.png"
-            />
-            <div class="heatmap-body-left-item-text">未打卡</div>
-          </div>
+        <!-- 昵称 -->
+        <div class="header-nick-name" v-if="userInfo.nick_name">
+          {{ userInfo.nick_name }}
         </div>
 
-        <!-- 右侧图表 -->
-        <div class="heatmap-body-right" v-if="heatmap && heatmap.length">
+        <!-- 签名 -->
+        <div class="header-signature" v-if="userInfo.signature">
+          {{ userInfo.signature }}
+        </div>
+      </div>
+
+      <!-- 省份版图列表 -->
+      <scroll-view
+        v-if="provinceList && provinceList.length"
+        class="jigsaw-scroll"
+        scroll-x
+        :scroll-y="false"
+      >
+        <div class="jigsaw-wrapper">
           <div
-            class="heatmap-body-right-item-wrapper"
-            v-for="(item, index) in heatmap"
+            class="jigsaw-item"
+            v-for="(item, index) in provinceList"
             :key="index"
-            @click="heatmapItemClick(item)"
           >
             <div
-              :class="[
-                'heatmap-body-right-item',
-                {
-                  'heatmap-body-right-item-active': item._active,
-                },
-              ]"
+              class="jigsaw-image"
               :style="{
-                background: item.background_color
-                  ? item.background_color
-                  : 'none',
+                '--province': `url('${item.province_url}')`,
+                '--background': item.background_color,
               }"
-            ></div>
+            />
           </div>
         </div>
-      </div>
-    </div>
+      </scroll-view>
 
-    <!-- 详情步行 -->
-    <div class="details" v-if="routeDetailList && routeDetailList.length">
-      <div class="details-left"></div>
-      <div class="details-right">
-        <div
-          class="details-right-item"
-          v-for="(item, index) in routeDetailList"
-          :key="index"
-        >
-          <div class="details-right-item-header">
-            <!-- 头部左侧 -->
-            <div class="details-right-item-header-left">
-              <div class="details-right-item-header-time">
-                {{ item.create_at }}
-              </div>
-              <div class="details-right-item-header-address">
-                {{ item.address || item.city }}
-              </div>
+      <!-- 热力图 -->
+      <div class="heatmap">
+        <!-- 头部切换日期 -->
+        <div class="heatmap-header">
+          <div class="heatmap-header-pick">2024年07月</div>
+        </div>
+
+        <!-- 主要内容 -->
+        <div class="heatmap-body">
+          <!-- 左侧标识 -->
+          <div class="heatmap-body-left">
+            <div class="heatmap-body-left-item">
+              <image
+                class="heatmap-body-left-item-icon"
+                src="https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/city-walk/main-heatmap-1.png"
+              />
+              <div class="heatmap-body-left-item-text">打卡多</div>
             </div>
-            <div class="details-right-item-header-left"></div>
+            <div class="heatmap-body-left-item">
+              <image
+                class="heatmap-body-left-item-icon"
+                src="https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/city-walk/main-heatmap-2.png"
+              />
+              <div class="heatmap-body-left-item-text">打卡少</div>
+            </div>
+            <div class="heatmap-body-left-item">
+              <image
+                class="heatmap-body-left-item-icon"
+                src="https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/city-walk/main-heatmap-3.png"
+              />
+              <div class="heatmap-body-left-item-text">未打卡</div>
+            </div>
+          </div>
+
+          <!-- 右侧图表 -->
+          <div class="heatmap-body-right" v-if="heatmap && heatmap.length">
+            <div
+              class="heatmap-body-right-item-wrapper"
+              v-for="(item, index) in heatmap"
+              :key="index"
+              @click="heatmapItemClick(item)"
+            >
+              <div
+                :class="[
+                  'heatmap-body-right-item',
+                  {
+                    'heatmap-body-right-item-active': item._active,
+                  },
+                ]"
+                :style="{
+                  background: item.background_color
+                    ? item.background_color
+                    : 'none',
+                }"
+              ></div>
+            </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <!-- 步行记录列表 -->
-    <div class="routes" v-if="routeList && routeList.length">
-      <div
-        class="routes-item"
-        v-for="(item, index) in routeList"
-        :key="index"
-        @click="routeDetail(item.list_id)"
-      >
-        <div class="routes-item-count">地点x{{ item.count }}</div>
-        <div class="routes-item-date">
-          {{ getCurrentDateFormatted(item.create_at) }}
+      <!-- 详情步行 -->
+      <div class="details" v-if="routeDetailList && routeDetailList.length">
+        <div class="details-left"></div>
+        <div class="details-right">
+          <div
+            class="details-right-item"
+            v-for="(item, index) in routeDetailList"
+            :key="index"
+          >
+            <div class="details-right-item-header">
+              <!-- 头部左侧 -->
+              <div class="details-right-item-header-left">
+                <div class="details-right-item-header-time">
+                  {{ item.create_at }}
+                </div>
+                <div class="details-right-item-header-address">
+                  {{ item.address || item.city }}
+                </div>
+              </div>
+              <div class="details-right-item-header-left"></div>
+            </div>
+          </div>
         </div>
-        <div class="routes-item-shadow"></div>
+      </div>
+
+      <!-- 步行记录列表 -->
+      <div class="routes" v-if="routeList && routeList.length">
+        <div
+          class="routes-item"
+          v-for="(item, index) in routeList"
+          :key="index"
+          @click="routeDetail(item.list_id)"
+        >
+          <div class="routes-item-count">地点x{{ item.count }}</div>
+          <div class="routes-item-date">
+            {{ getCurrentDateFormatted(item.create_at) }}
+          </div>
+          <div class="routes-item-shadow"></div>
+        </div>
       </div>
     </div>
-  </div>
+  </StickyScroll>
 </template>
 
 <style lang="scss">
   .main {
-    width: 100vw;
-    height: 100vh;
-    overflow-y: auto;
     position: relative;
-
-    .back {
-      width: 68rpx;
-      height: 68rpx;
-      background: rgba(255, 255, 255, 0.7);
-      box-shadow: 0rpx 2rpx 23rpx 0rpx rgba(158, 158, 158, 0.25);
-      border-radius: 50%;
-      position: fixed;
-      z-index: 10;
-      top: 134rpx;
-      left: 32rpx;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-
-      .back-icon {
-        width: 50rpx;
-        height: 50rpx;
-        flex-shrink: 0;
-      }
-    }
 
     // 背景
     .main-blank {
@@ -333,7 +326,7 @@
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      padding: 154rpx 34rpx 0 34rpx;
+      padding: 0 34rpx;
       box-sizing: border-box;
 
       // 头像
@@ -351,7 +344,6 @@
 
       // 昵称
       .header-nick-name {
-        font-family: PingFang SC, PingFang SC;
         font-weight: 400;
         font-size: 36rpx;
         color: #333333;
@@ -361,7 +353,6 @@
 
       // 签名
       .header-signature {
-        font-family: PingFang SC, PingFang SC;
         font-weight: 400;
         font-size: 28rpx;
         color: #666666;
@@ -419,7 +410,6 @@
           display: flex;
           align-items: center;
           justify-content: center;
-          font-family: PingFang SC, PingFang SC;
           font-weight: 400;
           font-size: 24rpx;
           color: #9a9a9a;
@@ -453,7 +443,6 @@
             }
 
             .heatmap-body-left-item-text {
-              font-family: PingFang SC, PingFang SC;
               font-weight: 400;
               font-size: 28rpx;
               color: #666666;
@@ -518,7 +507,6 @@
         overflow: hidden;
 
         .routes-item-count {
-          font-family: PingFang SC, PingFang SC;
           font-weight: 500;
           font-size: 32rpx;
           color: #ffffff;
@@ -529,7 +517,6 @@
         }
 
         .routes-item-date {
-          font-family: PingFang SC, PingFang SC;
           font-weight: 400;
           font-size: 28rpx;
           color: #ffffff;
