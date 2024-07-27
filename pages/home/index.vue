@@ -27,13 +27,13 @@
   const recordDetail = ref()
   /** 心情颜色 */
   const moodColors = ref([
-    { color: '', borderColor: '', key: '', type: '' },
-    { color: '', borderColor: '', key: '', type: '' },
-    { color: '', borderColor: '', key: '', type: '' },
-    { color: '', borderColor: '', key: '', type: '' },
-    { color: '', borderColor: '', key: '', type: '' },
-    { color: '', borderColor: '', key: '', type: '' },
-    { color: '', borderColor: '', key: '', type: '' },
+    { color: '#f16a59', borderColor: '#ef442f', key: '', type: '' },
+    { color: '#f6a552', borderColor: '#f39026', key: '', type: '' },
+    { color: '#fad35c', borderColor: '#fac736', key: '', type: '' },
+    { color: '#74cd6d', borderColor: '#50c348', key: '', type: '' },
+    { color: '#4a8cf9', borderColor: '#1d6ff8', key: '', type: '' },
+    { color: '#af72dc', borderColor: '#9b4fd3', key: '', type: '' },
+    { color: '#9b9ca0', borderColor: '#838387', key: '', type: '' },
   ])
   /** 出行方式 */
   const travelMode = ref([
