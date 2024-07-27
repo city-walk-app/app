@@ -6,6 +6,13 @@ export class Api extends Http {
   }
 
   /**
+   * 获取当前地区的天气
+   */
+  getWeatherInfo = (data) => {
+    return this.request({ url: '/location/get/weather/info', data })
+  }
+
+  /**
    * 获取周边热门地点
    */
   getLocationPopularRecommend = (data) => {

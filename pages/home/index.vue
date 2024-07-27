@@ -25,6 +25,8 @@
   const visibleSheet = ref(false)
   /** 打开信息详情 */
   const recordDetail = ref()
+  /** 天气信息 */
+  const weatherInfo = ref()
   /** 心情颜色 */
   const moodColors = ref([
     { color: '#f16a59', borderColor: '#ef442f', key: '', type: '' },
@@ -192,6 +194,20 @@
   }
 
   /**
+   * 获取当前地区的天气
+   */
+  const getWeatherInfo = async () => {
+    const res = await API.getWeatherInfo({
+      longitude: longitude.value,
+      latitude: latitude.value,
+    })
+
+    if (res.code === 200) {
+      weatherInfo.value = res.data
+    }
+  }
+
+  /**
    * 获取位置信息
    */
   const getLocation = async () => {
@@ -211,7 +227,8 @@
     longitude.value = res.longitude
     latitude.value = res.latitude
 
-    // getLocationPopularRecommend() // 获取周边热门地点
+    getLocationPopularRecommend() // 获取周边热门地点
+    getWeatherInfo() // 获取天气信息
   }
 
   /**
@@ -435,6 +452,12 @@
       "
     ></div> -->
 
+      <!-- 天气 -->
+      <div v-if="weatherInfo" class="weather">
+        <div class="weather-header">{{ weatherInfo.weather }}</div>
+        <div class="weather-body">{{ weatherInfo.humidity }}</div>
+      </div>
+
       <!-- 底部卡片 -->
       <div class="footer">
         <div class="footer-group">
@@ -657,6 +680,45 @@
       height: 100vh;
       position: fixed;
       inset: 0;
+    }
+
+    // 天气
+    .weather {
+      position: fixed;
+      left: 32rpx;
+      z-index: 30;
+      bottom: 594rpx;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+
+      .weather-header {
+        width: 81rpx;
+        height: 83rpx;
+        background: rgba(255, 255, 255, 0.5);
+        box-shadow: 0rpx 0rpx 9rpx 2rpx rgba(255, 185, 57, 0.3);
+        border-radius: 50%;
+        border: 2rpx solid #ffffff;
+      }
+
+      .weather-body {
+        width: 100rpx;
+        height: 38rpx;
+        background: linear-gradient(180deg, #fe8718 0%, #fec43d 100%);
+        box-shadow: 0rpx 2rpx 8rpx 0rpx rgba(82, 134, 250, 0.4);
+        border-radius: 36rpx 36rpx 36rpx 36rpx;
+        border: 2rpx solid #ffffff;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-weight: 400;
+        font-size: 20rpx;
+        color: #ffffff;
+        line-height: 23rpx;
+        position: relative;
+        top: -27rpx;
+      }
     }
 
     // 底部操作栏
