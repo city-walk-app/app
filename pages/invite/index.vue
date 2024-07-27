@@ -66,7 +66,6 @@
             <div class="body-footer-text">长按识别二维码加我好友</div>
           </div>
         </div>
-        <h1 v-for="i in 100">12</h1>
       </div>
 
       <!-- 底部 -->

@@ -35,7 +35,7 @@
    */
   const getLocationUserHeatmap = async () => {
     const res = await API.getLocationUserHeatmap({
-      date: getCurrentDateFormatted(),
+      // date: getCurrentDateFormatted(),
     })
 
     if (res.code === 200 && res.data && res.data.length) {
@@ -306,6 +306,9 @@
       z-index: 10;
       top: 134rpx;
       left: 32rpx;
+      display: flex;
+      justify-content: center;
+      align-items: center;
 
       .back-icon {
         width: 50rpx;
