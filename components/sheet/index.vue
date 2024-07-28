@@ -72,8 +72,9 @@
       bottom: 0;
       background-color: #fff;
       z-index: 600;
-      // padding: 40px 32px;
       box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
       border-radius: 19rpx 19rpx 0 0;
 
       &.shee-dialog-open {

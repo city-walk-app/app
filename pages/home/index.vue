@@ -570,6 +570,37 @@
             <!-- 发布瞬间按钮 -->
             <div class="home-sheet-content-body-button">发布瞬间</div>
           </div>
+
+          <!-- 心情颜色 -->
+          <div class="home-sheet-content-body-mood-colors">
+            <div
+              class="home-sheet-content-body-color"
+              v-for="(item, index) in moodColors"
+              :key="index"
+              :style="{
+                '--background': item.color,
+                '--border-color': item.borderColor,
+              }"
+            />
+          </div>
+
+          <!-- 位置 -->
+          <div class="home-sheet-content-body-position">
+            <div class="home-sheet-content-body-position-text">
+              选择当前位置
+            </div>
+          </div>
+
+          <!-- 说点什么 -->
+          <div class="home-sheet-content-body-speak">
+            <div class="home-sheet-content-body-speak-text">说点什么？</div>
+          </div>
+        </div>
+
+        <!-- 操作按钮 -->
+        <div class="home-sheet-content-footer">
+          <div class="home-sheet-content-footer-no">取消</div>
+          <div class="home-sheet-content-footer-ok">就这样</div>
         </div>
       </div>
     </template>
@@ -988,6 +1019,8 @@
     align-items: center;
     padding: 40rpx 32rpx;
     box-sizing: border-box;
+    position: relative;
+    flex: 1;
 
     // 版图
     .home-sheet-jigsaw {
@@ -1079,6 +1112,125 @@
           justify-content: center;
           align-items: center;
         }
+      }
+
+      // 心情颜色
+      .home-sheet-content-body-mood-colors {
+        display: flex;
+        align-items: center;
+        margin-top: 32rpx;
+        justify-content: space-between;
+        flex-wrap: nowrap;
+
+        .home-sheet-content-body-color {
+          width: 74rpx;
+          height: 74rpx;
+          border-radius: 50%;
+          flex-shrink: 0;
+          border: 2rpx solid var(--border-color);
+          background-color: var(--background);
+        }
+      }
+
+      // 位置
+      .home-sheet-content-body-position {
+        width: 100%;
+        height: 96rpx;
+        background: linear-gradient(135deg, #fff2d1 0%, #ffffff 100%);
+        box-shadow: 0rpx 0rpx 17rpx 0rpx rgba(159, 159, 159, 0.25);
+        border-radius: 28rpx;
+        border: 2rpx solid;
+        border-image: linear-gradient(
+            153deg,
+            rgba(255, 231, 190, 1),
+            rgba(255, 255, 255, 0),
+            rgba(255, 255, 255, 1)
+          )
+          2 2;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+        margin-top: 32rpx;
+
+        .home-sheet-content-body-position-text {
+          font-weight: 400;
+          font-size: 32rpx;
+          color: #666666;
+          line-height: 38rpx;
+          text-align: left;
+        }
+      }
+
+      // 说点什么
+      .home-sheet-content-body-speak {
+        width: 100%;
+        height: 124rpx;
+        background: linear-gradient(135deg, #fff2d1 0%, #ffffff 100%);
+        box-shadow: 0rpx 0rpx 17rpx 0rpx rgba(159, 159, 159, 0.25);
+        border-radius: 28rpx;
+        border: 2rpx solid;
+        border-image: linear-gradient(
+            153deg,
+            rgba(255, 231, 190, 1),
+            rgba(255, 255, 255, 0),
+            rgba(255, 255, 255, 1)
+          )
+          2 2;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+        margin-top: 32rpx;
+
+        .home-sheet-content-body-speak-text {
+          font-weight: 500;
+          font-size: 36rpx;
+          color: #666666;
+          line-height: 42rpx;
+        }
+      }
+    }
+
+    // 底部操作
+    .home-sheet-content-footer {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      column-gap: 46rpx;
+      position: absolute;
+      bottom: 40rpx;
+      right: 32rpx;
+      left: 32rpx;
+
+      .home-sheet-content-footer-no {
+        width: 320rpx;
+        height: 96rpx;
+        border-radius: 28rpx;
+        background-color: #fff;
+        border: 3rpx solid #f3943f;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-weight: 400;
+        font-size: 32rpx;
+        color: #f3943f;
+        line-height: 38rpx;
+      }
+
+      .home-sheet-content-footer-ok {
+        width: 320rpx;
+        height: 96rpx;
+        background: #f3943f;
+        border-radius: 28rpx;
+        border: 3rpx solid #f3943f;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-weight: 400;
+        font-size: 32rpx;
+        color: #ffffff;
+        line-height: 38rpx;
       }
     }
   }
