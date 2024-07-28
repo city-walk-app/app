@@ -22,7 +22,7 @@
   /** 是否开启卫星图 */
   const enableSatellite = ref(true)
   /** 是否显示对话框 */
-  const visibleSheet = ref(true)
+  const visibleSheet = ref(false)
   /** 打开信息详情 */
   const recordDetail = ref({
     province_url:
@@ -1198,10 +1198,10 @@
       justify-content: center;
       align-items: center;
       column-gap: 46rpx;
-      position: absolute;
-      bottom: 40rpx;
-      right: 32rpx;
-      left: 32rpx;
+      // position: absolute;
+      // bottom: 40rpx;
+      // right: 32rpx;
+      // left: 32rpx;
 
       .home-sheet-content-footer-no {
         width: 320rpx;
