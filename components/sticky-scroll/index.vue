@@ -90,7 +90,11 @@
         </div>
 
         <!-- 信息 -->
-        <div v-if="titleInfo && styleDiff >= 1" class="title-info">
+        <div
+          v-if="titleInfo"
+          class="title-info"
+          :style="{ opacity: styleDiff >= 1 ? 1 : 0 }"
+        >
           <div class="title-info-avatar-wrapper">
             <image
               class="title-info-avatar"
@@ -161,6 +165,7 @@
           display: flex;
           align-items: center;
           column-gap: 13rpx;
+          transition: opacity 0.26s;
 
           .title-info-avatar-wrapper {
             width: 52rpx;

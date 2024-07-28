@@ -1,5 +1,7 @@
 <script setup>
-  import { ref } from 'vue'
+  import { useGlobalStore } from '@/store'
+
+  const useGlobal = useGlobalStore()
 
   const prop = defineProps({
     visible: {
@@ -24,6 +26,14 @@
     <!-- 对话框内容 -->
     <div
       :class="['sheet-dialog', { 'shee-dialog-open': visible }]"
+      :style="{
+        height: `calc(100vh - ${
+          useGlobal.headerBtnPosi.top +
+          useGlobal.headerBtnPosi.height +
+          5 +
+          'px'
+        })`,
+      }"
       @click="close"
     >
       <slot name="content" />
@@ -36,7 +46,7 @@
     width: 100vw;
     height: 100vh;
     position: relative;
-    background-color: #333;
+    background-color: #000;
 
     .sheet-wrapper {
       width: inherit;
@@ -47,13 +57,12 @@
       transition: transform 0.24s;
 
       &.shee-wrapper-open {
-        transform: scale(0.9) translateY(-30px);
+        transform: scale(0.9) translateY(30px);
         border-radius: 15px;
       }
     }
 
     .sheet-dialog {
-      height: 97vh;
       transform: translateY(97vh);
       transition: transform 0.24s;
       width: 100vw;
@@ -63,9 +72,9 @@
       bottom: 0;
       background-color: #fff;
       z-index: 600;
-      padding: 40px 32px;
+      // padding: 40px 32px;
       box-sizing: border-box;
-      border-radius: 15px 15px 0 0;
+      border-radius: 19rpx 19rpx 0 0;
 
       &.shee-dialog-open {
         transform: translateY(0);

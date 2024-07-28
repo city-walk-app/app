@@ -22,9 +22,13 @@
   /** 是否开启卫星图 */
   const enableSatellite = ref(true)
   /** 是否显示对话框 */
-  const visibleSheet = ref(false)
+  const visibleSheet = ref(true)
   /** 打开信息详情 */
-  const recordDetail = ref()
+  const recordDetail = ref({
+    province_url:
+      'https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/provinces/230000.png',
+    background_color: '#F8D035',
+  })
   /** 天气信息 */
   const weatherInfo = ref()
   /** 心情颜色 */
@@ -79,13 +83,19 @@
     toast(res.message)
 
     if (res.code === 200) {
-      setStorage(USER_INFO, res.data)
-      userInfoStorage.value = res.data
-    } else {
-      uni.navigateTo({
-        url: '/pages/login/index',
-      })
+      userInfoStorage.value = res.data.user_info
+      userTokenStorage.value = res.data.token
+
+      setStorage(USER_INFO, res.data.user_info)
+      setStorage(USER_TOKEN, res.data.token)
+      return
     }
+
+    toast(res.message)
+
+    setTimeout(() => {
+      uni.navigateTo({ url: '/pages/login/index' })
+    }, 500)
   }
 
   /**
@@ -227,8 +237,8 @@
     longitude.value = res.longitude
     latitude.value = res.latitude
 
-    getLocationPopularRecommend() // 获取周边热门地点
-    getWeatherInfo() // 获取天气信息
+    // getLocationPopularRecommend() // 获取周边热门地点
+    // getWeatherInfo() // 获取天气信息
   }
 
   /**
@@ -540,6 +550,26 @@
               '--background': recordDetail.background_color,
             }"
           />
+        </div>
+
+        <!-- 文案 -->
+        <div class="home-sheet-content">再获得100经验版图将会升温版图</div>
+
+        <!-- 内容部分 -->
+        <div class="home-sheet-content-body">
+          <!-- 图片容器 -->
+          <div class="home-sheet-content-body-picture-wrapper">
+            <!-- 照相机 -->
+            <div class="home-sheet-content-body-camera-wrapper">
+              <image
+                class="home-sheet-content-body-camera"
+                src="https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/city-walk/record-succese-camera.png"
+              />
+            </div>
+
+            <!-- 发布瞬间按钮 -->
+            <div class="home-sheet-content-body-button">发布瞬间</div>
+          </div>
         </div>
       </div>
     </template>
@@ -955,11 +985,15 @@
     display: flex;
     justify-content: center;
     flex-direction: column;
+    align-items: center;
+    padding: 40rpx 32rpx;
+    box-sizing: border-box;
 
     // 版图
     .home-sheet-jigsaw {
-      width: 214rpx;
-      height: 214rpx;
+      width: 308rpx;
+      height: 308rpx;
+      flex-shrink: 0;
 
       .home-sheet-jigsaw-image {
         width: inherit;
@@ -967,6 +1001,84 @@
         mask: var(--province) 0 0 / cover no-repeat;
         -webkit-mask: var(--province) 0 0 / cover no-repeat;
         background: var(--background);
+      }
+    }
+
+    // 文案
+    .home-sheet-content {
+      margin-top: 18rpx;
+      font-weight: 400;
+      font-size: 28rpx;
+      color: #333333;
+      line-height: 33rpx;
+    }
+
+    // 内容
+    .home-sheet-content-body {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.3);
+      box-shadow: 0rpx 0rpx 17rpx 0rpx rgba(159, 159, 159, 0.25);
+      border-radius: 44rpx 44rpx 44rpx 44rpx;
+      border: 2rpx solid;
+      border-image: linear-gradient(
+          162deg,
+          rgba(255, 255, 255, 1),
+          rgba(255, 255, 255, 0),
+          rgba(255, 255, 255, 1)
+        )
+        2 2;
+      padding: 32rpx;
+      box-sizing: border-box;
+      margin-top: 32rpx;
+
+      // 图片容器
+      .home-sheet-content-body-picture-wrapper {
+        width: 100%;
+        min-height: 282rpx;
+        background: linear-gradient(135deg, #fff2d1 0%, #ffffff 100%);
+        box-shadow: 0rpx 0rpx 17rpx 0rpx rgba(159, 159, 159, 0.25);
+        border-radius: 28rpx;
+        border: 2rpx solid;
+        border-image: linear-gradient(
+            153deg,
+            rgba(255, 231, 190, 1),
+            rgba(255, 255, 255, 0),
+            rgba(255, 255, 255, 1)
+          )
+          2 2;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+
+        // 照相机
+        .home-sheet-content-body-camera-wrapper {
+          width: 138rpx;
+          height: 128rpx;
+          flex-shrink: 0;
+
+          .home-sheet-content-body-camera {
+            width: inherit;
+            height: inherit;
+          }
+        }
+
+        // 发布瞬间
+        .home-sheet-content-body-button {
+          margin-top: 26rpx;
+          width: 320rpx;
+          height: 80rpx;
+          background: #f3943f;
+          border-radius: 16rpx 16rpx 16rpx 16rpx;
+          border: 3rpx solid #f3943f;
+          font-weight: 400;
+          font-size: 32rpx;
+          color: #ffffff;
+          line-height: 38rpx;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
       }
     }
   }
