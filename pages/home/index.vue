@@ -22,7 +22,7 @@
   /** 是否开启卫星图 */
   const enableSatellite = ref(true)
   /** 是否显示对话框 */
-  const visibleSheet = ref(true)
+  const visibleSheet = ref(false)
   /** 打开信息详情 */
   const recordDetail = ref({
     province_url:
@@ -58,6 +58,7 @@
     content: '', // 内容
     travel_type: '', // 出行方式
     mood_color: '', // 心情颜色
+    address: '', // 位置信息
     picture: [], // 照片
   })
   /** 选择的图片 */
@@ -160,6 +161,8 @@
 
     const { latitude, longitude, name, address } = res
 
+    console.log('打卡成功', res)
+
     /** 创建当前位置信息 */
     const result = await API.locationCreateRecord({
       latitude,
@@ -174,6 +177,8 @@
           : '',
       }
 
+      routeDetailForm.address = address + name
+      routeDetailForm.route_id = result.data.route_id
       openSheet() // 打开对话框
       return
     }
@@ -379,18 +384,21 @@
   }
 
   /**
-   * 上传照片
-   */
-  const uploadPictures = async () => {}
-
-  /**
    * 完善步行打卡记录详情
    */
   const submitRouteDetail = async () => {
-    /**
-     * 提交结果
-     */
-    const subRes = await API.updateRouteDetail(routeDetailForm)
+    // 上传图片
+    if (pictureFileList.value && pictureFileList.value.length) {
+      const upRes = await uploadOSSImages(API, pictureFileList.value)
+
+      routeDetailForm.picture = upRes.filter(Boolean)
+    }
+
+    const res = await API.updateRouteDetail(routeDetailForm)
+
+    if (res.code === 200) {
+      console.log(res)
+    }
   }
 
   /**
@@ -408,10 +416,6 @@
     }
 
     pictureFileList.value = res.tempFilePaths
-
-    const upRes = await uploadOSSImages(API, res.tempFilePaths)
-
-    routeDetailForm.picture = upRes.filter(Boolean)
   }
 
   onLoad((options) => {
@@ -606,7 +610,16 @@
           />
         </div>
 
-        <image v-for="(item, index) in pictureFileList" class="" :src="item" />
+        <!-- 图片文件 -->
+        <template v-if="pictureFileList && pictureFileList.length">
+          <image
+            v-for="(item, index) in pictureFileList"
+            class=""
+            style="width: 30rpx; height: 30rpx"
+            :src="item"
+            :key="index"
+          />
+        </template>
 
         <!-- 文案 -->
         <div class="home-sheet-content">再获得100经验版图将会升温版图</div>
@@ -645,13 +658,20 @@
           <!-- 位置 -->
           <div class="home-sheet-content-body-position">
             <div class="home-sheet-content-body-position-text">
-              选择当前位置
+              <!-- 选择当前位置 -->
+              {{ routeDetailForm.address }}
             </div>
           </div>
 
           <!-- 说点什么 -->
           <div class="home-sheet-content-body-speak">
-            <div class="home-sheet-content-body-speak-text">说点什么？</div>
+            <!-- <div class="home-sheet-content-body-speak-text">说点什么？</div> -->
+            <div class="home-sheet-content-body-speak-text">
+              <textarea
+                class="home-sheet-content-body-speak-text-textarea"
+                v-model="routeDetailForm.content"
+              />
+            </div>
           </div>
         </div>
 
@@ -1241,12 +1261,21 @@
         align-items: center;
         position: relative;
         margin-top: 32rpx;
+        position: relative;
 
         .home-sheet-content-body-speak-text {
           font-weight: 500;
           font-size: 36rpx;
           color: #666666;
           line-height: 42rpx;
+          position: absolute;
+          inset: 0;
+          overflow: hidden;
+
+          .home-sheet-content-body-speak-text-textarea {
+            position: absolute;
+            inset: 0;
+          }
         }
       }
     }
