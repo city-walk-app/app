@@ -1,8 +1,8 @@
 import { USER_TOKEN } from '@/enum'
 import { getStorage, toast, clearStorage } from '@/utils'
 
-// export const VUE_APP_API_URL = 'https://api.city-walk.top' // 生产环境
-export const VUE_APP_API_URL = 'http://localhost:1219' // 本地环境
+export const VUE_APP_API_URL = 'https://api.city-walk.top' // 生产环境
+// export const VUE_APP_API_URL = 'http://localhost:1219' // 本地环境
 
 export class Http {
   request({
