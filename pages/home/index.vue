@@ -1,7 +1,7 @@
 <script setup>
   import { Api } from '@/api'
   import { ref, computed, reactive } from 'vue'
-  import { toast, getStorage, setStorage } from '@/utils'
+  import { toast, getStorage, setStorage, uploadOSSImages } from '@/utils'
   import { USER_INFO, USER_TOKEN } from '@/enum'
   import { onLoad, onShow } from '@dcloudio/uni-app'
   import { useGlobalStore } from '@/store'
@@ -22,7 +22,7 @@
   /** 是否开启卫星图 */
   const enableSatellite = ref(true)
   /** 是否显示对话框 */
-  const visibleSheet = ref(false)
+  const visibleSheet = ref(true)
   /** 打开信息详情 */
   const recordDetail = ref({
     province_url:
@@ -61,7 +61,7 @@
     picture: [], // 照片
   })
   /** 选择的图片 */
-  const pictureList = ref()
+  const pictureFileList = ref()
 
   /** 用户信息缓存 */
   const userInfoStorage = ref(getStorage(USER_INFO))
@@ -136,8 +136,8 @@
    * 关闭对话框
    */
   const closeSheet = () => {
-    visibleSheet.value = false
-    recordDetail.value = null
+    // visibleSheet.value = false
+    // recordDetail.value = null
   }
 
   /**
@@ -397,25 +397,21 @@
    * 选择照片
    */
   const choosePicture = async () => {
-    // #ifdef MP-WEIXIN
-    const res = await uni.chooseMedia({
+    const res = await uni.chooseImage({
       count: 2, // 选择图片的数量
-      mediaType: ['image'],
       sourceType: ['album', 'camera'],
     })
 
-    if (res.errMsg !== 'hooseMedia:ok') {
+    if (res.errMsg !== 'chooseImage:ok') {
       toast('上传异常，请重试')
       return
     }
 
-    pictureList.value = res.tempFiles.map((item) => item.tempFilePath)
+    pictureFileList.value = res.tempFilePaths
 
-    // #endif
+    const upRes = await uploadOSSImages(API, res.tempFilePaths)
 
-    console.log(res)
-
-    // this.imagePath = res.tempFilePaths[0]
+    routeDetailForm.picture = upRes.filter(Boolean)
   }
 
   onLoad((options) => {
@@ -609,6 +605,8 @@
             }"
           />
         </div>
+
+        <image v-for="(item, index) in pictureFileList" class="" :src="item" />
 
         <!-- 文案 -->
         <div class="home-sheet-content">再获得100经验版图将会升温版图</div>

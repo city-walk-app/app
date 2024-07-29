@@ -6,6 +6,13 @@ export class Api extends Http {
   }
 
   /**
+   * 上传公开文件
+   */
+  universalContentUpload = (data) => {
+    return this.request({ url: '/universal/content/upload', data })
+  }
+
+  /**
    * 完善步行打卡记录详情
    */
   updateRouteDetail = (data) => {
