@@ -11,18 +11,18 @@
   const API = new Api()
   const useGlobal = useGlobalStore()
 
-  console.log(useGlobal)
-
   /** 顶部状态栏高度 */
   const statusBarHeight = ref(0)
+  /** 当前纬度 */
   const latitude = ref()
+  /** 当前经度 */
   const longitude = ref()
+  /** 地图标点集合 */
   const markers = ref()
-  const visible = ref(true)
   /** 是否开启卫星图 */
   const enableSatellite = ref(true)
   /** 是否显示对话框 */
-  const visibleSheet = ref(true)
+  const visibleSheet = ref(false)
   /** 打开信息详情 */
   const recordDetail = ref({
     province_url:
@@ -63,7 +63,9 @@
   /** 选择的图片 */
   const pictureList = ref()
 
+  /** 用户信息缓存 */
   const userInfoStorage = ref(getStorage(USER_INFO))
+  /** 登录信息缓存 */
   const userTokenStorage = ref(getStorage(USER_TOKEN))
 
   /**
@@ -134,8 +136,8 @@
    * 关闭对话框
    */
   const closeSheet = () => {
-    // visibleSheet.value = false
-    // recordDetail.value = null
+    visibleSheet.value = false
+    recordDetail.value = null
   }
 
   /**
@@ -339,26 +341,6 @@
     }
   }
 
-  onLoad((options) => {
-    if (options.invite_id) {
-      getFriendInviteInfo(options.invite_id)
-    }
-  })
-
-  onShow(() => {
-    getStorageData() // 是否登录
-
-    console.log(isLoginState.value)
-
-    if (
-      (userInfoStorage.value,
-      userInfoStorage.value.user_id,
-      userTokenStorage.value)
-    ) {
-      getLocation() // 获取位置信息
-    }
-  })
-
   /**
    * 点击标记的点触发
    */
@@ -435,6 +417,26 @@
 
     // this.imagePath = res.tempFilePaths[0]
   }
+
+  onLoad((options) => {
+    if (options.invite_id) {
+      getFriendInviteInfo(options.invite_id)
+    }
+  })
+
+  onShow(() => {
+    getStorageData() // 是否登录
+
+    console.log(isLoginState.value)
+
+    if (
+      (userInfoStorage.value,
+      userInfoStorage.value.user_id,
+      userTokenStorage.value)
+    ) {
+      getLocation() // 获取位置信息
+    }
+  })
 </script>
 
 <template>
@@ -468,7 +470,13 @@
       <div
         class="options-wrapper"
         :style="{
-          top: useGlobal.navBarHeight + 16 + 'px',
+          '--top': useGlobal.navBarHeight + 16 + 'px',
+          '--background': enableSatellite
+            ? 'rgba(255, 255, 255, 0.2)'
+            : 'rgba(0, 0, 0, 0.2)',
+          '--border-color': enableSatellite
+            ? 'rgba(255, 255, 255, 0.3)'
+            : 'rgba(0, 0, 0, 0.3)',
         }"
       >
         <!-- 进入设置页面 -->
@@ -738,6 +746,7 @@
     .options-wrapper {
       position: fixed;
       right: 32rpx;
+      top: var(--top);
       z-index: 20;
       display: flex;
       flex-direction: column;
@@ -747,10 +756,9 @@
       .options-button {
         width: 84rpx;
         height: 84rpx;
-        background: hsla(0, 0%, 100%, 0.2);
-        -webkit-backdrop-filter: blur(25rpx);
-        backdrop-filter: blur(25rpx);
-        box-shadow: 0rpx 4rpx 23rpx 4rpx rgba(0, 0, 0, 0.25);
+        backdrop-filter: blur(15rpx);
+        background-color: var(--background);
+        border: 1rpx solid var(--border-color);
         border-radius: 16rpx;
         display: flex;
         align-items: center;
@@ -768,10 +776,9 @@
       .options-group {
         width: 84rpx;
         height: 168rpx;
-        background: hsla(0, 0%, 100%, 0.2);
-        -webkit-backdrop-filter: blur(25rpx);
-        backdrop-filter: blur(25rpx);
-        box-shadow: 0rpx 4rpx 23rpx 4rpx rgba(0, 0, 0, 0.25);
+        backdrop-filter: blur(15rpx);
+        background-color: var(--background);
+        border: 1rpx solid var(--border-color);
         border-radius: 16rpx;
         display: flex;
         flex-direction: column;
