@@ -1,6 +1,6 @@
 <script setup>
   import { Api } from '@/api'
-  import { ref, computed } from 'vue'
+  import { ref, computed, reactive } from 'vue'
   import { toast, getStorage, setStorage } from '@/utils'
   import { USER_INFO, USER_TOKEN } from '@/enum'
   import { onLoad, onShow } from '@dcloudio/uni-app'
@@ -22,7 +22,7 @@
   /** 是否开启卫星图 */
   const enableSatellite = ref(true)
   /** 是否显示对话框 */
-  const visibleSheet = ref(false)
+  const visibleSheet = ref(true)
   /** 打开信息详情 */
   const recordDetail = ref({
     province_url:
@@ -52,6 +52,16 @@
     { icon: '', key: '', type: '飞机' },
     { icon: '', key: '', type: '船' },
   ])
+  /** 步行记录详情表单 */
+  const routeDetailForm = reactive({
+    route_id: '', // 步行 id
+    content: '', // 内容
+    travel_type: '', // 出行方式
+    mood_color: '', // 心情颜色
+    picture: [], // 照片
+  })
+  /** 选择的图片 */
+  const pictureList = ref()
 
   const userInfoStorage = ref(getStorage(USER_INFO))
   const userTokenStorage = ref(getStorage(USER_TOKEN))
@@ -124,8 +134,8 @@
    * 关闭对话框
    */
   const closeSheet = () => {
-    visibleSheet.value = false
-    recordDetail.value = null
+    // visibleSheet.value = false
+    // recordDetail.value = null
   }
 
   /**
@@ -385,6 +395,46 @@
 
     mapContext.moveToLocation()
   }
+
+  /**
+   * 上传照片
+   */
+  const uploadPictures = async () => {}
+
+  /**
+   * 完善步行打卡记录详情
+   */
+  const submitRouteDetail = async () => {
+    /**
+     * 提交结果
+     */
+    const subRes = await API.updateRouteDetail(routeDetailForm)
+  }
+
+  /**
+   * 选择照片
+   */
+  const choosePicture = async () => {
+    // #ifdef MP-WEIXIN
+    const res = await uni.chooseMedia({
+      count: 2, // 选择图片的数量
+      mediaType: ['image'],
+      sourceType: ['album', 'camera'],
+    })
+
+    if (res.errMsg !== 'hooseMedia:ok') {
+      toast('上传异常，请重试')
+      return
+    }
+
+    pictureList.value = res.tempFiles.map((item) => item.tempFilePath)
+
+    // #endif
+
+    console.log(res)
+
+    // this.imagePath = res.tempFilePaths[0]
+  }
 </script>
 
 <template>
@@ -568,7 +618,9 @@
             </div>
 
             <!-- 发布瞬间按钮 -->
-            <div class="home-sheet-content-body-button">发布瞬间</div>
+            <div class="home-sheet-content-body-button" @click="choosePicture">
+              发布瞬间
+            </div>
           </div>
 
           <!-- 心情颜色 -->
@@ -600,7 +652,9 @@
         <!-- 操作按钮 -->
         <div class="home-sheet-content-footer">
           <div class="home-sheet-content-footer-no">取消</div>
-          <div class="home-sheet-content-footer-ok">就这样</div>
+          <div class="home-sheet-content-footer-ok" @click="submitRouteDetail">
+            就这样
+          </div>
         </div>
       </div>
     </template>

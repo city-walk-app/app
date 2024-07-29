@@ -6,6 +6,13 @@ export class Api extends Http {
   }
 
   /**
+   * 完善步行打卡记录详情
+   */
+  updateRouteDetail = (data) => {
+    return this.request({ url: '/location/update/user/route/detail', data })
+  }
+
+  /**
    * 获取当前地区的天气
    */
   getWeatherInfo = (data) => {
