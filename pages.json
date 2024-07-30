@@ -9,16 +9,10 @@
       }
     },
     {
-      "path": "pages/login/index"
-    },
-    {
       "path": "pages/ranking/index"
     },
     {
       "path": "pages/route-detail/index"
-    },
-    {
-      "path": "pages/setting/index"
     },
     {
       "path": "pages/mine/index"
@@ -28,6 +22,19 @@
     },
     {
       "path": "pages/friends/index"
+    }
+  ],
+  "subPackages": [
+    {
+      "root": "pages_bus",
+      "pages": [
+        {
+          "path": "login/index"
+        },
+        {
+          "path": "setting/index"
+        }
+      ]
     }
   ],
   "globalStyle": {

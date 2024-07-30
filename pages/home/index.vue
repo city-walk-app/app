@@ -115,7 +115,7 @@
     toast(res.message)
 
     setTimeout(() => {
-      goPage('/pages/login/index')
+      goPage('/pages_bus/login/index')
     }, 500)
   }
 
@@ -474,7 +474,7 @@
         }"
       >
         <!-- 进入设置页面 -->
-        <div class="options-button" @click="goPage('/pages/setting/index')">
+        <div class="options-button" @click="goPage('/pages_bus/setting/index')">
           <image class="options-setting-icon" src="/assets/svg/setting.svg" />
         </div>
         <div class="options-group">
@@ -702,7 +702,7 @@
       <div class="home-popup-login-footer">
         <div
           class="home-popup-login-footer-email"
-          @click="goPage('/pages/login/index')"
+          @click="goPage('/pages_bus/login/index')"
         >
           邮箱登录
         </div>
