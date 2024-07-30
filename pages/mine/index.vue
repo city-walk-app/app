@@ -1,7 +1,7 @@
 <script setup>
   import { ref } from 'vue'
   import { Api } from '@/api'
-  import { getCurrentDateFormatted } from '@/utils'
+  import { getCurrentDateFormatted, formatTime } from '@/utils'
   import { onLoad, onShow } from '@dcloudio/uni-app'
   import StickyScroll from '@/components/sticky-scroll'
 
@@ -108,13 +108,6 @@
     uni.navigateTo({
       url: `/pages/route-detail/index?list_id=${list_id}`,
     })
-  }
-
-  /**
-   * 返回
-   */
-  const back = () => {
-    uni.navigateBack({ delta: 1 })
   }
 
   onLoad((options) => {
@@ -251,24 +244,83 @@
 
       <!-- 详情步行 -->
       <div class="details" v-if="routeDetailList && routeDetailList.length">
-        <div class="details-left"></div>
-        <div class="details-right">
+        <!-- 左侧时间线 -->
+        <!-- <div class="details-left"></div> -->
+
+        <!-- 时间线 -->
+        <div class="details-everyone">
           <div
-            class="details-right-item"
+            class="details-everyone-item"
             v-for="(item, index) in routeDetailList"
             :key="index"
           >
-            <div class="details-right-item-header">
-              <!-- 头部左侧 -->
-              <div class="details-right-item-header-left">
-                <div class="details-right-item-header-time">
-                  {{ item.create_at }}
-                </div>
-                <div class="details-right-item-header-address">
-                  {{ item.address || item.city }}
+            <!-- 时间线 -->
+            <div class="details-everyone-time-line">
+              <image
+                v-if="index === 0"
+                class="details-everyone-time-line-avatar"
+                src="https://img1.baidu.com/it/u=1784112474,311889214&fm=253&fmt=auto&app=120&f=JPEG?w=500&h=500"
+                mode="aspectFill"
+              />
+
+              <!-- 圈 -->
+              <div v-else class="details-everyone-time-line-circle">
+                <div class="details-everyone-time-line-circle-inner" />
+              </div>
+            </div>
+
+            <!-- 详细记录 -->
+            <div class="details-everyone-content">
+              <!-- 图标 -->
+              <image
+                class="details-everyone-item-icon-position"
+                src="https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/city-walk/main-position.png"
+              />
+
+              <!-- 头部内容 -->
+              <div class="details-everyone-item-header">
+                <!-- 头部内容 -->
+                <div class="details-everyone-item-content">
+                  <div class="details-everyone-item-header-time">
+                    {{ formatTime(item.create_at) }}
+                  </div>
+                  <div class="details-everyone-item-header-address">
+                    {{ item.address || item.city }}
+                  </div>
                 </div>
               </div>
-              <div class="details-right-item-header-left"></div>
+
+              <!-- 身体内容 -->
+              <div
+                v-if="item.content || (item.picture && item.picture.length)"
+                class="details-everyone-item-body"
+              >
+                <!-- 文案 -->
+                <div
+                  v-if="item.content"
+                  class="details-everyone-item-body-content"
+                >
+                  {{ item.content }}
+                </div>
+
+                <!-- 照片 -->
+                <scroll-view
+                  v-if="item.picture && item.picture.length"
+                  class="details-everyone-item-body-pictures"
+                  :scroll-x="false"
+                  scroll-y
+                >
+                  <div class="details-everyone-item-body-picture-wrapper">
+                    <image
+                      v-for="(item, index) in item.picture"
+                      class="details-everyone-item-body-picture-item"
+                      :src="item"
+                      :key="index"
+                      mode="aspectFill"
+                    />
+                  </div>
+                </scroll-view>
+              </div>
             </div>
           </div>
         </div>
@@ -296,6 +348,7 @@
 <style lang="scss">
   .main {
     position: relative;
+    // background-color: #faf9fa;
 
     // 头部信息
     .header {
@@ -458,6 +511,167 @@
                 right: 0;
                 left: 0;
                 bottom: 0;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    // 当天记录详情
+    .details {
+      display: flex;
+      margin-top: 54rpx;
+      padding: 0 32rpx;
+      box-sizing: border-box;
+      position: relative;
+
+      // 左侧
+      .details-left {
+        width: 152rpx;
+        background-color: skyblue;
+        flex-shrink: 0;
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+      }
+
+      // 右侧
+      .details-everyone {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        row-gap: 54rpx;
+        width: 534rpx;
+
+        // 每一项
+        .details-everyone-item {
+          width: 100%;
+          display: flex;
+
+          // 时间线
+          .details-everyone-time-line {
+            width: 152rpx;
+            flex-shrink: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            // 头像
+            .details-everyone-time-line-avatar {
+              width: 92rpx;
+              height: 92rpx;
+              border-radius: 50%;
+            }
+
+            // 圈
+            .details-everyone-time-line-circle {
+              width: 40rpx;
+              height: 40rpx;
+              border-radius: 50%;
+              border: 2rpx solid #f7b535;
+              position: relative;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              background-color: #fff;
+
+              .details-everyone-time-line-circle-inner {
+                width: 24rpx;
+                height: 24rpx;
+                background: #f7b535;
+                border: 2rpx solid #f7b535;
+                border-radius: 50%;
+              }
+            }
+          }
+
+          // 内容部分
+          .details-everyone-content {
+            width: 534rpx;
+            background: rgba(255, 255, 255, 0.5);
+            box-shadow: 0rpx 2rpx 11rpx 0rpx rgba(101, 101, 101, 0.1);
+            position: relative;
+            min-height: 92rpx;
+            border-radius: 24rpx;
+
+            // 图标
+            .details-everyone-item-icon-position {
+              width: 122rpx;
+              height: 112rpx;
+              flex-shrink: 0;
+              position: absolute;
+              top: 0;
+              right: 0;
+            }
+
+            // 头部
+            .details-everyone-item-header {
+              display: flex;
+              justify-content: flex-start;
+
+              .details-everyone-item-content {
+                background: linear-gradient(270deg, #fff8e8 0%, #ffffff 100%);
+                padding: 24rpx 48rpx;
+                box-sizing: border-box;
+                display: flex;
+                align-items: center;
+                column-gap: 22rpx;
+                border: 2rpx solid #ffffff;
+                border-radius: 24rpx 0 120rpx 24rpx;
+
+                // 时间
+                .details-everyone-item-header-time {
+                  font-weight: 500;
+                  font-size: 32rpx;
+                  color: #333333;
+                  line-height: 38rpx;
+                }
+
+                // 位置
+                .details-everyone-item-header-address {
+                  font-weight: 400;
+                  font-size: 28rpx;
+                  color: #333333;
+                  white-space: nowrap;
+                  max-width: 200rpx;
+                  overflow: hidden;
+                  text-overflow: ellipsis;
+                }
+              }
+            }
+
+            // 身体部分
+            .details-everyone-item-body {
+              padding: 28rpx 48rpx 46rpx 48rpx;
+              box-sizing: border-box;
+
+              // 文案
+              .details-everyone-item-body-content {
+                font-weight: 400;
+                font-size: 28rpx;
+                color: #666666;
+                line-height: 33rpx;
+              }
+
+              // 图片
+              .details-everyone-item-body-pictures {
+                overflow-x: auto;
+                margin-top: 24rpx;
+
+                .details-everyone-item-body-picture-wrapper {
+                  display: flex;
+                  flex-wrap: nowrap;
+                  column-gap: 24rpx;
+
+                  .details-everyone-item-body-picture-item {
+                    width: 348rpx;
+                    height: 350rpx;
+                    border-radius: 16rpx;
+                    flex-shrink: 0;
+                  }
+                }
               }
             }
           }
