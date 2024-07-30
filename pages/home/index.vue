@@ -306,22 +306,18 @@
         confirmText: '同意',
       })
 
-      console.log(modalRes)
+      if (modalRes.errMsg !== 'showModal:ok') {
+        toast('弹窗异常')
+        return
+      }
 
-      /**
-       *        success: async (res) => {
-          if (res.confirm) {
-            const result = await API.friendConfirmInvite({ invite_id })
+      if (modalRes.confirm) {
+        const result = await API.friendConfirmInvite({ invite_id })
 
-            if (result.code === 200) {
-              console.log(result)
-            }
-            console.log('同意')
-          } else if (res.cancel) {
-            console.log('用户点击取消')
-          }
-        },
-       */
+        if (result.code === 200) {
+          console.log(result)
+        }
+      }
     }
   }
 
@@ -418,8 +414,56 @@
     }
   })
 
+  /**
+   * 获取权限
+   */
+  const getSetting = async () => {
+    const settingRes = await uni.getSetting()
+
+    console.log('获取权限', settingRes)
+    return
+
+    // 不是已授权位置权限状态
+    // if (res.locationAuthorized !== 'authorized') {
+    if (!settingRes.locationReducedAccuracy) {
+      const modalRes = await uni.showModal({
+        title: '位置权限',
+        content: '当前暂未开启位置权限，避免影响功能正常使用，你要去开启吗？',
+        showCancel: true,
+        cancelText: '先不了',
+        confirmText: '去开启',
+      })
+
+      if (modalRes.errMsg !== 'showModal:ok') {
+        toast('弹窗异常')
+        return
+      }
+
+      if (modalRes.confirm) {
+        const openRes = await uni.openAppAuthorizeSetting()
+
+        console.log(openRes)
+      }
+
+      return
+    }
+    // 已经授权
+    else {
+      if (
+        (userInfoStorage.value,
+        userInfoStorage.value.user_id,
+        userTokenStorage.value)
+      ) {
+        getLocation() // 获取位置信息
+      }
+    }
+  }
+
   onShow(() => {
     getStorageData() // 是否登录
+    // #ifdef MP-WEIXIN
+    getSetting() // 获取权限
+    // #endif
 
     console.log(isLoginState.value)
 
