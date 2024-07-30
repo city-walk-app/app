@@ -11,41 +11,22 @@
 
   /** 步骤 */
   const step = ref(0)
-
-  // setTimeout(() => {
-  //   step.value += 1
-  // }, 2000)
-
-  // /** 登录按钮禁用状态 */
-  // const disabled = ref(false)
-  // /** 登陆信息 */
-  // const loginForm = reactive({ email: '', code: '' })
-
-  // /** 用户身份信息 */
-  // const userInfo = ref()
-  // /** 按钮倒计时 */
-  // const timmer = ref(60)
-  // /**获取验证码按钮禁用状态 */
-  // const getCodeButtonLoading = ref(false)
-  // /** 倒计时定时器 */
-  // let timeout
-
-  // /** 验证码长度 */
-  // // const codeDigits = 6
-  // /** 验证码聚焦索引 */
-  // const activeCodeIndex = ref(0)
-
-  // /** 当前需要聚焦的文本框索引 */
-  // const inputFouksIndex = ref(0)
-  // /** 验证码输入框是否聚焦 */
-  // const codeInputFouks = ref(false)
-
-  // // 监听再验证码输入页面返回之后聚焦验证码输入框
-  // onShow(() => {
-  //   if (step.value === 1) {
-  //     codeInputFouks.value = true
-  //   }
-  // })
+  /** 验证码长度 */
+  const codeLength = ref(6)
+  /** 登陆信息 */
+  const loginForm = reactive({ email: '', code: '' })
+  /** 偏好列表 */
+  const preferences = ref([
+    { key: '', title: '', active: '' },
+    { key: '', title: '', active: '' },
+    { key: '', title: '', active: '' },
+    { key: '', title: '', active: '' },
+    { key: '', title: '', active: '' },
+    { key: '', title: '', active: '' },
+    { key: '', title: '', active: '' },
+    { key: '', title: '', active: '' },
+    { key: '', title: '', active: '' },
+  ])
 
   /**
    * 发送验证码
@@ -69,137 +50,58 @@
     }
   }
 
-  // /**
-  //  * 发送验证码
-  //  */
-  // const sendEmail = async () => {
-  //   // loading 状态下直接返回
-  //   if (getCodeButtonLoading.value) {
-  //     return
-  //   }
+  /**
+   * 登录
+   */
+  const onLogin = async () => {
+    // 验证码验证失败
+    if (!loginForm.code || loginForm.code.length !== 6) {
+      toast('验证码格式不正确')
+      return
+    }
 
-  //   // 邮箱不正确
-  //   if (!emailRegex.test(loginForm.email)) {
-  //     toast('输入正确邮箱之后再获取')
-  //     return
-  //   }
+    showLoading('处理中...')
 
-  //   showLoading('获取中...')
+    const res = await API.emailLogin(loginForm)
 
-  //   const res = await API.sendEmail({ email: loginForm.email })
+    hideLoading()
 
-  //   hideLoading()
-  //   toast(res.message)
+    if (res.code === 200) {
+      setStorage(USER_INFO, res.data.user_info)
+      setStorage(USER_TOKEN, res.data.token)
 
-  //   getCodeButtonLoading.value = true
+      // 新用户完善偏好设置
+      if (res.data.is_new_user) {
+        step.value = 2
+      } else {
+        uni.redirectTo({ url: '/pages/home/index' })
+      }
 
-  //   if (res.code === 200) {
-  //     startTimmer()
-  //     step.value = 1
-  //     return
-  //   }
+      return
+    }
 
-  //   clearInterval(timeout)
-  //   getCodeButtonLoading.value = false
-  //   timmer.value = 60
-  // }
+    toast(res.message)
+  }
 
-  // /**
-  //  * 开始按钮倒计时
-  //  */
-  // const startTimmer = () => {
-  //   timeout = setInterval(() => {
-  //     if (timmer.value === 0) {
-  //       clearInterval(timeout)
-  //       getCodeButtonLoading.value = false
-  //       timmer.value = 60
-  //       return
-  //     }
-
-  //     timmer.value--
-  //   }, 1000)
-  // }
-
-  // /**
-  //  * 登录
-  //  */
-  // const onLogin = async () => {
-  //   // 邮箱不正确
-  //   if (!emailRegex.test(loginForm.email)) {
-  //     toast('邮箱格式不正确')
-  //     return
-  //   }
-
-  //   // 验证码验证失败
-  //   if (!loginForm.code || loginForm.code.length !== 6) {
-  //     toast('验证码格式不正确')
-  //     return
-  //   }
-
-  //   showLoading('处理中...')
-
-  //   disabled.value = true
-
-  //   const res = await API.emailLogin(loginForm)
-
-  //   hideLoading()
-
-  //   disabled.value = false
-
-  //   if (res.code === 200) {
-  //     disabled.value = false
-
-  //     userInfo.value = res.data
-  //     setStorage(USER_INFO, res.data.user_info)
-  //     setStorage(USER_TOKEN, res.data.token)
-
-  //     uni.redirectTo({ url: '/pages/home/index' })
-  //     return
-  //   }
-
-  //   toast(res.message)
-  // }
-
-  // /**
-  //  * 监听验证码
-  //  */
-  // watch(
-  //   () => loginForm.code,
-  //   (newVal, oldVal) => {
-  //     if (newVal.length === 6) {
-  //       onLogin()
-  //       return
-  //     }
-
-  //     if (newVal.length === 0) {
-  //       activeCodeIndex.value = 0
-  //       return
-  //     }
-
-  //     if (newVal.length > oldVal.length) {
-  //       activeCodeIndex.value = newVal.length
-  //     } else if (newVal.length < oldVal.length) {
-  //       activeCodeIndex.value = newVal.length - 1
-  //     }
-  //   }
-  // )
+  /**
+   * 提交偏好设置
+   */
+  const submit = async () => {}
 
   /**
    * 监听动画结束事件
    */
-  const transitionend = () => {
-    // inputFouksIndex.value = step.value
-    // if (step.value === 1) {
-    //   codeInputFouks.value = true
-    // }
-  }
+  const transitionend = () => {}
 
-  // /**
-  //  * 验证码文本框失焦
-  //  */
-  // const onBlur = () => {
-  //   codeInputFouks.value = false
-  // }
+  watch(
+    () => loginForm.code,
+    (newValue) => {
+      console.log(newValue)
+      if (newValue.length === codeLength.value) {
+        onLogin() // 登录
+      }
+    }
+  )
 </script>
 
 <template>
@@ -223,14 +125,17 @@
           <div class="header-title">欢迎，请登录</div>
         </div>
 
-        <!-- 输入框 -->
-        <div class="email-input-wrapper">
-          <input
-            v-model="loginForm.email"
-            class="email-input"
-            type="text"
-            placeholder="请输入邮箱"
-          />
+        <div class="body">
+          <!-- 输入框 -->
+          <div class="email-input-wrapper">
+            <input
+              v-model="loginForm.email"
+              class="email-input"
+              type="text"
+              placeholder="请输入邮箱"
+              @confirm="sendEmail"
+            />
+          </div>
         </div>
 
         <!-- 登录按钮 -->
@@ -238,10 +143,69 @@
       </div>
 
       <!-- 2. 提交验证码 -->
-      <div class="login-swiper-item">2</div>
+      <div class="login-swiper-item">
+        <!-- 头部 -->
+        <div class="header">
+          <div class="header-logo-wrapper">
+            <image
+              class="header-logo"
+              src="https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/city-walk/logo.jpg"
+            />
+          </div>
+
+          <div class="header-title">请输入验证码</div>
+        </div>
+
+        <div class="body">
+          <!-- 验证码 -->
+          <div class="code-input-wrapper">
+            <div class="code-input-item" v-for="i in codeLength" :key="i">
+              {{ loginForm.code[i - 1] || '' }}
+            </div>
+            <input
+              v-model="loginForm.code"
+              class="code-input"
+              type="number"
+              @conform="onLogin"
+            />
+          </div>
+        </div>
+
+        <!-- 登录按钮 -->
+        <div class="button" @click="onLogin"></div>
+
+        <!-- 重新获取 -->
+        <div class="try-send">重新获取</div>
+      </div>
 
       <!-- 3. 选择偏好 -->
-      <div class="login-swiper-item">3</div>
+      <div class="login-swiper-item">
+        <!-- 头部 -->
+        <div class="header">
+          <div class="header-logo-wrapper">
+            <image
+              class="header-logo"
+              src="https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/city-walk/logo.jpg"
+            />
+          </div>
+
+          <div class="header-title">你的偏好？</div>
+        </div>
+
+        <!-- 输入框 -->
+        <div class="body">
+          <div class="preferences">
+            <div
+              class="preference-item"
+              v-for="(item, index) in preferences"
+              :key="index"
+            ></div>
+          </div>
+        </div>
+
+        <!-- 登录按钮 -->
+        <div class="button" @click="submit"></div>
+      </div>
     </div>
   </div>
 </template>
@@ -304,19 +268,73 @@
         }
 
         // 邮箱输入框
-        .email-input-wrapper {
-          margin-top: 88rpx;
-          width: 646rpx;
-          height: 116rpx;
-          background: #eeeeee;
-          border-radius: 40rpx;
+        .body {
           margin-bottom: 102rpx;
+          margin-top: 88rpx;
 
-          .email-input {
-            width: inherit;
-            height: inherit;
-            padding: 30rpx 46rpx;
-            box-sizing: border-box;
+          // 邮箱输入框
+          .email-input-wrapper {
+            width: 646rpx;
+            height: 116rpx;
+            background: #eee;
+            border-radius: 40rpx;
+
+            .email-input {
+              width: inherit;
+              height: inherit;
+              padding: 30rpx 46rpx;
+              box-sizing: border-box;
+              font-size: 34rpx;
+              font-weight: 600;
+              color: #333;
+            }
+          }
+
+          // 验证码输入框
+          .code-input-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            column-gap: 16rpx;
+            position: relative;
+
+            .code-input-item {
+              width: 99rpx;
+              height: 116rpx;
+              background: #eee;
+              border-radius: 31rpx;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              flex-shrink: 0;
+              font-size: 34rpx;
+              font-weight: 600;
+              color: #333;
+            }
+
+            .code-input {
+              position: absolute;
+              inset: 0;
+              height: 100%;
+              background-color: transparent;
+              color: transparent;
+              border: transparent;
+            }
+          }
+
+          // 偏好设置
+          .preferences {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            column-gap: 48rpx;
+            row-gap: 50rpx;
+
+            .preference-item {
+              width: 192rpx;
+              height: 184rpx;
+              background: #eee;
+              border-radius: 16rpx;
+            }
           }
         }
 
@@ -328,6 +346,15 @@
           display: flex;
           justify-content: center;
           align-items: center;
+        }
+
+        // 重新获取
+        .try-send {
+          font-weight: 400;
+          font-size: 32rpx;
+          color: #f8d035;
+          line-height: 38rpx;
+          margin-top: 114rpx;
         }
       }
     }
