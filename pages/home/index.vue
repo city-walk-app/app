@@ -1,7 +1,14 @@
 <script setup>
   import { Api } from '@/api'
   import { ref, computed, reactive } from 'vue'
-  import { toast, getStorage, setStorage, uploadOSSImages } from '@/utils'
+  import {
+    toast,
+    getStorage,
+    setStorage,
+    uploadOSSImages,
+    showLoading,
+    hideLoading,
+  } from '@/utils'
   import { USER_INFO, USER_TOKEN } from '@/enum'
   import { onLoad, onShow } from '@dcloudio/uni-app'
   import { useGlobalStore } from '@/store'
@@ -119,6 +126,7 @@
 
     if (res.code === 200) {
       loginOpenId(res.data.openid)
+      getLocation() // 获取位置信息
     }
   }
 
@@ -387,6 +395,8 @@
    * 完善步行打卡记录详情
    */
   const submitRouteDetail = async () => {
+    showLoading()
+
     // 上传图片
     if (pictureFileList.value && pictureFileList.value.length) {
       const upRes = await uploadOSSImages(API, pictureFileList.value)
@@ -397,6 +407,8 @@
     }
 
     const res = await API.updateRouteDetail(routeDetailForm)
+
+    hideLoading()
 
     if (res.code === 200) {
       console.log(res)

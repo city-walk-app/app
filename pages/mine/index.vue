@@ -46,6 +46,8 @@
           _active: false,
         }
       })
+
+      console.log(heatmap.value)
     }
   }
 
