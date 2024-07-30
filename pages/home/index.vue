@@ -54,7 +54,7 @@
   ])
   /** 步行记录详情表单 */
   const routeDetailForm = reactive({
-    route_id: '', // 步行 id
+    route_id: '121212', // 步行 id
     content: '', // 内容
     travel_type: '', // 出行方式
     mood_color: '', // 心情颜色
@@ -391,6 +391,8 @@
     if (pictureFileList.value && pictureFileList.value.length) {
       const upRes = await uploadOSSImages(API, pictureFileList.value)
 
+      console.log('上传的图片', upRes)
+
       routeDetailForm.picture = upRes.filter(Boolean)
     }
 
@@ -398,6 +400,13 @@
 
     if (res.code === 200) {
       console.log(res)
+
+      toast('提交成功')
+
+      setTimeout(() => {
+        visibleSheet.value = false
+        recordDetail.value = null
+      }, 500)
     }
   }
 
@@ -416,6 +425,8 @@
     }
 
     pictureFileList.value = res.tempFilePaths
+
+    console.log(pictureFileList.value)
   }
 
   onLoad((options) => {

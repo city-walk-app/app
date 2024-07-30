@@ -22,7 +22,7 @@ export const uploadOSSImages = async (API, fileList) => {
 
       const upRes = await uni.uploadFile({
         url: host,
-        filePath: item.url,
+        filePath: item,
         name: 'file',
         formData: {
           key,
@@ -31,6 +31,8 @@ export const uploadOSSImages = async (API, fileList) => {
           signature,
         },
       })
+
+      console.log('上传结果', upRes)
 
       if (upRes.errMsg !== 'uploadFile:ok') {
         toast('图片上传异常')
