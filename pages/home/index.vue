@@ -8,6 +8,7 @@
     uploadOSSImages,
     showLoading,
     hideLoading,
+    goPage,
   } from '@/utils'
   import { USER_INFO, USER_TOKEN } from '@/enum'
   import { onLoad, onShow } from '@dcloudio/uni-app'
@@ -114,7 +115,7 @@
     toast(res.message)
 
     setTimeout(() => {
-      uni.navigateTo({ url: '/pages/login/index' })
+      goPage('/pages/login/index')
     }, 500)
   }
 
@@ -267,13 +268,6 @@
   }
 
   /**
-   * 跳转设置页面
-   */
-  const goSetting = () => {
-    uni.navigateTo({ url: '/pages/setting/index' })
-  }
-
-  /**
    * 跳转我的
    */
   const goMine = () => {
@@ -295,34 +289,6 @@
   }
 
   /**
-   * 跳转登录
-   */
-  const goLogin = () => {
-    uni.navigateTo({ url: '/pages/login/index' })
-  }
-
-  /**
-   * 跳转朋友列表
-   */
-  const goFriends = () => {
-    uni.navigateTo({ url: '/pages/friends/index' })
-  }
-
-  /**
-   *邀请朋友
-   */
-  const inviteFriends = () => {
-    uni.navigateTo({ url: '/pages/invite/index' })
-  }
-
-  /**
-   * 排行榜
-   */
-  const goRanking = () => {
-    uni.navigateTo({ url: '/pages/ranking/index' })
-  }
-
-  /**
    * 获取邀请详情
    */
   const getFriendInviteInfo = async (invite_id) => {
@@ -332,13 +298,18 @@
     console.log(res)
 
     if (res.code === 200) {
-      uni.showModal({
+      const modalRes = await uni.showModal({
         title: '好友申请',
         content: `${res.data.name} 申请加你为好友，你同意吗？`,
         showCancel: true,
         cancelText: '拒绝',
         confirmText: '同意',
-        success: async (res) => {
+      })
+
+      console.log(modalRes)
+
+      /**
+       *        success: async (res) => {
           if (res.confirm) {
             const result = await API.friendConfirmInvite({ invite_id })
 
@@ -350,7 +321,7 @@
             console.log('用户点击取消')
           }
         },
-      })
+       */
     }
   }
 
@@ -503,7 +474,7 @@
         }"
       >
         <!-- 进入设置页面 -->
-        <div class="options-button" @click="goSetting">
+        <div class="options-button" @click="goPage('/pages/setting/index')">
           <image class="options-setting-icon" src="/assets/svg/setting.svg" />
         </div>
         <div class="options-group">
@@ -567,7 +538,7 @@
             style="
               --img: url('https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/city-walk/home-friends.png');
             "
-            @click="goFriends"
+            @click="goPage('/pages/friends/index')"
           >
             <div class="footer-card-background">
               <div class="footer-card-title">我到朋友</div>
@@ -579,7 +550,7 @@
             style="
               --img: url('https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/city-walk/home-invite.png');
             "
-            @click="inviteFriends"
+            @click="goPage('/pages/invite/index')"
           >
             <div class="footer-card-background">
               <div class="footer-card-title">邀请朋友</div>
@@ -605,7 +576,7 @@
             style="
               --img: url('https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/city-walk/home-ranking.png');
             "
-            @click="goRanking"
+            @click="goPage('/pages/ranking/index')"
           >
             <div class="footer-card-background">
               <div class="footer-card-title">排行榜</div>
@@ -729,7 +700,10 @@
 
       <!-- 操作 -->
       <div class="home-popup-login-footer">
-        <div class="home-popup-login-footer-email" @click="goLogin">
+        <div
+          class="home-popup-login-footer-email"
+          @click="goPage('/pages/login/index')"
+        >
           邮箱登录
         </div>
         <div class="home-popup-login-footer-vite" @click="wxLogin">

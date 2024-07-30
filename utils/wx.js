@@ -48,3 +48,10 @@ export const setStorage = (key, value) => {
  * 清楚本地缓存数据
  */
 export const clearStorage = uni.clearStorageSync
+
+/**
+ * 跳转登录
+ */
+export const goPage = (url) => {
+  uni.navigateTo({ url })
+}
