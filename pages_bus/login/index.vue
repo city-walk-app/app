@@ -96,12 +96,13 @@
   watch(
     () => loginForm.code,
     (newValue) => {
-      console.log(newValue)
       if (newValue.length === codeLength.value) {
         onLogin() // 登录
       }
     }
   )
+
+  onShow(() => {})
 </script>
 
 <template>
