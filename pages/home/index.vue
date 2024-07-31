@@ -283,7 +283,7 @@
   /**
    * 获取本地缓存数据
    */
-  const getStorageData = () => {
+  const setStorageData = () => {
     userInfoStorage.value = getStorage(USER_INFO)
     userTokenStorage.value = getStorage(USER_TOKEN)
   }
@@ -421,11 +421,15 @@
     const settingRes = await uni.getSetting()
 
     console.log('获取权限', settingRes)
-    return
+
+    if (settingRes.errMsg !== 'getSetting:ok') {
+      return
+    }
+
+    // return
 
     // 不是已授权位置权限状态
-    // if (res.locationAuthorized !== 'authorized') {
-    if (!settingRes.locationReducedAccuracy) {
+    if (!settingRes.authSetting['scope.userLocation']) {
       const modalRes = await uni.showModal({
         title: '位置权限',
         content: '当前暂未开启位置权限，避免影响功能正常使用，你要去开启吗？',
@@ -435,44 +439,35 @@
       })
 
       if (modalRes.errMsg !== 'showModal:ok') {
-        toast('弹窗异常')
         return
       }
 
       if (modalRes.confirm) {
-        const openRes = await uni.openAppAuthorizeSetting()
+        const openRes = await uni.openSetting()
 
-        console.log(openRes)
+        if (openRes.errMsg !== 'openSetting:ok') {
+          return
+        }
+
+        // 已经授权了
+        if (openRes.authSetting['scope.userLocation']) {
+          getLocation() // 获取位置信息
+        }
       }
 
       return
     }
-    // 已经授权
-    else {
-      if (
-        (userInfoStorage.value,
-        userInfoStorage.value.user_id,
-        userTokenStorage.value)
-      ) {
-        getLocation() // 获取位置信息
-      }
-    }
+
+    getLocation() // 获取位置信息
   }
 
   onShow(() => {
-    getStorageData() // 是否登录
-    // #ifdef MP-WEIXIN
-    getSetting() // 获取权限
-    // #endif
+    setStorageData() // 设置缓存信息
 
-    console.log(isLoginState.value)
-
-    if (
-      (userInfoStorage.value,
-      userInfoStorage.value.user_id,
-      userTokenStorage.value)
-    ) {
-      getLocation() // 获取位置信息
+    if (isLoginState.value) {
+      // #ifdef MP-WEIXIN
+      getSetting() // 获取权限
+      // #endif
     }
   })
 </script>
