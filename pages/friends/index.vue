@@ -4,6 +4,7 @@
   import StickyScroll from '@/components/sticky-scroll'
   import Empty from '@/components/empty'
   import { DEFAULT_AVATAR } from '@/enum'
+  import { toast } from '@/utils'
 
   const API = new Api()
 
@@ -24,7 +25,10 @@
 
     if (res.code === 200) {
       friends.value = res.data
+      return
     }
+
+    toast(res.message)
   }
 
   friendList() // 获取朋友列表

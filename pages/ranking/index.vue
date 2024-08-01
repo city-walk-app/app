@@ -106,10 +106,17 @@
 
           <!-- 头像 -->
           <div class="ranking-item-avatar-wrapper">
+            <!-- 皇冠 -->
+            <image
+              class="ranking-item-avatar-crown"
+              src="https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/city-walk/ranking-crown.png"
+            />
+
+            <!-- 头像 -->
             <image
               class="ranking-item-avatar"
               mode="aspectFill"
-              :scr="item.avatar || DEFAULT_AVATAR"
+              :src="item.avatar || DEFAULT_AVATAR"
             />
           </div>
 
@@ -235,7 +242,7 @@
 
       // 第一个
       &.ranking-item-first {
-        background: linear-gradient(93deg, #f7b535 0%, #fff0da 100%);
+        background: linear-gradient(93deg, #f6e6c3 0%, #fbf5ee 100%);
         box-shadow: 0rpx 2rpx 11rpx 0rpx rgba(186, 186, 186, 0.2);
         border: 2rpx solid;
         border-image: linear-gradient(
@@ -276,7 +283,20 @@
         border-radius: 50%;
         flex-shrink: 0;
         margin-left: 24rpx;
+        position: relative;
 
+        // 皇冠
+        .ranking-item-avatar-crown {
+          width: 50rpx;
+          height: 50rpx;
+          flex-shrink: 0;
+          position: absolute;
+          top: -25rpx;
+          right: -10rpx;
+          z-index: 20;
+        }
+
+        // 头像
         .ranking-item-avatar {
           width: inherit;
           height: inherit;
