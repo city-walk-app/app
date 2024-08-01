@@ -149,7 +149,14 @@
       <!-- 头部信息 -->
       <div class="header">
         <!-- 头像 -->
-        <div class="header-avatar-wrapper">
+        <div
+          :class="[
+            'header-avatar-wrapper',
+            {
+              'cw-skeleton-animated': !userInfo,
+            },
+          ]"
+        >
           <image
             v-if="userInfo"
             class="header-avatar-image"
@@ -174,10 +181,10 @@
         <!-- 用户信息-骨架图 -->
         <template v-else>
           <!-- 昵称骨架屏 -->
-          <div class="header-nick-name__skeleton" />
+          <div class="cw-skeleton-animated header-nick-name__skeleton" />
 
           <!-- 签名骨架屏 -->
-          <div class="header-nick-signature__skeleton" />
+          <div class="cw-skeleton-animated header-nick-signature__skeleton" />
         </template>
       </div>
 
@@ -185,7 +192,7 @@
       <div v-if="provinceListLoading" class="jigsaw-scroll">
         <div class="jigsaw-wrapper">
           <div class="jigsaw-item" v-for="i in 3" :key="i">
-            <div class="jigsaw-item__skeleton" />
+            <div class="cw-skeleton-animated jigsaw-item__skeleton" />
           </div>
         </div>
       </div>
@@ -369,7 +376,11 @@
 
       <!-- 步行记录列表-加载中 -->
       <div class="routes" v-if="routeListLoading">
-        <div class="routes-item__skeleton" v-for="i in 3" :key="i" />
+        <div
+          class="cw-skeleton-animated routes-item__skeleton"
+          v-for="i in 3"
+          :key="i"
+        />
       </div>
 
       <!-- 步行记录列表-加载完成 -->

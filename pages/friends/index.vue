@@ -67,8 +67,10 @@
       <!-- 朋友列表-加载中 -->
       <div class="body" v-if="friendsLoading">
         <div class="body-item" v-for="i in 4" :key="i">
-          <div class="body-item-avatar-wrapper__skeleton" />
-          <div class="body-item-name__skeleton" />
+          <div
+            class="cw-skeleton-animated body-item-avatar-wrapper__skeleton"
+          />
+          <div class="cw-skeleton-animated body-item-name__skeleton" />
         </div>
       </div>
 
