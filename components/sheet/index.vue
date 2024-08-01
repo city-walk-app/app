@@ -8,6 +8,7 @@
       type: Boolean,
       required: true,
     },
+    title: String,
   })
   const emit = defineEmits(['on-close'])
 
@@ -34,8 +35,18 @@
           'px'
         })`,
       }"
-      @click="close"
     >
+      <div class="sheet-dialog-header">
+        <div class="sheet-dialog-header-title">{{ title || '' }}</div>
+
+        <div class="sheet-dialog-header-close" @click="close">
+          <image
+            class="sheet-dialog-header-close-icon"
+            src="/assets/svg/close.svg"
+          />
+        </div>
+      </div>
+
       <slot name="content" />
     </div>
   </div>
@@ -76,6 +87,41 @@
       display: flex;
       flex-direction: column;
       border-radius: 19rpx 19rpx 0 0;
+
+      // 头部
+      .sheet-dialog-header {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+        padding: 34rpx;
+        box-sizing: border-box;
+
+        .sheet-dialog-header-title {
+          height: 42rpx;
+          display: flex;
+          align-items: center;
+        }
+
+        .sheet-dialog-header-close {
+          width: 60rpx;
+          height: 60rpx;
+          background-color: #eee;
+          border-radius: 50%;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          position: absolute;
+          right: 34rpx;
+          top: 34rpx;
+
+          .sheet-dialog-header-close-icon {
+            width: 40rpx;
+            height: 40rpx;
+            flex-shrink: 0;
+          }
+        }
+      }
 
       &.shee-dialog-open {
         transform: translateY(0);

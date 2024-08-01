@@ -146,8 +146,8 @@
    * 关闭对话框
    */
   const closeSheet = () => {
-    // visibleSheet.value = false
-    // recordDetail.value = null
+    visibleSheet.value = false
+    recordDetail.value = null
   }
 
   /**

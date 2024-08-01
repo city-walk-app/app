@@ -10,6 +10,12 @@
 
   /** 用户信息 */
   const userInfo = ref()
+  /** 是否显示对话框 */
+  const visibleSheet = ref(false)
+  /** 控制弹窗内容的 key */
+  const sheetKey = ref('')
+  /** 控制弹窗内容的 title */
+  const sheetTite = ref('')
 
   /** 缓存的当前用户信息 */
   const userInfoStorage = ref(getStorage(USER_INFO))
@@ -53,151 +59,195 @@
       uni.redirectTo({ url: '/pages/home/index' })
     }
   }
+
+  /**
+   * 关闭对话框
+   */
+  const closeSheet = () => {
+    visibleSheet.value = false
+  }
+
+  /**
+   * 打开对话框
+   */
+  const openSheet = (key, title) => {
+    if (!key) {
+      return
+    }
+
+    sheetKey.value = key
+    sheetTite.value = title
+    visibleSheet.value = true
+  }
 </script>
 
 <template>
-  <StickyScroll title="设置">
-    <div class="setting">
-      <!-- 主要内容 -->
-      <div class="main">
-        <!-- 头像 -->
-        <div class="card">
-          <div class="card-item-avatar">
-            <div class="avatar">
-              <div class="avatar-wrapper">
+  <Sheet
+    v-model:visible="visibleSheet"
+    :title="sheetTite"
+    @on-close="closeSheet"
+  >
+    <!-- 设置页面 -->
+    <StickyScroll title="设置">
+      <div class="setting">
+        <!-- 主要内容 -->
+        <div class="main">
+          <!-- 头像 -->
+          <div class="card">
+            <div
+              class="card-item-avatar"
+              @click="openSheet('avatar', '修改头像')"
+            >
+              <div class="avatar">
+                <div class="avatar-wrapper">
+                  <image
+                    class="avatar-image"
+                    src="https://img1.baidu.com/it/u=1784112474,311889214&fm=253&fmt=auto&app=120&f=JPEG?w=500&h=500"
+                    mode="aspectFill"
+                  />
+                </div>
+
+                <div class="avatar-title">我的头像</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 信息 -->
+          <div class="card">
+            <!-- 名字 -->
+            <div class="card-item" @click="openSheet('nick_name', '修改名字')">
+              <div class="card-item-label">
                 <image
-                  class="avatar-image"
-                  src="https://img1.baidu.com/it/u=1784112474,311889214&fm=253&fmt=auto&app=120&f=JPEG?w=500&h=500"
-                  mode="aspectFill"
+                  class="card-item-label-icon"
+                  src="https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/city-walk/setting-nick-name.png"
                 />
+                <div class="card-item-label-title">名字</div>
               </div>
 
-              <div class="avatar-title">我的头像</div>
+              <image class="card-item-arrow" src="" />
+            </div>
+
+            <!-- 性别 -->
+            <div class="card-item" @click="openSheet('gender', '修改性别')">
+              <div class="card-item-label">
+                <image
+                  class="card-item-label-icon"
+                  src="https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/city-walk/setting-nick-name.png"
+                />
+                <div class="card-item-label-title">性别</div>
+              </div>
+
+              <image class="card-item-arrow" src="" />
+            </div>
+
+            <!-- 手机 -->
+            <div class="card-item" @click="openSheet('mobile', '修改手机')">
+              <div class="card-item-label">
+                <image
+                  class="card-item-label-icon"
+                  src="https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/city-walk/setting-nick-name.png"
+                />
+                <div class="card-item-label-title">手机</div>
+              </div>
+
+              <image class="card-item-arrow" src="" />
+            </div>
+
+            <!-- 邮箱 -->
+            <div class="card-item" @click="openSheet('email', '修改邮箱')">
+              <div class="card-item-label">
+                <image
+                  class="card-item-label-icon"
+                  src="https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/city-walk/setting-nick-name.png"
+                />
+                <div class="card-item-label-title">邮箱</div>
+              </div>
+
+              <image class="card-item-arrow" src="" />
+            </div>
+
+            <!-- 签名 -->
+            <div class="card-item" @click="openSheet('signature', '修改签名')">
+              <div class="card-item-label">
+                <image
+                  class="card-item-label-icon"
+                  src="https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/city-walk/setting-nick-name.png"
+                />
+                <div class="card-item-label-title">签名</div>
+              </div>
+
+              <image class="card-item-arrow" src="" />
+            </div>
+          </div>
+
+          <!-- 账户 -->
+          <div class="card">
+            <!-- 赞助 -->
+            <div class="card-item">
+              <div class="card-item-label">
+                <div class="card-item-label-sutitle">赞助</div>
+              </div>
+
+              <image class="card-item-arrow" src="" />
+            </div>
+
+            <!-- 加入 CityWalk -->
+            <div class="card-item">
+              <div class="card-item-label">
+                <div class="card-item-label-sutitle">加入 CityWalk</div>
+              </div>
+
+              <image class="card-item-arrow" src="" />
+            </div>
+
+            <!-- 给个好评 -->
+            <div class="card-item">
+              <div class="card-item-label">
+                <div class="card-item-label-sutitle">给个好评</div>
+              </div>
+
+              <image class="card-item-arrow" src="" />
+            </div>
+
+            <!-- Github -->
+            <div class="card-item">
+              <div class="card-item-label">
+                <div class="card-item-label-sutitle">Github</div>
+              </div>
+
+              <image class="card-item-arrow" src="" />
             </div>
           </div>
         </div>
-
-        <!-- 信息 -->
-        <div class="card">
-          <!-- 名字 -->
-          <div class="card-item">
-            <div class="card-item-label">
-              <image
-                class="card-item-label-icon"
-                src="https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/city-walk/setting-nick-name.png"
-              />
-              <div class="card-item-label-title">名字</div>
-            </div>
-
-            <image class="card-item-arrow" src="" />
-          </div>
-
-          <!-- 性别 -->
-          <div class="card-item">
-            <div class="card-item-label">
-              <image
-                class="card-item-label-icon"
-                src="https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/city-walk/setting-nick-name.png"
-              />
-              <div class="card-item-label-title">性别</div>
-            </div>
-
-            <image class="card-item-arrow" src="" />
-          </div>
-
-          <!-- 手机 -->
-          <div class="card-item">
-            <div class="card-item-label">
-              <image
-                class="card-item-label-icon"
-                src="https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/city-walk/setting-nick-name.png"
-              />
-              <div class="card-item-label-title">手机</div>
-            </div>
-
-            <image class="card-item-arrow" src="" />
-          </div>
-
-          <!-- 邮箱 -->
-          <div class="card-item">
-            <div class="card-item-label">
-              <image
-                class="card-item-label-icon"
-                src="https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/city-walk/setting-nick-name.png"
-              />
-              <div class="card-item-label-title">邮箱</div>
-            </div>
-
-            <image class="card-item-arrow" src="" />
-          </div>
-
-          <!-- 签名 -->
-          <div class="card-item">
-            <div class="card-item-label">
-              <image
-                class="card-item-label-icon"
-                src="https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/city-walk/setting-nick-name.png"
-              />
-              <div class="card-item-label-title">签名</div>
-            </div>
-
-            <image class="card-item-arrow" src="" />
-          </div>
-        </div>
-
-        <!-- 账户 -->
-        <div class="card">
-          <!-- 赞助 -->
-          <div class="card-item">
-            <div class="card-item-label">
-              <div class="card-item-label-sutitle">赞助</div>
-            </div>
-
-            <image class="card-item-arrow" src="" />
-          </div>
-
-          <!-- 加入 CityWalk -->
-          <div class="card-item">
-            <div class="card-item-label">
-              <div class="card-item-label-sutitle">加入 CityWalk</div>
-            </div>
-
-            <image class="card-item-arrow" src="" />
-          </div>
-
-          <!-- 给个好评 -->
-          <div class="card-item">
-            <div class="card-item-label">
-              <div class="card-item-label-sutitle">给个好评</div>
-            </div>
-
-            <image class="card-item-arrow" src="" />
-          </div>
-
-          <!-- Github -->
-          <div class="card-item">
-            <div class="card-item-label">
-              <div class="card-item-label-sutitle">Github</div>
-            </div>
-
-            <image class="card-item-arrow" src="" />
-          </div>
-
-          <!-- 签名 -->
-          <div class="card-item">
-            <div class="card-item-label">
-              <div class="card-item-label-title">签名</div>
-            </div>
-
-            <image class="card-item-arrow" src="" />
-          </div>
+        <div class="exit-wrapper" @click="outLogin">
+          <div class="exit-wrapper-text">退出登录</div>
         </div>
       </div>
-      <div class="exit-wrapper" @click="outLogin">
-        <div class="exit-wrapper-text">退出登录</div>
+    </StickyScroll>
+
+    <!-- 弹窗内容 -->
+    <template #content>
+      <div class="setting-sheet">
+        <!-- 头像 -->
+        <template v-if="sheetKey === 'avatar'"></template>
+
+        <!-- 名字 -->
+        <template v-else-if="sheetKey === 'nick_name'"></template>
+
+        <!-- 性别 -->
+        <template v-else-if="sheetKey === 'gender'"></template>
+
+        <!-- 手机 -->
+        <template v-else-if="sheetKey === 'mobile'"></template>
+
+        <!-- 邮箱 -->
+        <template v-else-if="sheetKey === 'email'"></template>
+
+        <!-- 签名 -->
+        <template v-else-if="sheetKey === 'signature'"></template>
       </div>
-    </div>
-  </StickyScroll>
+    </template>
+  </Sheet>
 </template>
 
 <style lang="scss">
