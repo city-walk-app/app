@@ -108,6 +108,7 @@
           <div class="ranking-item-avatar-wrapper">
             <!-- 皇冠 -->
             <image
+              v-if="index === 0"
               class="ranking-item-avatar-crown"
               src="https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/city-walk/ranking-crown.png"
             />

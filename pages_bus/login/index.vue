@@ -15,6 +15,10 @@
   const codeLength = ref(6)
   /** 登陆信息 */
   const loginForm = reactive({ email: '', code: '' })
+  /** 邮箱输入框聚焦 */
+  const emailInputFocus = ref(false)
+  /** 验证码输入框聚焦 */
+  const codeInputFocus = ref(false)
   /** 偏好列表 */
   const preferences = ref([
     { key: '', title: '', active: '' },
@@ -89,9 +93,22 @@
   const submit = async () => {}
 
   /**
+   * 获取焦点
+   */
+  const autoFocus = () => {
+    if (step.value === 0) {
+      emailInputFocus.value = true
+    } else if (step.value === 1) {
+      codeInputFocus.value = true
+    }
+  }
+
+  /**
    * 监听动画结束事件
    */
-  const transitionend = () => {}
+  const transitionend = () => {
+    autoFocus() // 获取焦点
+  }
 
   watch(
     () => loginForm.code,
@@ -102,7 +119,9 @@
     }
   )
 
-  onShow(() => {})
+  onShow(() => {
+    autoFocus() // 获取焦点
+  })
 </script>
 
 <template>
@@ -134,13 +153,18 @@
               class="email-input"
               type="text"
               placeholder="请输入邮箱"
+              placeholder-class="email-input-placeholder"
+              :adjust-position="false"
+              :focus="emailInputFocus"
               @confirm="sendEmail"
             />
           </div>
         </div>
 
         <!-- 登录按钮 -->
-        <div class="button" @click="sendEmail"></div>
+        <div class="button" hover-class="button-hover" @click="sendEmail">
+          <image class="button-icon" src="/assets/svg/right.svg" />
+        </div>
       </div>
 
       <!-- 2. 提交验证码 -->
@@ -159,21 +183,36 @@
 
         <div class="body">
           <!-- 验证码 -->
-          <div class="code-input-wrapper">
-            <div class="code-input-item" v-for="i in codeLength" :key="i">
+          <div class="code-input-wrapper" @click="codeInputFocus = true">
+            <!-- 验证码输入框 -->
+            <div
+              :class="[
+                'code-input-item',
+                { 'code-input-item-active': i - 1 === loginForm.code.length },
+              ]"
+              v-for="i in codeLength"
+              :key="i"
+            >
               {{ loginForm.code[i - 1] || '' }}
             </div>
+
+            <!-- 隐藏的输入框 -->
             <input
               v-model="loginForm.code"
               class="code-input"
               type="number"
+              :focus="codeInputFocus"
+              :adjust-position="false"
+              @blur="codeInputFocus = false"
               @conform="onLogin"
             />
           </div>
         </div>
 
         <!-- 登录按钮 -->
-        <div class="button" @click="onLogin"></div>
+        <div class="button" hover-class="button-hover" @click="onLogin">
+          <image class="button-icon" src="/assets/svg/right.svg" />
+        </div>
 
         <!-- 重新获取 -->
         <div class="try-send">重新获取</div>
@@ -205,7 +244,9 @@
         </div>
 
         <!-- 登录按钮 -->
-        <div class="button" @click="submit"></div>
+        <div class="button" hover-class="button-hover" @click="submit">
+          <image class="button-icon" src="/assets/svg/right.svg" />
+        </div>
       </div>
     </div>
   </div>
@@ -216,6 +257,8 @@
     overflow: hidden;
     height: 100vh;
     width: 100vw;
+    background: url('https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/city-walk/main-blank.png')
+      no-repeat;
 
     // 登录表单轮播图
     .login-swiper {
@@ -279,6 +322,13 @@
             height: 116rpx;
             background: #eee;
             border-radius: 40rpx;
+            border: 3rpx solid transparent;
+            transition: 0.24s;
+
+            &:focus-within {
+              border-color: var(--cw-theme-1);
+              background-color: #fff;
+            }
 
             .email-input {
               width: inherit;
@@ -288,6 +338,11 @@
               font-size: 34rpx;
               font-weight: 600;
               color: #333;
+            }
+
+            .email-input-placeholder {
+              font-weight: 400;
+              color: #a8a8a8;
             }
           }
 
@@ -311,15 +366,17 @@
               font-size: 34rpx;
               font-weight: 600;
               color: #333;
+              border: 3rpx solid transparent;
+
+              &.code-input-item-active {
+                border-color: var(--cw-theme-1);
+                background-color: #fff;
+              }
             }
 
             .code-input {
-              position: absolute;
-              inset: 0;
-              height: 100%;
-              background-color: transparent;
-              color: transparent;
-              border: transparent;
+              position: fixed;
+              left: -99999rpx;
             }
           }
 
@@ -342,11 +399,23 @@
         .button {
           width: 180rpx;
           height: 180rpx;
-          background: #f3943f;
+          background: var(--cw-theme-1);
           border-radius: 50%;
           display: flex;
           justify-content: center;
           align-items: center;
+          transition: background 0.23s;
+
+          .button-icon {
+            width: 99rpx;
+            height: 99rpx;
+            flex-shrink: 0;
+          }
+        }
+
+        // 按钮点击效果
+        .button-hover {
+          background-color: #f8d035;
         }
 
         // 重新获取

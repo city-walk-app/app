@@ -92,6 +92,12 @@
 
     // 头像设置
     if (sheetKey.value === 'avatar') {
+      // 没有选择图片
+      if (!avatarFile.value || !avatarFile.value.length) {
+        visibleSheet.value = false
+        return
+      }
+
       const upRes = await uploadOSSImages(API, [avatarFile.value])
 
       if (upRes && upRes.length) {
@@ -413,6 +419,7 @@
               width: 120rpx;
               height: 120rpx;
               border-radius: 50%;
+              background-color: var(--cw-skeleton-background-light);
 
               .avatar-image {
                 width: inherit;
@@ -504,6 +511,7 @@
       width: 366rpx;
       height: 366rpx;
       border-radius: 50%;
+      background-color: var(--cw-skeleton-background-light);
 
       .setting-sheet-avatar-image {
         width: inherit;

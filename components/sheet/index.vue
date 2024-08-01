@@ -18,7 +18,7 @@
 </script>
 
 <template>
-  <div :class="['sheet']">
+  <div class="sheet">
     <!-- 容器，存放内容 -->
     <div :class="['sheet-wrapper', { 'shee-wrapper-open': visible }]">
       <slot />

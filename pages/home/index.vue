@@ -28,15 +28,11 @@
   /** 地图标点集合 */
   const markers = ref()
   /** 是否开启卫星图 */
-  const enableSatellite = ref(true)
+  const enableSatellite = ref(false)
   /** 是否显示对话框 */
   const visibleSheet = ref(false)
   /** 打开信息详情 */
-  const recordDetail = ref({
-    province_url:
-      'https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/provinces/230000.png',
-    background_color: '#F8D035',
-  })
+  const recordDetail = ref()
   /** 天气信息 */
   const weatherInfo = ref()
   /** 心情颜色 */
@@ -521,12 +517,8 @@
         class="options-wrapper"
         :style="{
           '--top': useGlobal.navBarHeight + 16 + 'px',
-          '--background': enableSatellite
-            ? 'rgba(255, 255, 255, 0.2)'
-            : 'rgba(0, 0, 0, 0.2)',
-          '--border-color': enableSatellite
-            ? 'rgba(255, 255, 255, 0.3)'
-            : 'rgba(0, 0, 0, 0.3)',
+          '--background': 'rgba(255, 255, 255, 0.2)',
+          '--border-color': 'rgba(255, 255, 255, 0.3)',
         }"
       >
         <!-- 进入设置页面 -->
@@ -534,16 +526,25 @@
           <image class="options-setting-icon" src="/assets/svg/setting.svg" />
         </div>
         <div class="options-group">
-          <!-- 地图设置 -->
+          <!-- 改变地图图层 -->
           <div class="options-group-item" @click="changeEnableSatellite">
-            <image class="options-setting-icon" src="/assets/svg/map.svg" />
+            <image
+              v-if="enableSatellite"
+              class="options-setting-icon"
+              src="/assets/svg/home-star-map-open.svg"
+            />
+            <image
+              v-else
+              class="options-setting-icon"
+              src="/assets/svg/home-star-map-close.svg"
+            />
           </div>
           <div class="options-group-line" />
           <!-- 回到当前位置 -->
           <div class="options-group-item" @click="moveToCurrentLocation">
             <image
               class="options-setting-icon"
-              src="/assets/svg/position.svg"
+              src="/assets/svg/home-position.svg"
             />
           </div>
         </div>
