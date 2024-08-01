@@ -129,8 +129,7 @@
       userInfo
         ? {
             name: userInfo.nick_name,
-            avatar:
-              'https://img1.baidu.com/it/u=1784112474,311889214&fm=253&fmt=auto&app=120&f=JPEG?w=500&h=500',
+            avatar: userInfo.avatar || DEFAULT_AVATAR,
           }
         : null
     "
@@ -143,7 +142,7 @@
           <image
             class="header-avatar-image"
             mode="aspectFill"
-            src="https://img1.baidu.com/it/u=1784112474,311889214&fm=253&fmt=auto&app=120&f=JPEG?w=500&h=500"
+            :src="userInfo.avatar || DEFAULT_AVATAR"
           />
         </div>
 

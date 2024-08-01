@@ -10,7 +10,7 @@
     hideLoading,
     goPage,
   } from '@/utils'
-  import { USER_INFO, USER_TOKEN } from '@/enum'
+  import { USER_INFO, USER_TOKEN, DEFAULT_AVATAR } from '@/enum'
   import { onLoad, onShow } from '@dcloudio/uni-app'
   import { useGlobalStore } from '@/store'
   import FilterPopup from '@/components/filter-popup'
@@ -495,7 +495,7 @@
         <image
           mode="aspectFill"
           class="avatar-wrapper-image"
-          src="https://img1.baidu.com/it/u=1784112474,311889214&fm=253&fmt=auto&app=120&f=JPEG?w=500&h=500"
+          :src="userInfoStorage.avatar || DEFAULT_AVATAR"
         />
       </div>
 
