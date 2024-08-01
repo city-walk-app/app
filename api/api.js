@@ -135,7 +135,7 @@ export class Api extends Http {
    * 设置用户信息
    */
   setUserInfo = (data) => {
-    return this.request({ url: '/user/info/set_user_info', data })
+    return this.request({ url: '/user/set/user_info', data })
   }
 
   /**

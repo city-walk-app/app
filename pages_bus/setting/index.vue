@@ -1,43 +1,24 @@
 <script setup>
   import { ref } from 'vue'
-  import { getStorage } from '@/utils'
-  import { USER_INFO } from '@/enum'
+  import { getStorage, setStorage, uploadOSSImages } from '@/utils'
+  import { USER_INFO, DEFAULT_AVATAR } from '@/enum'
   import { Api } from '@/api'
   import Sheet from '@/components/sheet'
   import StickyScroll from '@/components/sticky-scroll'
 
   const API = new Api()
 
-  /** 用户信息 */
-  const userInfo = ref()
   /** 是否显示对话框 */
   const visibleSheet = ref(false)
   /** 控制弹窗内容的 key */
   const sheetKey = ref('')
   /** 控制弹窗内容的 title */
   const sheetTite = ref('')
+  /** 头像文件 */
+  const avatarFile = ref()
 
   /** 缓存的当前用户信息 */
   const userInfoStorage = ref(getStorage(USER_INFO))
-
-  /**
-   * 获取用户信息
-   */
-  const getUserInfo = async () => {
-    if (userInfo.value && userInfo.value.user_id) {
-      return
-    }
-
-    const res = await API.getUserInfo({
-      user_id: userInfoStorage.value.user_id,
-    })
-
-    if (res.code === 200) {
-      userInfo.value = res.data
-    }
-  }
-
-  // getUserInfo()
 
   /**
    * 点击退出登录
@@ -79,6 +60,77 @@
     sheetTite.value = title
     visibleSheet.value = true
   }
+
+  /**
+   * 选择头像
+   */
+  const chooseAvatar = async () => {
+    const res = await uni.chooseImage({
+      count: 1, // 选择图片的数量
+      sourceType: ['album', 'camera'],
+    })
+
+    if (res.errMsg !== 'chooseImage:ok') {
+      toast('上传异常，请重试')
+      return
+    }
+
+    avatarFile.value = res.tempFilePaths[0]
+
+    console.log(avatarFile.value)
+  }
+
+  /**
+   * 提交信息
+   */
+  const submitInfo = async () => {
+    if (!sheetKey.value) {
+      return
+    }
+
+    const data = {}
+
+    // 头像设置
+    if (sheetKey.value === 'avatar') {
+      const upRes = await uploadOSSImages(API, [avatarFile.value])
+
+      if (upRes && upRes.length) {
+        data[sheetKey.value] = upRes[0]
+      }
+    }
+    // 其它设置
+    else {
+      data[sheetKey.value] = userInfoStorage[sheetKey.value]
+    }
+
+    // 没有内容
+    if (!Object.keys(data).length) {
+      visibleSheet.value = false
+      return
+    }
+
+    const res = await API.setUserInfo(data)
+
+    if (res.code === 200) {
+      setStorage(USER_INFO, res.data)
+      visibleSheet.value = false
+      userInfoStorage.value = res.data
+      return
+    }
+
+    toast(res.message)
+  }
+
+  /**
+   * 修改性别
+   */
+  const changeGender = (value) => {
+    if (!value) {
+      return
+    }
+
+    userInfoStorage.gender = value
+  }
 </script>
 
 <template>
@@ -102,8 +154,8 @@
                 <div class="avatar-wrapper">
                   <image
                     class="avatar-image"
-                    src="https://img1.baidu.com/it/u=1784112474,311889214&fm=253&fmt=auto&app=120&f=JPEG?w=500&h=500"
                     mode="aspectFill"
+                    :src="userInfoStorage.avatar || DEFAULT_AVATAR"
                   />
                 </div>
 
@@ -229,22 +281,90 @@
     <template #content>
       <div class="setting-sheet">
         <!-- 头像 -->
-        <template v-if="sheetKey === 'avatar'"></template>
+        <template v-if="sheetKey === 'avatar'">
+          <div class="setting-sheet-avatar-wrapper" @click="chooseAvatar">
+            <image
+              v-if="avatarFile"
+              class="setting-sheet-avatar-image"
+              :src="avatarFile"
+              mode="aspectFill"
+            />
+            <image
+              v-else
+              class="setting-sheet-avatar-image"
+              mode="aspectFill"
+              :src="userInfoStorage.avatar || DEFAULT_AVATAR"
+            />
+          </div>
+        </template>
 
         <!-- 名字 -->
-        <template v-else-if="sheetKey === 'nick_name'"></template>
+        <template v-else-if="sheetKey === 'nick_name'">
+          <div class="setting-sheet-input-wrapper">
+            <input
+              class="setting-sheet-input"
+              type="text"
+              v-model="userInfoStorage.nick_name"
+            />
+          </div>
+        </template>
 
         <!-- 性别 -->
-        <template v-else-if="sheetKey === 'gender'"></template>
+        <template v-else-if="sheetKey === 'gender'">
+          <div class="setting-sheet-gender-wrapper">
+            <!-- 基本选项 -->
+            <div class="setting-sheet-gender-options">
+              <div class="setting-sheet-gender-item" @click="changeGender('1')">
+                男
+              </div>
+              <div class="setting-sheet-gender-item" @click="changeGender('2')">
+                女
+              </div>
+            </div>
+            <!-- 其它选项 -->
+            <div class="setting-sheet-gender-other" @click="changeGender('3')">
+              不愿透露
+            </div>
+          </div>
+        </template>
 
         <!-- 手机 -->
-        <template v-else-if="sheetKey === 'mobile'"></template>
+        <template v-else-if="sheetKey === 'mobile'">
+          <div class="setting-sheet-input-wrapper">
+            <input
+              class="setting-sheet-input"
+              type="text"
+              v-model="userInfoStorage.mobile"
+            />
+          </div>
+        </template>
 
         <!-- 邮箱 -->
-        <template v-else-if="sheetKey === 'email'"></template>
+        <template v-else-if="sheetKey === 'email'">
+          <div class="setting-sheet-input-wrapper">
+            <input
+              class="setting-sheet-input"
+              type="text"
+              v-model="userInfoStorage.email"
+            />
+          </div>
+        </template>
 
         <!-- 签名 -->
-        <template v-else-if="sheetKey === 'signature'"></template>
+        <template v-else-if="sheetKey === 'signature'">
+          <div class="setting-sheet-input-wrapper">
+            <input
+              class="setting-sheet-input"
+              type="text"
+              v-model="userInfoStorage.signature"
+            />
+          </div>
+        </template>
+
+        <!-- 提交按钮 -->
+        <div class="setting-sheet-submit-button" @click="submitInfo">
+          就这样
+        </div>
       </div>
     </template>
   </Sheet>
@@ -366,6 +486,101 @@
         color: #f65e56;
         line-height: 38rpx;
       }
+    }
+  }
+
+  // 对话框
+  .setting-sheet {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    padding: 40rpx 32rpx 32rpx 32rpx;
+    box-sizing: border-box;
+
+    // 头像容器
+    .setting-sheet-avatar-wrapper {
+      width: 366rpx;
+      height: 366rpx;
+      border-radius: 50%;
+
+      .setting-sheet-avatar-image {
+        width: inherit;
+        height: inherit;
+        border-radius: inherit;
+      }
+    }
+
+    // 输入框
+    .setting-sheet-input-wrapper {
+      width: 646rpx;
+      height: 116rpx;
+      background: #eee;
+      border-radius: 40rpx;
+
+      .setting-sheet-input {
+        width: inherit;
+        height: inherit;
+        padding: 30rpx 46rpx;
+        box-sizing: border-box;
+        font-size: 34rpx;
+        font-weight: 600;
+        color: #333;
+      }
+    }
+
+    // 性别
+    .setting-sheet-gender-wrapper {
+      display: flex;
+      flex-direction: column;
+      row-gap: 32rpx;
+
+      // 选项
+      .setting-sheet-gender-options {
+        display: flex;
+        align-items: center;
+        column-gap: 24rpx;
+
+        .setting-sheet-gender-item {
+          width: 300rpx;
+          height: 300rpx;
+          background: #eee;
+          border-radius: 40rpx;
+          padding: 28rpx;
+          box-sizing: border-box;
+          display: flex;
+          align-items: flex-end;
+          justify-content: flex-end;
+        }
+      }
+
+      // 不愿透露的
+      .setting-sheet-gender-other {
+        width: 624rpx;
+        height: 116rpx;
+        background: #eee;
+        border-radius: 20rpx;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+    }
+
+    // 提交按钮
+    .setting-sheet-submit-button {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 96rpx;
+      background: #f3943f;
+      border-radius: 28rpx;
+      border: 3rpx solid #f3943f;
+      font-weight: 400;
+      font-size: 32rpx;
+      color: #ffffff;
+      line-height: 38rpx;
     }
   }
 </style>
