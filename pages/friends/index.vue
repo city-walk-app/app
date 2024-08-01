@@ -2,24 +2,32 @@
   import { ref } from 'vue'
   import { Api } from '@/api'
   import StickyScroll from '@/components/sticky-scroll'
+  import Empty from '@/components/empty'
+  import { DEFAULT_AVATAR } from '@/enum'
 
   const API = new Api()
 
   /** 朋友列表 */
-  const friends = ref([1, 2, 31, 3, 4, 4, 4, 4, 1, 1, 1, 1, 1])
+  const friends = ref()
+  /** 是否正在加载朋友列表 */
+  const friendsLoading = ref(true)
 
   /**
    * 获取朋友列表
    */
   const friendList = async () => {
+    friendsLoading.value = true
+
     const res = await API.friendList()
+
+    friendsLoading.value = false
 
     if (res.code === 200) {
       friends.value = res.data
     }
   }
 
-  // friendList() // 获取朋友列表
+  friendList() // 获取朋友列表
 </script>
 
 <template>
@@ -56,31 +64,39 @@
         </div>
       </div>
 
-      <!-- 朋友列表 -->
-      <div class="body">
-        <div class="body-item" v-for="(item, index) in friends" :key="index">
-          <!-- 头像 -->
-          <image
-            mode="aspectFill"
-            class="body-item-avatar"
-            src="https://img1.baidu.com/it/u=1784112474,311889214&fm=253&fmt=auto&app=120&f=JPEG?w=500&h=500"
-          />
-          <!-- 名字 -->
-          <div class="body-item-name">田同学</div>
+      <!-- 朋友列表-加载中 -->
+      <div class="body" v-if="friendsLoading">
+        <div class="body-item" v-for="i in 4" :key="i">
+          <div class="body-item-avatar-wrapper__skeleton" />
+          <div class="body-item-name__skeleton" />
         </div>
       </div>
-    </div>
-  </StickyScroll>
-  <!-- <div class="friends">
-    <div class="header">
-      <h1>我的朋友</h1>
-      <template v-if="friends && friends.length">
-        <div v-for="(item, index) in friends" :key="index">
-          {{ item.nick_name }}
+
+      <!-- 朋友列表-加载完成 -->
+      <template v-else>
+        <!-- 朋友列表-有数据 -->
+        <div class="body" v-if="friends && friends.length">
+          <div class="body-item" v-for="(item, index) in friends" :key="index">
+            <!-- 头像 -->
+            <div class="body-item-avatar-wrapper">
+              <image
+                mode="aspectFill"
+                class="body-item-avatar"
+                :src="item.avatar || DEFAULT_AVATAR"
+              />
+            </div>
+            <!-- 名字 -->
+            <div class="body-item-name">{{ item.nick_name || '' }}</div>
+          </div>
+        </div>
+
+        <!-- 朋友列表-没有朋友 -->
+        <div v-else class="body-empty">
+          <Empty title="居然一个朋友都没有" />
         </div>
       </template>
     </div>
-  </div> -->
+  </StickyScroll>
 </template>
 
 <style lang="scss">
@@ -202,14 +218,44 @@
         align-items: center;
         row-gap: 24rpx;
 
-        .body-item-avatar {
+        // 头像容器
+        .body-item-avatar-wrapper__skeleton {
           width: 212rpx;
           height: 212rpx;
           flex-shrink: 0;
           border-radius: 44rpx;
+          flex-shrink: 0;
+          background-color: var(--cw-skeleton-background-light);
         }
 
+        // 头像容器
+        .body-item-avatar-wrapper {
+          width: 212rpx;
+          height: 212rpx;
+          flex-shrink: 0;
+          border-radius: 44rpx;
+          flex-shrink: 0;
+          background-color: var(--cw-skeleton-background-light);
+
+          .body-item-avatar {
+            width: inherit;
+            height: inherit;
+            border-radius: inherit;
+          }
+        }
+
+        // 名字骨架图
+        .body-item-name__skeleton {
+          width: 84rpx;
+          height: 40rpx;
+          background-color: var(--cw-skeleton-background-light);
+        }
+
+        // 名字
         .body-item-name {
+          height: 40rpx;
+          display: flex;
+          align-items: center;
           font-weight: 400;
           font-size: 28rpx;
           color: #666666;

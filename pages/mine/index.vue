@@ -2,6 +2,7 @@
   import { ref } from 'vue'
   import { Api } from '@/api'
   import { getCurrentDateFormatted, formatTime } from '@/utils'
+  import { DEFAULT_AVATAR } from '@/enum'
   import { onLoad, onShow } from '@dcloudio/uni-app'
   import StickyScroll from '@/components/sticky-scroll'
   import Empty from '@/components/empty'
@@ -148,7 +149,7 @@
       <!-- 头部信息 -->
       <div class="header">
         <!-- 头像 -->
-        <div class="header-avatar-box">
+        <div class="header-avatar-wrapper">
           <image
             v-if="userInfo"
             class="header-avatar-image"
@@ -413,11 +414,11 @@
       box-sizing: border-box;
 
       // 头像
-      .header-avatar-box {
+      .header-avatar-wrapper {
         width: 148rpx;
         height: 148rpx;
         border-radius: 50%;
-        background-color: #ddd;
+        background-color: var(--cw-skeleton-background-light);
 
         .header-avatar-image {
           width: inherit;
@@ -429,6 +430,10 @@
       // 昵称
       .header-nick-name {
         font-weight: 400;
+        height: 50rpx;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         font-size: 36rpx;
         color: #333333;
         line-height: 42rpx;
@@ -440,7 +445,7 @@
         width: 108rpx;
         height: 50rpx;
         margin-top: 32rpx;
-        background-color: #ddd;
+        background-color: var(--cw-skeleton-background-light);
       }
 
       // 签名
@@ -457,7 +462,7 @@
         width: 560rpx;
         height: 40rpx;
         margin-top: 16rpx;
-        background-color: #ddd;
+        background-color: var(--cw-skeleton-background-light);
       }
     }
 
@@ -491,7 +496,7 @@
             width: inherit;
             height: inherit;
             border-radius: 50%;
-            background-color: #ddd;
+            background-color: var(--cw-skeleton-background-light);
           }
         }
       }
@@ -816,7 +821,7 @@
       .routes-item__skeleton {
         width: 326rpx;
         height: 232rpx;
-        background: #ddd;
+        background-color: var(--cw-skeleton-background-light);
         border-radius: 16rpx;
         position: relative;
         overflow: hidden;

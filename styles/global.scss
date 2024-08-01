@@ -1,0 +1,17 @@
+// 骨架屏加载动画
+.cw-skeleton-animated {
+  // 加载动画
+  @keyframes f-skeleton-animated {
+    0% {
+      background-position: 100% 50%;
+    }
+
+    100% {
+      background-position: 0 50%;
+    }
+  }
+
+  background: linear-gradient(90deg, #f4f4f4 25%, #dcdcdc 37%, #f4f4f4 63%);
+  background-size: 400%;
+  animation: f-skeleton-animated 1.2s ease infinite;
+}

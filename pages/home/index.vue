@@ -803,7 +803,7 @@
       border-radius: 50%;
       position: fixed;
       left: 32rpx;
-      background-color: #ddd;
+      background-color: var(--cw-skeleton-background-light);
       z-index: 20;
 
       .avatar-wrapper-image {
