@@ -85,6 +85,20 @@
   }
 
   /**
+   * 获取用户信息
+   */
+  const getUserInfo = async () => {
+    const res = await API.getUserInfo({
+      user_id: userInfoStorage.value.user_id,
+    })
+
+    if (res.code === 200) {
+      userInfoStorage.value = res.data
+      setStorage(USER_INFO, res.data)
+    }
+  }
+
+  /**
    * 是否为已经登录状态
    */
   const isLoginState = computed(() => {
@@ -404,15 +418,7 @@
     }
 
     pictureFileList.value = res.tempFilePaths
-
-    console.log(pictureFileList.value)
   }
-
-  onLoad((options) => {
-    if (options.invite_id) {
-      getFriendInviteInfo(options.invite_id)
-    }
-  })
 
   /**
    * 获取权限
@@ -460,6 +466,17 @@
 
     getLocation() // 获取位置信息
   }
+
+  onLoad((options) => {
+    // 如果是登录状态
+    if (isLoginState.value) {
+      // 存在邀请 id
+      if (options.invite_id) {
+        getFriendInviteInfo(options.invite_id) // 获取邀请详情
+      }
+      getUserInfo() // 获取用户信息
+    }
+  })
 
   onShow(() => {
     setStorageData() // 设置缓存信息
