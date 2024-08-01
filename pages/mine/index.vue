@@ -4,6 +4,7 @@
   import { getCurrentDateFormatted, formatTime } from '@/utils'
   import { onLoad, onShow } from '@dcloudio/uni-app'
   import StickyScroll from '@/components/sticky-scroll'
+  import Empty from '@/components/empty'
 
   const API = new Api()
 
@@ -19,6 +20,10 @@
   const heatmap = ref()
   /** 步行记录详情列表 */
   const routeDetailList = ref()
+  /** 是否正在加载版图列表 */
+  const provinceListLoading = ref(true)
+  /** 是否正在加载步行记录列表 */
+  const routeListLoading = ref(true)
 
   /**
    * 获取用户信息
@@ -46,8 +51,6 @@
           _active: false,
         }
       })
-
-      console.log(heatmap.value)
     }
   }
 
@@ -55,7 +58,11 @@
    * 获取当前用户走过的省份列表
    */
   const getUserProvinceJigsaw = async () => {
+    provinceListLoading.value = true
+
     const res = await API.getUserProvinceJigsaw({ user_id: userId.value })
+
+    provinceListLoading.value = false
 
     if (res.code === 200) {
       provinceList.value = res.data.map((item) => {
@@ -70,10 +77,14 @@
   }
 
   /**
-   * 获取当前用户走过的省份列表
+   * 获取用户步行记录列表
    */
   const getUserRouteList = async () => {
+    routeListLoading.value = true
+
     const res = await API.getUserRouteList({ user_id: userId.value })
+
+    routeListLoading.value = false
 
     if (res.code === 200) {
       routeList.value = res.data
@@ -85,7 +96,6 @@
    */
   const heatmapItemClick = (item) => {
     item._active = !item._active
-    console.log(item)
 
     if (item._active) {
       routeDetailList.value = item.routes
@@ -136,30 +146,52 @@
   >
     <div class="main">
       <!-- 头部信息 -->
-      <div class="header" v-if="userInfo">
+      <div class="header">
         <!-- 头像 -->
         <div class="header-avatar-box">
           <image
+            v-if="userInfo"
             class="header-avatar-image"
             mode="aspectFill"
             :src="userInfo.avatar || DEFAULT_AVATAR"
           />
         </div>
 
-        <!-- 昵称 -->
-        <div class="header-nick-name" v-if="userInfo.nick_name">
-          {{ userInfo.nick_name }}
-        </div>
+        <!-- 用户信息 -->
+        <template v-if="userInfo">
+          <!-- 昵称 -->
+          <div class="header-nick-name">
+            {{ userInfo.nick_name || '' }}
+          </div>
 
-        <!-- 签名 -->
-        <div class="header-signature" v-if="userInfo.signature">
-          {{ userInfo.signature }}
+          <!-- 签名 -->
+          <div class="header-signature">
+            {{ userInfo.signature || '' }}
+          </div>
+        </template>
+
+        <!-- 用户信息-骨架图 -->
+        <template v-else>
+          <!-- 昵称骨架屏 -->
+          <div class="header-nick-name__skeleton" />
+
+          <!-- 签名骨架屏 -->
+          <div class="header-nick-signature__skeleton" />
+        </template>
+      </div>
+
+      <!-- 省份版图列表-骨架屏 -->
+      <div v-if="provinceListLoading" class="jigsaw-scroll">
+        <div class="jigsaw-wrapper">
+          <div class="jigsaw-item" v-for="i in 3" :key="i">
+            <div class="jigsaw-item__skeleton" />
+          </div>
         </div>
       </div>
 
-      <!-- 省份版图列表 -->
+      <!-- 省份版图列表-加载完成 -->
       <scroll-view
-        v-if="provinceList && provinceList.length"
+        v-if="!provinceListLoading && provinceList && provinceList.length"
         class="jigsaw-scroll"
         scroll-x
         :scroll-y="false"
@@ -185,7 +217,7 @@
       <div class="heatmap">
         <!-- 头部切换日期 -->
         <div class="heatmap-header">
-          <div class="heatmap-header-pick">2024年07月</div>
+          <div class="heatmap-header-pick">{{ getCurrentDateFormatted() }}</div>
         </div>
 
         <!-- 主要内容 -->
@@ -215,7 +247,7 @@
             </div>
           </div>
 
-          <!-- 右侧图表 -->
+          <!-- 右侧热力图-加载完成 -->
           <div class="heatmap-body-right" v-if="heatmap && heatmap.length">
             <div
               class="heatmap-body-right-item-wrapper"
@@ -237,6 +269,15 @@
                 }"
               ></div>
             </div>
+          </div>
+
+          <!-- 右侧热力图-骨架图 -->
+          <div v-else class="heatmap-body-right">
+            <div
+              class="heatmap-body-right-item-wrapper"
+              v-for="i in 31"
+              :key="i"
+            />
           </div>
         </div>
       </div>
@@ -325,21 +366,34 @@
         </div>
       </div>
 
-      <!-- 步行记录列表 -->
-      <div class="routes" v-if="routeList && routeList.length">
-        <div
-          class="routes-item"
-          v-for="(item, index) in routeList"
-          :key="index"
-          @click="routeDetail(item.list_id)"
-        >
-          <div class="routes-item-count">地点x{{ item.count }}</div>
-          <div class="routes-item-date">
-            {{ getCurrentDateFormatted(item.create_at) }}
-          </div>
-          <div class="routes-item-shadow"></div>
-        </div>
+      <!-- 步行记录列表-加载中 -->
+      <div class="routes" v-if="routeListLoading">
+        <div class="routes-item__skeleton" v-for="i in 3" :key="i" />
       </div>
+
+      <!-- 步行记录列表-加载完成 -->
+      <template v-else>
+        <!-- 步行记录列表 -->
+        <div class="routes" v-if="routeList && routeList.length">
+          <div
+            class="routes-item"
+            v-for="(item, index) in routeList"
+            :key="index"
+            @click="routeDetail(item.list_id)"
+          >
+            <div class="routes-item-count">地点x{{ item.count }}</div>
+            <div class="routes-item-date">
+              {{ getCurrentDateFormatted(item.create_at) }}
+            </div>
+            <div class="routes-item-shadow"></div>
+          </div>
+        </div>
+
+        <!-- 步行记录是空的 -->
+        <div class="routes-empty" v-else>
+          <Empty title="暂无打卡记录" />
+        </div>
+      </template>
     </div>
   </StickyScroll>
 </template>
@@ -363,6 +417,7 @@
         width: 148rpx;
         height: 148rpx;
         border-radius: 50%;
+        background-color: #ddd;
 
         .header-avatar-image {
           width: inherit;
@@ -380,6 +435,14 @@
         margin-top: 32rpx;
       }
 
+      // 昵称骨架屏
+      .header-nick-name__skeleton {
+        width: 108rpx;
+        height: 50rpx;
+        margin-top: 32rpx;
+        background-color: #ddd;
+      }
+
       // 签名
       .header-signature {
         font-weight: 400;
@@ -387,6 +450,14 @@
         color: #666666;
         line-height: 33rpx;
         margin-top: 16rpx;
+      }
+
+      // 签名骨架屏
+      .header-nick-signature__skeleton {
+        width: 560rpx;
+        height: 40rpx;
+        margin-top: 16rpx;
+        background-color: #ddd;
       }
     }
 
@@ -414,6 +485,13 @@
             mask: var(--province) 0 0 / cover no-repeat;
             -webkit-mask: var(--province) 0 0 / cover no-repeat;
             background: var(--background);
+          }
+
+          .jigsaw-item__skeleton {
+            width: inherit;
+            height: inherit;
+            border-radius: 50%;
+            background-color: #ddd;
           }
         }
       }
@@ -688,6 +766,7 @@
       column-gap: 34rpx;
       row-gap: 26rpx;
 
+      // 每一项
       .routes-item {
         width: 326rpx;
         height: 232rpx;
@@ -732,6 +811,23 @@
           bottom: 0;
         }
       }
+
+      // 骨架图
+      .routes-item__skeleton {
+        width: 326rpx;
+        height: 232rpx;
+        background: #ddd;
+        border-radius: 16rpx;
+        position: relative;
+        overflow: hidden;
+      }
+    }
+
+    // 暂无记录
+    .routes-empty {
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
   }
 </style>
