@@ -806,11 +806,13 @@
       left: 32rpx;
       background-color: var(--cw-skeleton-background-light);
       z-index: 20;
+      box-shadow: 0rpx 4rpx 12rpx 4rpx rgba(0, 0, 0, 0.16);
 
       .avatar-wrapper-image {
         width: inherit;
         height: inherit;
         border-radius: inherit;
+        flex-shrink: 0;
       }
     }
 
@@ -835,6 +837,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
+        box-shadow: 0rpx 4rpx 12rpx 4rpx rgba(0, 0, 0, 0.16);
 
         // icon
         .options-setting-icon {
@@ -855,6 +858,7 @@
         display: flex;
         flex-direction: column;
         align-items: center;
+        box-shadow: 0rpx 4rpx 12rpx 4rpx rgba(0, 0, 0, 0.16);
 
         .options-group-item {
           flex: 1;
@@ -901,10 +905,13 @@
       .weather-header {
         width: 81rpx;
         height: 83rpx;
-        background: rgba(255, 255, 255, 0.5);
-        box-shadow: 0rpx 0rpx 9rpx 2rpx rgba(255, 185, 57, 0.3);
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(15rpx);
+        // box-shadow: 0rpx 0rpx 9rpx 2rpx rgba(255, 185, 57, 0.3);
+        box-shadow: 0rpx 4rpx 12rpx 4rpx rgba(0, 0, 0, 0.16);
         border-radius: 50%;
-        border: 2rpx solid #ffffff;
+        border: 2rpx solid #fff;
+        backdrop-filter: blur(15rpx);
         display: flex;
         justify-content: center;
         overflow: hidden;
@@ -933,13 +940,13 @@
         background: linear-gradient(180deg, #fe8718 0%, #fec43d 100%);
         box-shadow: 0rpx 2rpx 8rpx 0rpx rgba(82, 134, 250, 0.4);
         border-radius: 36rpx 36rpx 36rpx 36rpx;
-        border: 2rpx solid #ffffff;
+        border: 2rpx solid #fff;
         display: flex;
         justify-content: center;
         align-items: center;
         font-weight: 400;
         font-size: 20rpx;
-        color: #ffffff;
+        color: #fff;
         line-height: 23rpx;
         position: relative;
         top: -25rpx;
@@ -1004,7 +1011,7 @@
             font-family: Douyin Sans, Douyin Sans;
             font-weight: bold;
             font-size: 32rpx;
-            color: #ffffff;
+            color: #fff;
             line-height: 38rpx;
           }
 
@@ -1013,7 +1020,7 @@
             font-family: PingFang SC, PingFang SC;
             font-weight: 400;
             font-size: 24rpx;
-            color: #ffffff;
+            color: #fff;
             line-height: 34rpx;
             max-width: 110rpx;
           }
@@ -1049,7 +1056,7 @@
       // background: linear-gradient(
       //   180deg,
       //   rgba(255, 255, 255, 0) 20%,
-      //   #ffffff 43%
+      //   #fff 43%
       // );
       // // background-color: transparent;
       // // background: hsla(0, 0%, 100%, 0.75);
@@ -1138,7 +1145,7 @@
         border: 3rpx solid #f3943f;
         font-weight: 400;
         font-size: 32rpx;
-        color: #ffffff;
+        color: #fff;
         line-height: 38rpx;
       }
     }
@@ -1201,7 +1208,7 @@
       .home-sheet-content-body-picture-wrapper {
         width: 100%;
         min-height: 282rpx;
-        background: linear-gradient(135deg, #fff2d1 0%, #ffffff 100%);
+        background: linear-gradient(135deg, #fff2d1 0%, #fff 100%);
         box-shadow: 0rpx 0rpx 17rpx 0rpx rgba(159, 159, 159, 0.25);
         border-radius: 28rpx;
         border: 2rpx solid;
@@ -1239,7 +1246,7 @@
           border: 3rpx solid #f3943f;
           font-weight: 400;
           font-size: 32rpx;
-          color: #ffffff;
+          color: #fff;
           line-height: 38rpx;
           display: flex;
           justify-content: center;
@@ -1269,7 +1276,7 @@
       .home-sheet-content-body-position {
         width: 100%;
         height: 96rpx;
-        background: linear-gradient(135deg, #fff2d1 0%, #ffffff 100%);
+        background: linear-gradient(135deg, #fff2d1 0%, #fff 100%);
         box-shadow: 0rpx 0rpx 17rpx 0rpx rgba(159, 159, 159, 0.25);
         border-radius: 28rpx;
         border: 2rpx solid;
@@ -1299,7 +1306,7 @@
       .home-sheet-content-body-speak {
         width: 100%;
         height: 124rpx;
-        background: linear-gradient(135deg, #fff2d1 0%, #ffffff 100%);
+        background: linear-gradient(135deg, #fff2d1 0%, #fff 100%);
         box-shadow: 0rpx 0rpx 17rpx 0rpx rgba(159, 159, 159, 0.25);
         border-radius: 28rpx;
         border: 2rpx solid;
@@ -1371,7 +1378,7 @@
         align-items: center;
         font-weight: 400;
         font-size: 32rpx;
-        color: #ffffff;
+        color: #fff;
         line-height: 38rpx;
       }
     }
