@@ -1,6 +1,12 @@
 <script setup>
   import { ref } from 'vue'
-  import { getStorage, setStorage, uploadOSSImages } from '@/utils'
+  import {
+    getStorage,
+    setStorage,
+    uploadOSSImages,
+    showLoading,
+    hideLoading,
+  } from '@/utils'
   import { USER_INFO, DEFAULT_AVATAR } from '@/enum'
   import { Api } from '@/api'
   import Sheet from '@/components/sheet'
@@ -106,7 +112,7 @@
     }
     // 其它设置
     else {
-      data[sheetKey.value] = userInfoStorage[sheetKey.value]
+      data[sheetKey.value] = userInfoStorage.value[sheetKey.value]
     }
 
     // 没有内容
@@ -115,7 +121,11 @@
       return
     }
 
+    showLoading('处理中...')
+
     const res = await API.setUserInfo(data)
+
+    hideLoading()
 
     if (res.code === 200) {
       setStorage(USER_INFO, res.data)
@@ -292,8 +302,8 @@
             <image
               v-if="avatarFile"
               class="setting-sheet-avatar-image"
-              :src="avatarFile"
               mode="aspectFill"
+              :src="avatarFile"
             />
             <image
               v-else
@@ -301,6 +311,8 @@
               mode="aspectFill"
               :src="userInfoStorage.avatar || DEFAULT_AVATAR"
             />
+
+            <div class="setting-sheet-avatar-title">选择照片</div>
           </div>
         </template>
 
@@ -425,6 +437,15 @@
                 width: inherit;
                 height: inherit;
                 border-radius: inherit;
+                flex-shrink: 0;
+              }
+
+              // 标题
+              .avatar-title {
+                font-weight: 400;
+                font-size: 36rpx;
+                color: #333333;
+                line-height: 42rpx;
               }
             }
           }
@@ -512,11 +533,25 @@
       height: 366rpx;
       border-radius: 50%;
       background-color: var(--cw-skeleton-background-light);
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+      row-gap: 26rpx;
 
+      // 预览的头像
       .setting-sheet-avatar-image {
         width: inherit;
         height: inherit;
         border-radius: inherit;
+        flex-shrink: 0;
+      }
+
+      // 标题
+      .setting-sheet-avatar-title {
+        font-weight: 400;
+        font-size: 28rpx;
+        color: #9a9a9a;
+        line-height: 33rpx;
       }
     }
 

@@ -60,8 +60,8 @@
       <div
         class="sticky-scroll-navigation-bar"
         :style="{
-          height: useGlobal.navBarHeight + 'px',
-          opacity: styleDiff,
+          '--height': useGlobal.navBarHeight + 'px',
+          '--opacity': styleDiff,
         }"
       />
 
@@ -132,8 +132,16 @@
         top: 0;
         right: 0;
         left: 0;
-        backdrop-filter: blur(10px);
+        mask-image: linear-gradient(
+          180deg,
+          #fff 0%,
+          rgb(255, 255, 255, 0.8) 80%,
+          transparent
+        );
+        backdrop-filter: blur(12px);
         z-index: 5;
+        height: var(--height);
+        opacity: var(--opacity);
       }
 
       // 头部
