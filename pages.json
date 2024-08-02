@@ -22,19 +22,12 @@
     },
     {
       "path": "pages/friends/index"
-    }
-  ],
-  "subPackages": [
+    },
     {
-      "root": "pages_bus",
-      "pages": [
-        {
-          "path": "login/index"
-        },
-        {
-          "path": "setting/index"
-        }
-      ]
+      "path": "login/index"
+    },
+    {
+      "path": "setting/index"
     }
   ],
   "globalStyle": {
