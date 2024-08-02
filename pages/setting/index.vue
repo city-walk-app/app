@@ -71,19 +71,19 @@
    * 选择头像
    */
   const chooseAvatar = async () => {
-    const res = await uni.chooseImage({
-      count: 1, // 选择图片的数量
-      sourceType: ['album', 'camera'],
-    })
+    try {
+      const res = await uni.chooseImage({
+        count: 1, // 选择图片的数量
+        sourceType: ['album', 'camera'],
+      })
 
-    if (res.errMsg !== 'chooseImage:ok') {
-      toast('上传异常，请重试')
-      return
+      // 上传成功
+      if (res.errMsg === 'chooseImage:ok') {
+        avatarFile.value = res.tempFilePaths[0]
+      }
+    } catch (err) {
+      console.log('上传头像异常', err)
     }
-
-    avatarFile.value = res.tempFilePaths[0]
-
-    console.log(avatarFile.value)
   }
 
   /**

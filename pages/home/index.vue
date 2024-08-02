@@ -403,17 +403,18 @@
    * 选择照片
    */
   const choosePicture = async () => {
-    const res = await uni.chooseImage({
-      count: 2, // 选择图片的数量
-      sourceType: ['album', 'camera'],
-    })
+    try {
+      const res = await uni.chooseImage({
+        count: 2, // 选择图片的数量
+        sourceType: ['album', 'camera'],
+      })
 
-    if (res.errMsg !== 'chooseImage:ok') {
-      toast('上传异常，请重试')
-      return
+      if (res.errMsg === 'chooseImage:ok') {
+        pictureFileList.value = res.tempFilePaths
+      }
+    } catch (err) {
+      console.log('选择照片异常', err)
     }
-
-    pictureFileList.value = res.tempFilePaths
   }
 
   /**
