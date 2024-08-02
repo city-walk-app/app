@@ -312,7 +312,9 @@
               :src="userInfoStorage.avatar || DEFAULT_AVATAR"
             />
 
-            <div class="setting-sheet-avatar-title">选择照片</div>
+            <div v-if="!avatarFile" class="setting-sheet-avatar-title">
+              点击选择照片
+            </div>
           </div>
         </template>
 
@@ -524,7 +526,7 @@
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
-    padding: 40rpx 32rpx 32rpx 32rpx;
+    padding: 60rpx 32rpx var(--cw-padding-bottom) 32rpx;
     box-sizing: border-box;
 
     // 头像容器

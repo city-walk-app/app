@@ -6,4 +6,8 @@ page {
 
   // 主题色
   --cw-theme-1: #f3943f;
+
+  // 底部边距
+  --cw-padding-bottom: 66rpx;
+  // --cw-padding-bottom: calc(32rpx + env(safe-area-inset-bottom));
 }
