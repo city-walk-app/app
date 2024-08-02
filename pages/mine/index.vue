@@ -79,10 +79,14 @@
    * 获取用户信息
    */
   const getUserInfo = async () => {
-    const res = await API.getUserInfo({ user_id: userId.value })
+    try {
+      const res = await API.getUserInfo({ user_id: userId.value })
 
-    if (res.code === 200) {
-      userInfo.value = res.data
+      if (res.code === 200) {
+        userInfo.value = res.data
+      }
+    } catch (err) {
+      console.log('接口异常', err)
     }
   }
 
@@ -90,18 +94,22 @@
    * 获取用户指定月份打卡热力图
    */
   const getLocationUserHeatmap = async (date = {}) => {
-    const res = await API.getLocationUserHeatmap({
-      user_id: userId.value,
-      ...date,
-    })
-
-    if (res.code === 200 && res.data && res.data.length) {
-      heatmap.value = res.data.map((item) => {
-        return {
-          ...item,
-          _active: false,
-        }
+    try {
+      const res = await API.getLocationUserHeatmap({
+        user_id: userId.value,
+        ...date,
       })
+
+      if (res.code === 200 && res.data && res.data.length) {
+        heatmap.value = res.data.map((item) => {
+          return {
+            ...item,
+            _active: false,
+          }
+        })
+      }
+    } catch (err) {
+      console.log('接口异常', err)
     }
   }
 
@@ -109,21 +117,25 @@
    * 获取当前用户走过的省份列表
    */
   const getUserProvinceJigsaw = async () => {
-    provinceListLoading.value = true
+    try {
+      provinceListLoading.value = true
 
-    const res = await API.getUserProvinceJigsaw({ user_id: userId.value })
+      const res = await API.getUserProvinceJigsaw({ user_id: userId.value })
 
-    provinceListLoading.value = false
+      provinceListLoading.value = false
 
-    if (res.code === 200) {
-      provinceList.value = res.data.map((item) => {
-        return {
-          ...item,
-          province_url: item.province_code
-            ? `https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/provinces/${item.province_code}.png`
-            : '',
-        }
-      })
+      if (res.code === 200) {
+        provinceList.value = res.data.map((item) => {
+          return {
+            ...item,
+            province_url: item.province_code
+              ? `https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/provinces/${item.province_code}.png`
+              : '',
+          }
+        })
+      }
+    } catch (err) {
+      console.log('接口异常', err)
     }
   }
 
@@ -131,14 +143,18 @@
    * 获取用户步行记录列表
    */
   const getUserRouteList = async () => {
-    routeListLoading.value = true
+    try {
+      routeListLoading.value = true
 
-    const res = await API.getUserRouteList({ user_id: userId.value })
+      const res = await API.getUserRouteList({ user_id: userId.value })
 
-    routeListLoading.value = false
+      routeListLoading.value = false
 
-    if (res.code === 200) {
-      routeList.value = res.data
+      if (res.code === 200) {
+        routeList.value = res.data
+      }
+    } catch (err) {
+      console.log('接口异常', err)
     }
   }
 
@@ -157,8 +173,6 @@
 
   /**
    * 点击查看详情
-   *
-   * @param list_id
    */
   const routeDetail = (list_id) => {
     if (!list_id) {
@@ -268,6 +282,7 @@
               class="header-avatar-image"
               mode="aspectFill"
               :src="userInfo.avatar || DEFAULT_AVATAR"
+              @click="previewPicture([userInfo.avatar || DEFAULT_AVATAR])"
             />
           </div>
 

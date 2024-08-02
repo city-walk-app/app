@@ -17,18 +17,22 @@
    * 获取朋友列表
    */
   const friendList = async () => {
-    friendsLoading.value = true
+    try {
+      friendsLoading.value = true
 
-    const res = await API.friendList()
+      const res = await API.friendList()
 
-    friendsLoading.value = false
+      friendsLoading.value = false
 
-    if (res.code === 200) {
-      friends.value = res.data
-      return
+      if (res.code === 200) {
+        friends.value = res.data
+        return
+      }
+
+      toast(res.message)
+    } catch (err) {
+      console.log('接口异常', err)
     }
-
-    toast(res.message)
   }
 
   friendList() // 获取朋友列表

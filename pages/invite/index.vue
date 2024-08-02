@@ -7,6 +7,7 @@
 
   const API = new Api()
   const useGlobal = useGlobalStore()
+  const qrCodeBase64 = ref('')
 
   console.log(useGlobal.headerBtnPosi)
   console.log(useGlobal.navBarHeight)
@@ -15,23 +16,29 @@
    * 邀请朋友
    */
   const friendInvite = async () => {
-    const res = await API.friendInvite()
+    try {
+      const res = await API.friendInvite()
 
-    if (res.code === 200) {
-      return res.data
+      if (res.code === 200) {
+        return res.data
+      }
+    } catch (err) {
+      console.log('接口异常', err)
     }
   }
-
-  const qrCodeBase64 = ref('')
 
   /**
    * 获取邀请二维码
    */
   const getInviteQrCode = async () => {
-    const res = await API.getInviteQrCode({})
+    try {
+      const res = await API.getInviteQrCode({})
 
-    if (res.code === 200) {
-      qrCodeBase64.value = res.data
+      if (res.code === 200) {
+        qrCodeBase64.value = res.data
+      }
+    } catch (err) {
+      console.log('接口异常', err)
     }
   }
 

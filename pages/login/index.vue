@@ -36,21 +36,25 @@
    * 发送验证码
    */
   const sendEmail = async () => {
-    // 邮箱不正确
-    if (!emailRegex.test(loginForm.email)) {
-      toast('输入正确邮箱之后再获取')
-      return
-    }
+    try {
+      // 邮箱不正确
+      if (!emailRegex.test(loginForm.email)) {
+        toast('输入正确邮箱之后再获取')
+        return
+      }
 
-    showLoading('获取中...')
+      showLoading('获取中...')
 
-    const res = await API.sendEmail({ email: loginForm.email })
+      const res = await API.sendEmail({ email: loginForm.email })
 
-    hideLoading()
+      hideLoading()
 
-    if (res.code === 200) {
-      toast('获取成功')
-      step.value = 1
+      if (res.code === 200) {
+        toast('获取成功')
+        step.value = 1
+      }
+    } catch (err) {
+      console.log('接口异常', err)
     }
   }
 
@@ -58,33 +62,37 @@
    * 登录
    */
   const onLogin = async () => {
-    // 验证码验证失败
-    if (!loginForm.code || loginForm.code.length !== 6) {
-      toast('验证码格式不正确')
-      return
-    }
-
-    showLoading('处理中...')
-
-    const res = await API.emailLogin(loginForm)
-
-    hideLoading()
-
-    if (res.code === 200) {
-      setStorage(USER_INFO, res.data.user_info)
-      setStorage(USER_TOKEN, res.data.token)
-
-      // 新用户完善偏好设置
-      if (res.data.is_new_user) {
-        step.value = 2
-      } else {
-        uni.redirectTo({ url: '/pages/home/index' })
+    try {
+      // 验证码验证失败
+      if (!loginForm.code || loginForm.code.length !== 6) {
+        toast('验证码格式不正确')
+        return
       }
 
-      return
-    }
+      showLoading('处理中...')
 
-    toast(res.message)
+      const res = await API.emailLogin(loginForm)
+
+      hideLoading()
+
+      if (res.code === 200) {
+        setStorage(USER_INFO, res.data.user_info)
+        setStorage(USER_TOKEN, res.data.token)
+
+        // 新用户完善偏好设置
+        if (res.data.is_new_user) {
+          step.value = 2
+        } else {
+          uni.redirectTo({ url: '/pages/home/index' })
+        }
+
+        return
+      }
+
+      toast(res.message)
+    } catch (err) {
+      console.log('接口异常', err)
+    }
   }
 
   /**

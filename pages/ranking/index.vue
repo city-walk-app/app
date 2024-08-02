@@ -17,18 +17,24 @@
    * 获取朋友经验排名
    */
   const getFriendExperienceRanking = async () => {
-    rankingListLoading.value = true
+    try {
+      rankingListLoading.value = true
 
-    const res = await API.getFriendExperienceRanking()
+      const res = await API.getFriendExperienceRanking()
 
-    rankingListLoading.value = false
+      rankingListLoading.value = false
 
-    if (res.code === 200) {
-      rankingList.value = res.data
-      return
+      if (res.code === 200) {
+        rankingList.value = res.data
+        return
+      }
+
+      toast(res.message)
+    } catch (err) {
+      console.log('接口异常', err)
+
+      rankingListLoading.value = false
     }
-
-    toast(res.message)
   }
 
   /**

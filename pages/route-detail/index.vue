@@ -13,17 +13,19 @@
 
   /**
    * 获取用户步行记录列表
-   *
-   * @param list_id
    */
   const getUserRouteDetail = async (list_id) => {
-    const res = await API.getUserRouteDetail({
-      list_id,
-      user_id: userInfo.value.user_id,
-    })
+    try {
+      const res = await API.getUserRouteDetail({
+        list_id,
+        user_id: userInfo.value.user_id,
+      })
 
-    if (res.code === 200) {
-      routeDetail.value = res.data
+      if (res.code === 200) {
+        routeDetail.value = res.data
+      }
+    } catch (err) {
+      console.log('接口异常', err)
     }
   }
 

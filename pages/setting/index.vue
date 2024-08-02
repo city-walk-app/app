@@ -11,6 +11,7 @@
   import { Api } from '@/api'
   import Sheet from '@/components/sheet'
   import StickyScroll from '@/components/sticky-scroll'
+  import { toast } from '../../utils'
 
   const API = new Api()
 
@@ -98,16 +99,24 @@
 
     // 头像设置
     if (sheetKey.value === 'avatar') {
-      // 没有选择图片
-      if (!avatarFile.value || !avatarFile.value.length) {
-        visibleSheet.value = false
+      try {
+        // 没有选择图片
+        if (!avatarFile.value || !avatarFile.value.length) {
+          closeSheet() // 关闭对话框
+          return
+        }
+
+        const upRes = await uploadOSSImages(API, [avatarFile.value])
+
+        if (upRes && upRes.length) {
+          data[sheetKey.value] = upRes[0]
+        }
+      } catch (err) {
+        console.log('头像设置异常', err)
+
+        toast('头像处理异常')
+        closeSheet() // 关闭对话框
         return
-      }
-
-      const upRes = await uploadOSSImages(API, [avatarFile.value])
-
-      if (upRes && upRes.length) {
-        data[sheetKey.value] = upRes[0]
       }
     }
     // 其它设置
@@ -117,24 +126,28 @@
 
     // 没有内容
     if (!Object.keys(data).length) {
-      visibleSheet.value = false
+      closeSheet() // 关闭对话框
       return
     }
 
-    showLoading('处理中...')
+    try {
+      showLoading('处理中...')
 
-    const res = await API.setUserInfo(data)
+      const res = await API.setUserInfo(data)
 
-    hideLoading()
+      hideLoading()
 
-    if (res.code === 200) {
-      setStorage(USER_INFO, res.data)
-      visibleSheet.value = false
-      userInfoStorage.value = res.data
-      return
+      if (res.code === 200) {
+        setStorage(USER_INFO, res.data)
+        closeSheet() // 关闭对话框
+        userInfoStorage.value = res.data
+        return
+      }
+
+      toast(res.message)
+    } catch (err) {
+      console.log('接口异常', err)
     }
-
-    toast(res.message)
   }
 
   /**

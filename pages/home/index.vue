@@ -85,13 +85,17 @@
    * 获取用户信息
    */
   const getUserInfo = async () => {
-    const res = await API.getUserInfo({
-      user_id: userInfoStorage.value.user_id,
-    })
+    try {
+      const res = await API.getUserInfo({
+        user_id: userInfoStorage.value.user_id,
+      })
 
-    if (res.code === 200) {
-      userInfoStorage.value = res.data
-      setStorage(USER_INFO, res.data)
+      if (res.code === 200) {
+        userInfoStorage.value = res.data
+        setStorage(USER_INFO, res.data)
+      }
+    } catch (err) {
+      console.log('接口异常', err)
     }
   }
 
@@ -318,32 +322,36 @@
    * 获取邀请详情
    */
   const getFriendInviteInfo = async (invite_id) => {
-    console.log('获取详情')
-    const res = await API.getFriendInviteInfo({ invite_id })
+    try {
+      console.log('获取详情')
+      const res = await API.getFriendInviteInfo({ invite_id })
 
-    console.log(res)
+      console.log(res)
 
-    if (res.code === 200) {
-      const modalRes = await uni.showModal({
-        title: '好友申请',
-        content: `${res.data.name} 申请加你为好友，你同意吗？`,
-        showCancel: true,
-        cancelText: '拒绝',
-        confirmText: '同意',
-      })
+      if (res.code === 200) {
+        const modalRes = await uni.showModal({
+          title: '好友申请',
+          content: `${res.data.name} 申请加你为好友，你同意吗？`,
+          showCancel: true,
+          cancelText: '拒绝',
+          confirmText: '同意',
+        })
 
-      if (modalRes.errMsg !== 'showModal:ok') {
-        toast('弹窗异常')
-        return
-      }
+        if (modalRes.errMsg !== 'showModal:ok') {
+          toast('弹窗异常')
+          return
+        }
 
-      if (modalRes.confirm) {
-        const result = await API.friendConfirmInvite({ invite_id })
+        if (modalRes.confirm) {
+          const result = await API.friendConfirmInvite({ invite_id })
 
-        if (result.code === 200) {
-          console.log(result)
+          if (result.code === 200) {
+            console.log(result)
+          }
         }
       }
+    } catch (err) {
+      console.log('接口异常', err)
     }
   }
 
@@ -392,30 +400,34 @@
    * 完善步行打卡记录详情
    */
   const submitRouteDetail = async () => {
-    showLoading()
+    try {
+      showLoading()
 
-    // 上传图片
-    if (pictureFileList.value && pictureFileList.value.length) {
-      const upRes = await uploadOSSImages(API, pictureFileList.value)
+      // 上传图片
+      if (pictureFileList.value && pictureFileList.value.length) {
+        const upRes = await uploadOSSImages(API, pictureFileList.value)
 
-      console.log('上传的图片', upRes)
+        console.log('上传的图片', upRes)
 
-      routeDetailForm.picture = upRes.filter(Boolean)
-    }
+        routeDetailForm.picture = upRes.filter(Boolean)
+      }
 
-    const res = await API.updateRouteDetail(routeDetailForm)
+      const res = await API.updateRouteDetail(routeDetailForm)
 
-    hideLoading()
+      hideLoading()
 
-    if (res.code === 200) {
-      console.log(res)
+      if (res.code === 200) {
+        console.log(res)
 
-      toast('提交成功')
+        toast('提交成功')
 
-      setTimeout(() => {
-        visibleSheet.value = false
-        recordDetail.value = null
-      }, 500)
+        setTimeout(() => {
+          visibleSheet.value = false
+          recordDetail.value = null
+        }, 500)
+      }
+    } catch (err) {
+      console.log('接口异常', err)
     }
   }
 
