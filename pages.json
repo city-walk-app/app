@@ -24,10 +24,10 @@
       "path": "pages/friends/index"
     },
     {
-      "path": "login/index"
+      "path": "pages/login/index"
     },
     {
-      "path": "setting/index"
+      "path": "pages/setting/index"
     }
   ],
   "globalStyle": {
