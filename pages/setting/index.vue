@@ -391,6 +391,7 @@
 </template>
 
 <style lang="scss">
+  // 设置页面
   .setting {
     padding: 32rpx;
     box-sizing: border-box;

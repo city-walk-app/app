@@ -9,6 +9,7 @@
     showLoading,
     hideLoading,
     goPage,
+    isNumber,
   } from '@/utils'
   import { USER_INFO, USER_TOKEN, DEFAULT_AVATAR } from '@/enum'
   import { onLoad, onShow } from '@dcloudio/uni-app'
@@ -58,7 +59,7 @@
   ])
   /** 步行记录详情表单 */
   const routeDetailForm = reactive({
-    route_id: '121212', // 步行 id
+    route_id: '', // 步行 id
     content: '', // 内容
     travel_type: '', // 出行方式
     mood_color: '', // 心情颜色
@@ -180,6 +181,11 @@
 
     const { latitude, longitude, name, address } = res
 
+    if (isNumber(longitude) || isNumber(latitude)) {
+      toast('参数缺失')
+      return
+    }
+
     console.log('打卡成功', res)
 
     /** 创建当前位置信息 */
@@ -234,9 +240,14 @@
       latitude: latitude.value,
     })
 
-    if (res.code === 200 && res.data && res.data.length) {
-      setMarkers(res.data)
+    if (res.code === 200) {
+      if (res.data && res.data.length) {
+        setMarkers(res.data)
+      }
+      return
     }
+
+    toast(res.message)
   }
 
   /**
@@ -250,7 +261,10 @@
 
     if (res.code === 200) {
       weatherInfo.value = res.data
+      return
     }
+
+    toast(res.message)
   }
 
   /**
@@ -270,11 +284,13 @@
       return
     }
 
-    longitude.value = res.longitude
-    latitude.value = res.latitude
+    if (isNumber(res.longitude) && isNumber(res.latitude)) {
+      longitude.value = res.longitude
+      latitude.value = res.latitude
 
-    // getLocationPopularRecommend() // 获取周边热门地点
-    // getWeatherInfo() // 获取天气信息
+      // getLocationPopularRecommend() // 获取周边热门地点
+      // getWeatherInfo() // 获取天气信息
+    }
   }
 
   /**
@@ -362,10 +378,14 @@
   /**
    * 回到当前位置
    */
-  const moveToCurrentLocation = async () => {
-    const mapContext = uni.createMapContext('map')
+  const moveToCurrentLocation = () => {
+    try {
+      const mapContext = uni.createMapContext('map')
 
-    mapContext.moveToLocation()
+      mapContext.moveToLocation()
+    } catch (err) {
+      console.log('回到当前位置异常', err)
+    }
   }
 
   /**
