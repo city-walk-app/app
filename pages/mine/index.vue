@@ -1,11 +1,17 @@
 <script setup>
-  import { ref } from 'vue'
+  import { ref, reactive } from 'vue'
   import { Api } from '@/api'
-  import { getCurrentDateFormatted, formatTime } from '@/utils'
+  import {
+    getCurrentDateFormatted,
+    formatTime,
+    showLoading,
+    hideLoading,
+  } from '@/utils'
   import { DEFAULT_AVATAR } from '@/enum'
   import { onLoad } from '@dcloudio/uni-app'
   import StickyScroll from '@/components/sticky-scroll'
   import Empty from '@/components/empty'
+  import Sheet from '@/components/sheet'
 
   const API = new Api()
 
@@ -25,6 +31,48 @@
   const provinceListLoading = ref(true)
   /** 是否正在加载步行记录列表 */
   const routeListLoading = ref(true)
+  /** 是否显示对话框 */
+  const visibleSheet = ref(false)
+  /** 月份选择列表 */
+  const monthSelectList = ref([
+    { title: '一', key: 1 },
+    { title: '二', key: 2 },
+    { title: '三', key: 3 },
+    { title: '四', key: 4 },
+    { title: '五', key: 5 },
+    { title: '六', key: 6 },
+    { title: '七', key: 7 },
+    { title: '八', key: 8 },
+    { title: '九', key: 9 },
+    { title: '十', key: 10 },
+    { title: '十一', key: 11 },
+    { title: '十二', key: 12 },
+  ])
+  /** 年份选择列表 */
+  const yearSelectList = ref()
+  /** 热力图筛选参数 */
+  const heatmapDateParams = reactive({
+    year: null,
+    month: null,
+  })
+
+  /**
+   * 设置年份数组
+   *
+   * 项目从 2024 年开始，所以开始年份就是 2024 年
+   */
+  const setYearSelectList = (startYear, endYear) => {
+    const yearsArray = []
+
+    for (let year = startYear; year <= endYear; year++) {
+      yearsArray.push(year)
+    }
+
+    yearSelectList.value = yearsArray
+    console.log(yearSelectList.value)
+  }
+
+  setYearSelectList(2024, new Date().getFullYear()) // 设置年份数组
 
   /**
    * 获取用户信息
@@ -40,10 +88,10 @@
   /**
    * 获取用户指定月份打卡热力图
    */
-  const getLocationUserHeatmap = async () => {
+  const getLocationUserHeatmap = async (date = {}) => {
     const res = await API.getLocationUserHeatmap({
       user_id: userId.value,
-      // date: getCurrentDateFormatted(),
+      ...date,
     })
 
     if (res.code === 200 && res.data && res.data.length) {
@@ -122,6 +170,52 @@
     })
   }
 
+  /**
+   * 关闭对话框
+   */
+  const closeSheet = () => {
+    visibleSheet.value = false
+  }
+
+  /**
+   * 打开对话框
+   */
+  const openSheet = () => {
+    visibleSheet.value = true
+  }
+
+  /**
+   * 热力图选择时间段筛选
+   */
+  const submitFilter = async () => {
+    if (!heatmapDateParams.year || !heatmapDateParams.month) {
+      toast('请选择年月')
+      return
+    }
+
+    showLoading('筛选中...')
+
+    await getLocationUserHeatmap(heatmapDateParams)
+
+    hideLoading()
+
+    closeSheet() // 关闭对话框
+  }
+
+  /**
+   * 选择年份
+   */
+  const setYearSelect = (year) => {
+    heatmapDateParams.year = year
+  }
+
+  /**
+   * 选择月份
+   */
+  const setMonthSelect = (month) => {
+    heatmapDateParams.month = month
+  }
+
   onLoad((options) => {
     userId.value = options.user_id
 
@@ -133,296 +227,361 @@
 </script>
 
 <template>
-  <StickyScroll
-    :title-info="
-      userInfo
-        ? {
-            name: userInfo.nick_name,
-            avatar: userInfo.avatar || DEFAULT_AVATAR,
-          }
-        : null
-    "
+  <Sheet
+    v-model:visible="visibleSheet"
+    title="筛选时间段"
+    @on-close="closeSheet"
   >
-    <div class="main">
-      <!-- 头部信息 -->
-      <div class="header">
-        <!-- 头像 -->
-        <div
-          :class="[
-            'header-avatar-wrapper',
-            {
-              'cw-skeleton-animated': !userInfo,
-            },
-          ]"
+    <!-- 我的页面 -->
+    <StickyScroll
+      :title-info="
+        userInfo
+          ? {
+              name: userInfo.nick_name,
+              avatar: userInfo.avatar || DEFAULT_AVATAR,
+            }
+          : null
+      "
+    >
+      <div class="main">
+        <!-- 头部信息 -->
+        <div class="header">
+          <!-- 头像 -->
+          <div
+            :class="[
+              'header-avatar-wrapper',
+              {
+                'cw-skeleton-animated': !userInfo,
+              },
+            ]"
+          >
+            <image
+              v-if="userInfo"
+              class="header-avatar-image"
+              mode="aspectFill"
+              :src="userInfo.avatar || DEFAULT_AVATAR"
+            />
+          </div>
+
+          <!-- 用户信息 -->
+          <template v-if="userInfo">
+            <!-- 昵称 -->
+            <div class="header-nick-name">
+              {{ userInfo.nick_name || '' }}
+            </div>
+
+            <!-- 签名 -->
+            <div class="header-signature">
+              {{ userInfo.signature || '' }}
+            </div>
+          </template>
+
+          <!-- 用户信息-骨架图 -->
+          <template v-else>
+            <!-- 昵称骨架屏 -->
+            <div class="cw-skeleton-animated header-nick-name__skeleton" />
+
+            <!-- 签名骨架屏 -->
+            <div class="cw-skeleton-animated header-nick-signature__skeleton" />
+          </template>
+        </div>
+
+        <!-- 省份版图列表-骨架屏 -->
+        <div v-if="provinceListLoading" class="jigsaw-scroll">
+          <div class="jigsaw-wrapper">
+            <div class="jigsaw-item" v-for="i in 3" :key="i">
+              <div class="cw-skeleton-animated jigsaw-item__skeleton" />
+            </div>
+          </div>
+        </div>
+
+        <!-- 省份版图列表-加载完成 -->
+        <scroll-view
+          v-if="!provinceListLoading && provinceList && provinceList.length"
+          class="jigsaw-scroll"
+          scroll-x
+          :scroll-y="false"
         >
-          <image
-            v-if="userInfo"
-            class="header-avatar-image"
-            mode="aspectFill"
-            :src="userInfo.avatar || DEFAULT_AVATAR"
+          <div class="jigsaw-wrapper">
+            <div
+              class="jigsaw-item"
+              v-for="(item, index) in provinceList"
+              :key="index"
+            >
+              <div
+                class="jigsaw-image"
+                :style="{
+                  '--province': `url('${item.province_url}')`,
+                  '--background': item.background_color,
+                }"
+              />
+            </div>
+          </div>
+        </scroll-view>
+
+        <!-- 热力图 -->
+        <div class="heatmap">
+          <!-- 头部切换日期 -->
+          <div class="heatmap-header">
+            <div class="heatmap-header-date" @click="openSheet">
+              <!-- 日历 -->
+              <div class="heatmap-header-date-calendar">
+                <image
+                  class="heatmap-header-date-calendar-icon"
+                  src="/assets/svg/main-calendar.svg"
+                />
+              </div>
+              <div class="heatmap-header-date-time">
+                {{ getCurrentDateFormatted() }}
+              </div>
+            </div>
+          </div>
+
+          <!-- 主要内容 -->
+          <div class="heatmap-body">
+            <!-- 左侧标识 -->
+            <div class="heatmap-body-left">
+              <div class="heatmap-body-left-item">
+                <image
+                  class="heatmap-body-left-item-icon"
+                  src="https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/city-walk/main-heatmap-1.png"
+                />
+                <div class="heatmap-body-left-item-text">打卡多</div>
+              </div>
+              <div class="heatmap-body-left-item">
+                <image
+                  class="heatmap-body-left-item-icon"
+                  src="https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/city-walk/main-heatmap-2.png"
+                />
+                <div class="heatmap-body-left-item-text">打卡少</div>
+              </div>
+              <div class="heatmap-body-left-item">
+                <image
+                  class="heatmap-body-left-item-icon"
+                  src="https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/city-walk/main-heatmap-3.png"
+                />
+                <div class="heatmap-body-left-item-text">未打卡</div>
+              </div>
+            </div>
+
+            <!-- 右侧热力图-加载完成 -->
+            <div class="heatmap-body-right" v-if="heatmap && heatmap.length">
+              <div
+                class="heatmap-body-right-item-wrapper"
+                v-for="(item, index) in heatmap"
+                :key="index"
+                @click="heatmapItemClick(item)"
+              >
+                <div
+                  :class="[
+                    'heatmap-body-right-item',
+                    {
+                      'heatmap-body-right-item-active': item._active,
+                    },
+                  ]"
+                  :style="{
+                    background: item.background_color
+                      ? item.background_color
+                      : 'none',
+                  }"
+                ></div>
+              </div>
+            </div>
+
+            <!-- 右侧热力图-骨架图 -->
+            <div v-else class="heatmap-body-right">
+              <div
+                class="heatmap-body-right-item-wrapper"
+                v-for="i in 31"
+                :key="i"
+              />
+            </div>
+          </div>
+        </div>
+
+        <!-- 详情步行 -->
+        <div class="details" v-if="routeDetailList && routeDetailList.length">
+          <!-- 左侧时间线 -->
+          <!-- <div class="details-left"></div> -->
+
+          <!-- 时间线 -->
+          <div class="details-everyone">
+            <div
+              class="details-everyone-item"
+              v-for="(item, index) in routeDetailList"
+              :key="index"
+            >
+              <!-- 时间线 -->
+              <div class="details-everyone-time-line">
+                <image
+                  v-if="index === 0"
+                  class="details-everyone-time-line-avatar"
+                  src="https://img1.baidu.com/it/u=1784112474,311889214&fm=253&fmt=auto&app=120&f=JPEG?w=500&h=500"
+                  mode="aspectFill"
+                />
+
+                <!-- 圈 -->
+                <div v-else class="details-everyone-time-line-circle">
+                  <div class="details-everyone-time-line-circle-inner" />
+                </div>
+              </div>
+
+              <!-- 详细记录 -->
+              <div class="details-everyone-content">
+                <!-- 图标 -->
+                <image
+                  class="details-everyone-item-icon-position"
+                  src="https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/city-walk/main-position.png"
+                />
+
+                <!-- 头部内容 -->
+                <div class="details-everyone-item-header">
+                  <!-- 头部内容 -->
+                  <div class="details-everyone-item-content">
+                    <div class="details-everyone-item-header-time">
+                      {{ formatTime(item.create_at) }}
+                    </div>
+                    <div class="details-everyone-item-header-address">
+                      {{ item.address || item.city }}
+                    </div>
+                  </div>
+                </div>
+
+                <!-- 身体内容 -->
+                <div
+                  v-if="item.content || (item.picture && item.picture.length)"
+                  class="details-everyone-item-body"
+                >
+                  <!-- 文案 -->
+                  <div
+                    v-if="item.content"
+                    class="details-everyone-item-body-content"
+                  >
+                    {{ item.content }}
+                  </div>
+
+                  <!-- 照片 -->
+                  <scroll-view
+                    v-if="item.picture && item.picture.length"
+                    class="details-everyone-item-body-pictures"
+                    :scroll-x="false"
+                    scroll-y
+                  >
+                    <div class="details-everyone-item-body-picture-wrapper">
+                      <image
+                        v-for="(item, index) in item.picture"
+                        class="details-everyone-item-body-picture-item"
+                        :src="item"
+                        :key="index"
+                        mode="aspectFill"
+                      />
+                    </div>
+                  </scroll-view>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 步行记录列表-加载中 -->
+        <div class="routes" v-if="routeListLoading">
+          <div
+            class="cw-skeleton-animated routes-item__skeleton"
+            v-for="i in 3"
+            :key="i"
           />
         </div>
 
-        <!-- 用户信息 -->
-        <template v-if="userInfo">
-          <!-- 昵称 -->
-          <div class="header-nick-name">
-            {{ userInfo.nick_name || '' }}
-          </div>
-
-          <!-- 签名 -->
-          <div class="header-signature">
-            {{ userInfo.signature || '' }}
-          </div>
-        </template>
-
-        <!-- 用户信息-骨架图 -->
+        <!-- 步行记录列表-加载完成 -->
         <template v-else>
-          <!-- 昵称骨架屏 -->
-          <div class="cw-skeleton-animated header-nick-name__skeleton" />
+          <!-- 步行记录列表 -->
+          <div class="routes" v-if="routeList && routeList.length">
+            <div
+              class="routes-item"
+              v-for="(item, index) in routeList"
+              :key="index"
+              @click="routeDetail(item.list_id)"
+            >
+              <div class="routes-item-count">地点x{{ item.count }}</div>
+              <div class="routes-item-date">
+                {{ getCurrentDateFormatted(item.create_at) }}
+              </div>
+              <div class="routes-item-shadow"></div>
+            </div>
+          </div>
 
-          <!-- 签名骨架屏 -->
-          <div class="cw-skeleton-animated header-nick-signature__skeleton" />
+          <!-- 步行记录是空的 -->
+          <div class="routes-empty" v-else>
+            <Empty title="暂无打卡记录" />
+          </div>
         </template>
       </div>
+    </StickyScroll>
 
-      <!-- 省份版图列表-骨架屏 -->
-      <div v-if="provinceListLoading" class="jigsaw-scroll">
-        <div class="jigsaw-wrapper">
-          <div class="jigsaw-item" v-for="i in 3" :key="i">
-            <div class="cw-skeleton-animated jigsaw-item__skeleton" />
-          </div>
-        </div>
-      </div>
-
-      <!-- 省份版图列表-加载完成 -->
-      <scroll-view
-        v-if="!provinceListLoading && provinceList && provinceList.length"
-        class="jigsaw-scroll"
-        scroll-x
-        :scroll-y="false"
-      >
-        <div class="jigsaw-wrapper">
-          <div
-            class="jigsaw-item"
-            v-for="(item, index) in provinceList"
-            :key="index"
+    <!-- 弹窗内容 -->
+    <template #content>
+      <div class="main-sheet">
+        <!-- 内容 -->
+        <div class="main-sheet-wrapper">
+          <!-- 选择年份 -->
+          <scroll-view
+            class="main-sheet-wrapper-scroll"
+            scroll-x
+            :scroll-y="false"
           >
-            <div
-              class="jigsaw-image"
-              :style="{
-                '--province': `url('${item.province_url}')`,
-                '--background': item.background_color,
-              }"
-            />
-          </div>
-        </div>
-      </scroll-view>
-
-      <!-- 热力图 -->
-      <div class="heatmap">
-        <!-- 头部切换日期 -->
-        <div class="heatmap-header">
-          <div class="heatmap-header-date">
-            <!-- 日历 -->
-            <div class="heatmap-header-date-calendar">
-              <image
-                class="heatmap-header-date-calendar-icon"
-                src="/assets/svg/main-calendar.svg"
-              />
-            </div>
-            <div class="heatmap-header-date-time">
-              {{ getCurrentDateFormatted() }}
-            </div>
-          </div>
-        </div>
-
-        <!-- 主要内容 -->
-        <div class="heatmap-body">
-          <!-- 左侧标识 -->
-          <div class="heatmap-body-left">
-            <div class="heatmap-body-left-item">
-              <image
-                class="heatmap-body-left-item-icon"
-                src="https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/city-walk/main-heatmap-1.png"
-              />
-              <div class="heatmap-body-left-item-text">打卡多</div>
-            </div>
-            <div class="heatmap-body-left-item">
-              <image
-                class="heatmap-body-left-item-icon"
-                src="https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/city-walk/main-heatmap-2.png"
-              />
-              <div class="heatmap-body-left-item-text">打卡少</div>
-            </div>
-            <div class="heatmap-body-left-item">
-              <image
-                class="heatmap-body-left-item-icon"
-                src="https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/city-walk/main-heatmap-3.png"
-              />
-              <div class="heatmap-body-left-item-text">未打卡</div>
-            </div>
-          </div>
-
-          <!-- 右侧热力图-加载完成 -->
-          <div class="heatmap-body-right" v-if="heatmap && heatmap.length">
-            <div
-              class="heatmap-body-right-item-wrapper"
-              v-for="(item, index) in heatmap"
-              :key="index"
-              @click="heatmapItemClick(item)"
-            >
+            <div class="main-sheet-item-wrapper" style="--width: 460rpx">
               <div
                 :class="[
-                  'heatmap-body-right-item',
+                  'main-sheet-item',
                   {
-                    'heatmap-body-right-item-active': item._active,
+                    'main-sheet-item-active': heatmapDateParams.year === item,
                   },
                 ]"
-                :style="{
-                  background: item.background_color
-                    ? item.background_color
-                    : 'none',
-                }"
-              ></div>
-            </div>
-          </div>
-
-          <!-- 右侧热力图-骨架图 -->
-          <div v-else class="heatmap-body-right">
-            <div
-              class="heatmap-body-right-item-wrapper"
-              v-for="i in 31"
-              :key="i"
-            />
-          </div>
-        </div>
-      </div>
-
-      <!-- 详情步行 -->
-      <div class="details" v-if="routeDetailList && routeDetailList.length">
-        <!-- 左侧时间线 -->
-        <!-- <div class="details-left"></div> -->
-
-        <!-- 时间线 -->
-        <div class="details-everyone">
-          <div
-            class="details-everyone-item"
-            v-for="(item, index) in routeDetailList"
-            :key="index"
-          >
-            <!-- 时间线 -->
-            <div class="details-everyone-time-line">
-              <image
-                v-if="index === 0"
-                class="details-everyone-time-line-avatar"
-                src="https://img1.baidu.com/it/u=1784112474,311889214&fm=253&fmt=auto&app=120&f=JPEG?w=500&h=500"
-                mode="aspectFill"
-              />
-
-              <!-- 圈 -->
-              <div v-else class="details-everyone-time-line-circle">
-                <div class="details-everyone-time-line-circle-inner" />
-              </div>
-            </div>
-
-            <!-- 详细记录 -->
-            <div class="details-everyone-content">
-              <!-- 图标 -->
-              <image
-                class="details-everyone-item-icon-position"
-                src="https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/city-walk/main-position.png"
-              />
-
-              <!-- 头部内容 -->
-              <div class="details-everyone-item-header">
-                <!-- 头部内容 -->
-                <div class="details-everyone-item-content">
-                  <div class="details-everyone-item-header-time">
-                    {{ formatTime(item.create_at) }}
-                  </div>
-                  <div class="details-everyone-item-header-address">
-                    {{ item.address || item.city }}
-                  </div>
-                </div>
-              </div>
-
-              <!-- 身体内容 -->
-              <div
-                v-if="item.content || (item.picture && item.picture.length)"
-                class="details-everyone-item-body"
+                v-for="(item, index) in yearSelectList"
+                :key="index"
+                @click="setYearSelect(item)"
               >
-                <!-- 文案 -->
-                <div
-                  v-if="item.content"
-                  class="details-everyone-item-body-content"
-                >
-                  {{ item.content }}
-                </div>
-
-                <!-- 照片 -->
-                <scroll-view
-                  v-if="item.picture && item.picture.length"
-                  class="details-everyone-item-body-pictures"
-                  :scroll-x="false"
-                  scroll-y
-                >
-                  <div class="details-everyone-item-body-picture-wrapper">
-                    <image
-                      v-for="(item, index) in item.picture"
-                      class="details-everyone-item-body-picture-item"
-                      :src="item"
-                      :key="index"
-                      mode="aspectFill"
-                    />
-                  </div>
-                </scroll-view>
+                <div class="main-sheet-item-title">{{ item }}年</div>
               </div>
             </div>
-          </div>
-        </div>
-      </div>
+          </scroll-view>
 
-      <!-- 步行记录列表-加载中 -->
-      <div class="routes" v-if="routeListLoading">
-        <div
-          class="cw-skeleton-animated routes-item__skeleton"
-          v-for="i in 3"
-          :key="i"
-        />
-      </div>
-
-      <!-- 步行记录列表-加载完成 -->
-      <template v-else>
-        <!-- 步行记录列表 -->
-        <div class="routes" v-if="routeList && routeList.length">
-          <div
-            class="routes-item"
-            v-for="(item, index) in routeList"
-            :key="index"
-            @click="routeDetail(item.list_id)"
+          <!-- 选择月份 -->
+          <scroll-view
+            class="main-sheet-wrapper-scroll"
+            scroll-x
+            :scroll-y="false"
           >
-            <div class="routes-item-count">地点x{{ item.count }}</div>
-            <div class="routes-item-date">
-              {{ getCurrentDateFormatted(item.create_at) }}
+            <div class="main-sheet-item-wrapper" style="--width: 300rpx">
+              <div
+                :class="[
+                  'main-sheet-item',
+                  {
+                    'main-sheet-item-active':
+                      heatmapDateParams.month === item.key,
+                  },
+                ]"
+                v-for="(item, index) in monthSelectList"
+                :key="index"
+                @click="setMonthSelect(item.key)"
+              >
+                <div class="main-sheet-item-title">{{ item.title }}月</div>
+              </div>
             </div>
-            <div class="routes-item-shadow"></div>
-          </div>
+          </scroll-view>
         </div>
 
-        <!-- 步行记录是空的 -->
-        <div class="routes-empty" v-else>
-          <Empty title="暂无打卡记录" />
-        </div>
-      </template>
-    </div>
-  </StickyScroll>
+        <!-- 提交按钮 -->
+        <div class="main-sheet-submit-button" @click="submitFilter">筛选</div>
+      </div>
+    </template>
+  </Sheet>
 </template>
 
 <style lang="scss">
+  // 我的页面
   .main {
     position: relative;
-    // background-color: #faf9fa;
 
     // 头部信息
     .header {
@@ -872,6 +1031,84 @@
       display: flex;
       justify-content: center;
       align-items: center;
+    }
+  }
+
+  // 弹窗内容
+  .main-sheet {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    padding: 60rpx 32rpx var(--cw-padding-bottom) 32rpx;
+    box-sizing: border-box;
+
+    // 内容
+    .main-sheet-wrapper {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+      row-gap: 90rpx;
+
+      .main-sheet-wrapper-scroll {
+        width: inherit;
+
+        .main-sheet-item-wrapper {
+          display: flex;
+          flex-wrap: nowrap;
+          overflow-x: auto;
+          column-gap: 19rpx;
+
+          // 每一项
+          .main-sheet-item {
+            width: var(--width);
+            height: 200rpx;
+            flex-shrink: 0;
+            background-color: var(--cw-skeleton-background-light);
+            border-radius: 10rpx;
+            padding: 30rpx 27rpx;
+            box-sizing: border-box;
+            display: flex;
+            justify-content: flex-end;
+            align-items: flex-end;
+            transition: background 0.26s;
+
+            .main-sheet-item-title {
+              color: #333;
+              font-weight: 600;
+              font-size: 42rpx;
+              transition: color 0.26s;
+            }
+
+            // 选中状态
+            &.main-sheet-item-active {
+              background-color: var(--cw-theme-1);
+
+              .main-sheet-item-title {
+                color: #fff;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    // 提交按钮
+    .main-sheet-submit-button {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 96rpx;
+      background: #f3943f;
+      border-radius: 28rpx;
+      border: 3rpx solid #f3943f;
+      font-weight: 400;
+      font-size: 32rpx;
+      color: #ffffff;
+      line-height: 38rpx;
     }
   }
 </style>
