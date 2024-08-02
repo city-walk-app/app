@@ -3,7 +3,7 @@
   import { Api } from '@/api'
   import { getCurrentDateFormatted, formatTime } from '@/utils'
   import { DEFAULT_AVATAR } from '@/enum'
-  import { onLoad, onShow } from '@dcloudio/uni-app'
+  import { onLoad } from '@dcloudio/uni-app'
   import StickyScroll from '@/components/sticky-scroll'
   import Empty from '@/components/empty'
 
@@ -42,6 +42,7 @@
    */
   const getLocationUserHeatmap = async () => {
     const res = await API.getLocationUserHeatmap({
+      user_id: userId.value,
       // date: getCurrentDateFormatted(),
     })
 
@@ -127,9 +128,6 @@
     getUserInfo() // 获取用户信息
     getUserRouteList() // 获取用户步行记录列表
     getUserProvinceJigsaw() // 获取当前用户走过的省份列表
-  })
-
-  onShow(() => {
     getLocationUserHeatmap() // 获取用户指定月份打卡热力图
   })
 </script>
@@ -225,7 +223,18 @@
       <div class="heatmap">
         <!-- 头部切换日期 -->
         <div class="heatmap-header">
-          <div class="heatmap-header-pick">{{ getCurrentDateFormatted() }}</div>
+          <div class="heatmap-header-date">
+            <!-- 日历 -->
+            <div class="heatmap-header-date-calendar">
+              <image
+                class="heatmap-header-date-calendar-icon"
+                src="/assets/svg/main-calendar.svg"
+              />
+            </div>
+            <div class="heatmap-header-date-time">
+              {{ getCurrentDateFormatted() }}
+            </div>
+          </div>
         </div>
 
         <!-- 主要内容 -->
@@ -524,19 +533,38 @@
         align-items: center;
         justify-content: flex-end;
 
-        .heatmap-header-pick {
-          height: 52rpx;
+        // 日期
+        .heatmap-header-date {
           background: #f3f3f3;
-          border-radius: 4rpx 4rpx 4rpx 4rpx;
-          padding: 0 16rpx;
+          border-radius: 4rpx;
+          padding: 14rpx 23rpx;
           box-sizing: border-box;
           display: flex;
           align-items: center;
           justify-content: center;
-          font-weight: 400;
-          font-size: 24rpx;
-          color: #9a9a9a;
-          line-height: 44rpx;
+          column-gap: 13rpx;
+
+          // 日历
+          .heatmap-header-date-calendar {
+            width: 32rpx;
+            height: 32rpx;
+            flex-shrink: 0;
+
+            // icon
+            .heatmap-header-date-calendar-icon {
+              width: inherit;
+              height: inherit;
+              flex-shrink: 0;
+            }
+          }
+
+          // 时间
+          .heatmap-header-date-time {
+            font-weight: 400;
+            font-size: 24rpx;
+            color: #9a9a9a;
+            line-height: 44rpx;
+          }
         }
       }
 
