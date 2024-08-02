@@ -25,8 +25,12 @@ export const hideLoading = uni.hideLoading
 /**
  * 预览图片
  */
-export const previewImage = (url) => {
-  uni.previewImage({ urls: [url] })
+export const previewImage = async (urls, current) => {
+  try {
+    await uni.previewImage({ urls, current })
+  } catch (err) {
+    console.log('预览失败', err)
+  }
 }
 
 

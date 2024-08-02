@@ -6,6 +6,7 @@
     formatTime,
     showLoading,
     hideLoading,
+    previewImage,
   } from '@/utils'
   import { DEFAULT_AVATAR } from '@/enum'
   import { onLoad } from '@dcloudio/uni-app'
@@ -214,6 +215,13 @@
    */
   const setMonthSelect = (month) => {
     heatmapDateParams.month = month
+  }
+
+  /**
+   * 点击预览图片
+   */
+  const previewPicture = async (urls, current) => {
+    await previewImage(urls, current)
   }
 
   onLoad((options) => {
@@ -464,17 +472,22 @@
                   <scroll-view
                     v-if="item.picture && item.picture.length"
                     class="details-everyone-item-body-pictures"
-                    :scroll-x="false"
-                    scroll-y
+                    scroll-x
+                    :scroll-y="false"
                   >
-                    <div class="details-everyone-item-body-picture-wrapper">
-                      <image
-                        v-for="(item, index) in item.picture"
-                        class="details-everyone-item-body-picture-item"
-                        :src="item"
+                    <div class="details-everyone-item-body-picture-list">
+                      <div
+                        class="cw-skeleton-animated details-everyone-item-body-picture-item-wrapper"
+                        v-for="(pictItem, index) in item.picture"
                         :key="index"
-                        mode="aspectFill"
-                      />
+                        @click="previewPicture(item.picture, pictItem)"
+                      >
+                        <image
+                          class="details-everyone-item-body-picture-item"
+                          mode="aspectFill"
+                          :src="pictItem"
+                        />
+                      </div>
                     </div>
                   </scroll-view>
                 </div>
@@ -940,16 +953,25 @@
                 overflow-x: auto;
                 margin-top: 24rpx;
 
-                .details-everyone-item-body-picture-wrapper {
+                .details-everyone-item-body-picture-list {
                   display: flex;
                   flex-wrap: nowrap;
                   column-gap: 24rpx;
 
-                  .details-everyone-item-body-picture-item {
+                  .details-everyone-item-body-picture-item-wrapper {
                     width: 348rpx;
                     height: 350rpx;
                     border-radius: 16rpx;
                     flex-shrink: 0;
+                    overflow: hidden;
+                    background-color: var(--cw-skeleton-background-light);
+
+                    .details-everyone-item-body-picture-item {
+                      width: inherit;
+                      height: inherit;
+                      border-radius: inherit;
+                      flex-shrink: 0;
+                    }
                   }
                 }
               }
