@@ -15,6 +15,7 @@
   import StickyScroll from '@/components/sticky-scroll'
   import Empty from '@/components/empty'
   import Sheet from '@/components/sheet'
+  import CwButton from '@/components/cw-button'
 
   const API = new Api()
 
@@ -611,7 +612,7 @@
         </div>
 
         <!-- 提交按钮 -->
-        <div class="main-sheet-submit-button" @click="submitFilter">筛选</div>
+        <CwButton block @click="submitFilter">筛选</CwButton>
       </div>
     </template>
   </Sheet>
@@ -1155,22 +1156,6 @@
           }
         }
       }
-    }
-
-    // 提交按钮
-    .main-sheet-submit-button {
-      width: 100%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 96rpx;
-      background: #f3943f;
-      border-radius: 28rpx;
-      border: 3rpx solid #f3943f;
-      font-weight: 400;
-      font-size: 32rpx;
-      color: #ffffff;
-      line-height: 38rpx;
     }
   }
 </style>

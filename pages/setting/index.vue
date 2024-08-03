@@ -12,6 +12,7 @@
   import Sheet from '@/components/sheet'
   import StickyScroll from '@/components/sticky-scroll'
   import { toast } from '../../utils'
+  import CwButton from '@/components/cw-button'
 
   const API = new Api()
 
@@ -395,9 +396,7 @@
         </template>
 
         <!-- 提交按钮 -->
-        <div class="setting-sheet-submit-button" @click="submitInfo">
-          就这样
-        </div>
+        <CwButton block @click="submitInfo">就这样</CwButton>
       </div>
     </template>
   </Sheet>
@@ -624,22 +623,6 @@
         justify-content: center;
         align-items: center;
       }
-    }
-
-    // 提交按钮
-    .setting-sheet-submit-button {
-      width: 100%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 96rpx;
-      background: #f3943f;
-      border-radius: 28rpx;
-      border: 3rpx solid #f3943f;
-      font-weight: 400;
-      font-size: 32rpx;
-      color: #ffffff;
-      line-height: 38rpx;
     }
   }
 </style>

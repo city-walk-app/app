@@ -4,6 +4,7 @@
   import { onShareAppMessage } from '@dcloudio/uni-app'
   import { useGlobalStore } from '@/store'
   import StickyScroll from '@/components/sticky-scroll'
+  import CwButton from '@/components/cw-button'
 
   const API = new Api()
   const useGlobal = useGlobalStore()
@@ -43,6 +44,13 @@
   }
 
   /**
+   * 分享海报
+   */
+  const sharePoster = async () => {
+    console.log('分享海报')
+  }
+
+  /**
    * 分享
    */
   onShareAppMessage(async ({ from }) => {
@@ -78,8 +86,8 @@
 
       <!-- 底部 -->
       <div class="footer">
-        <button open-type="share" class="footer-button-link">分享链接</button>
-        <div class="footer-button-image">分享海报</div>
+        <CwButton type="line" @click="sharePoster">分享海报</CwButton>
+        <CwButton open-type="share">分享链接</CwButton>
       </div>
     </div>
   </StickyScroll>
@@ -87,11 +95,9 @@
 
 <style lang="scss">
   .invite {
-    width: 100vw;
-    height: 100vh;
     position: relative;
     overflow: hidden;
-    padding: 0 32rpx 94rpx 32rpx;
+    padding: 0 32rpx var(--cw-padding-bottom) 32rpx;
     box-sizing: border-box;
 
     .main {
@@ -179,38 +185,6 @@
       bottom: 94rpx;
       right: 0;
       left: 0;
-
-      .footer-button-link {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        width: 320rpx;
-        height: 96rpx;
-        padding: 0;
-        margin: 0;
-        border-radius: 28rpx;
-        border: 3rpx solid #f3943f;
-        font-weight: 400;
-        font-size: 32rpx;
-        color: #f3943f;
-        line-height: 38rpx;
-        background-color: #fff;
-      }
-
-      .footer-button-image {
-        width: 320rpx;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 96rpx;
-        background: #f3943f;
-        border-radius: 28rpx;
-        border: 3rpx solid #f3943f;
-        font-weight: 400;
-        font-size: 32rpx;
-        color: #ffffff;
-        line-height: 38rpx;
-      }
     }
   }
 </style>

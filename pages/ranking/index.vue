@@ -344,7 +344,7 @@
           .ranking-item-info-count {
             font-weight: 400;
             font-size: 28rpx;
-            color: #f3943f;
+            color: var(--cw-theme-1);
             line-height: 33rpx;
           }
         }

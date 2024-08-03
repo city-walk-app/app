@@ -17,6 +17,7 @@
   import { useGlobalStore } from '@/store'
   import FilterPopup from '@/components/filter-popup'
   import Sheet from '@/components/sheet'
+  import CwButton from '@/components/cw-button'
 
   const API = new Api()
   const useGlobal = useGlobalStore()
@@ -32,9 +33,9 @@
   /** 是否开启卫星图 */
   const enableSatellite = ref(false)
   /** 是否显示对话框 */
-  const visibleSheet = ref(false)
+  const visibleSheet = ref(true)
   /** 打开信息详情 */
-  const recordDetail = ref()
+  const recordDetail = ref({})
   /** 天气信息 */
   const weatherInfo = ref()
   /** 心情颜色 */
@@ -665,6 +666,13 @@
     console.log(routeDetailForm.mood_color)
   }
 
+  /**
+   * 取消完善打卡信息
+   */
+  const cancellation = () => {
+    visibleSheet.value = false
+  }
+
   onLoad((options) => {
     // 如果是登录状态
     if (isLoginState.value) {
@@ -951,12 +959,15 @@
               </div>
 
               <!-- 发布瞬间按钮 -->
-              <div
+              <CwButton
+                width="320rpx"
+                height="80rpx"
+                radius="16rpx"
                 class="home-sheet-content-body-button"
                 @click="choosePicture"
               >
                 发布瞬间
-              </div>
+              </CwButton>
             </template>
           </div>
 
@@ -1013,10 +1024,8 @@
 
         <!-- 操作按钮 -->
         <div class="home-sheet-content-footer">
-          <div class="home-sheet-content-footer-no">取消</div>
-          <div class="home-sheet-content-footer-ok" @click="submitRouteDetail">
-            就这样
-          </div>
+          <CwButton type="line" @click="cancellation">取消</CwButton>
+          <CwButton @click="submitRouteDetail">就这样</CwButton>
         </div>
       </div>
     </template>
@@ -1042,15 +1051,10 @@
 
       <!-- 操作 -->
       <div class="home-popup-login-footer">
-        <div
-          class="home-popup-login-footer-email"
-          @click="goPage('/pages/login/index')"
-        >
+        <CwButton type="line" @click="goPage('/pages/login/index')">
           邮箱登录
-        </div>
-        <div class="home-popup-login-footer-vite" @click="wxLogin">
-          快捷登录
-        </div>
+        </CwButton>
+        <CwButton @click="wxLogin">快捷登录</CwButton>
       </div>
     </div>
   </FilterPopup>
@@ -1377,36 +1381,6 @@
       justify-content: center;
       align-items: center;
       column-gap: 46rpx;
-
-      .home-popup-login-footer-email {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        width: 320rpx;
-        height: 96rpx;
-        border-radius: 28rpx;
-        border: 3rpx solid #f3943f;
-        font-weight: 400;
-        font-size: 32rpx;
-        color: #f3943f;
-        line-height: 38rpx;
-        background-color: #fff;
-      }
-
-      .home-popup-login-footer-vite {
-        width: 320rpx;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 96rpx;
-        background: #f3943f;
-        border-radius: 28rpx;
-        border: 3rpx solid #f3943f;
-        font-weight: 400;
-        font-size: 32rpx;
-        color: #fff;
-        line-height: 38rpx;
-      }
     }
   }
 
@@ -1498,18 +1472,6 @@
         // 发布瞬间
         .home-sheet-content-body-button {
           margin-top: 26rpx;
-          width: 320rpx;
-          height: 80rpx;
-          background: #f3943f;
-          border-radius: 16rpx 16rpx 16rpx 16rpx;
-          border: 3rpx solid #f3943f;
-          font-weight: 400;
-          font-size: 32rpx;
-          color: #fff;
-          line-height: 38rpx;
-          display: flex;
-          justify-content: center;
-          align-items: center;
         }
       }
 
@@ -1672,40 +1634,6 @@
       justify-content: center;
       align-items: center;
       column-gap: 46rpx;
-      // position: absolute;
-      // bottom: 40rpx;
-      // right: 32rpx;
-      // left: 32rpx;
-
-      .home-sheet-content-footer-no {
-        width: 320rpx;
-        height: 96rpx;
-        border-radius: 28rpx;
-        background-color: #fff;
-        border: 3rpx solid #f3943f;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        font-weight: 400;
-        font-size: 32rpx;
-        color: #f3943f;
-        line-height: 38rpx;
-      }
-
-      .home-sheet-content-footer-ok {
-        width: 320rpx;
-        height: 96rpx;
-        background: #f3943f;
-        border-radius: 28rpx;
-        border: 3rpx solid #f3943f;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        font-weight: 400;
-        font-size: 32rpx;
-        color: #fff;
-        line-height: 38rpx;
-      }
     }
   }
 </style>
