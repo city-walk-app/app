@@ -706,6 +706,13 @@
     visibleSheet.value = false
   }
 
+  /**
+   * 点击预览图片
+   */
+  const previewPicture = async (urls, current) => {
+    await previewImage(urls, current)
+  }
+
   onLoad((options) => {
     console.log('启动参数', options)
 
@@ -774,6 +781,8 @@
         <div class="options-button" @click="goPage('/pages/setting/index')">
           <image class="options-setting-icon" src="/assets/svg/setting.svg" />
         </div>
+
+        <!-- 操作组 -->
         <div class="options-group">
           <!-- 改变地图图层 -->
           <div class="options-group-item" @click="changeEnableSatellite">
@@ -928,6 +937,7 @@
                 <div
                   class="home-sheet-content-body-picture-wrapper-item"
                   @longpress="handleLongPictureOpt(0)"
+                  @click="previewPicture(pictureFileList, pictureFileList[0])"
                 >
                   <div class="home-sheet-content-body-picture-wrapper-item-box">
                     <image
@@ -972,6 +982,9 @@
                   v-for="(item, index) in pictureFileList"
                   :key="index"
                   @longpress="handleLongPictureOpt(index)"
+                  @click="
+                    previewPicture(pictureFileList, pictureFileList[index])
+                  "
                 >
                   <div class="home-sheet-content-body-picture-wrapper-item-box">
                     <image
