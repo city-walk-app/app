@@ -32,9 +32,9 @@
   /** 是否开启卫星图 */
   const enableSatellite = ref(false)
   /** 是否显示对话框 */
-  const visibleSheet = ref(false)
+  const visibleSheet = ref(true)
   /** 打开信息详情 */
-  const recordDetail = ref()
+  const recordDetail = ref({})
   /** 天气信息 */
   const weatherInfo = ref()
   /** 心情颜色 */
@@ -86,6 +86,10 @@
    * 获取用户信息
    */
   const getUserInfo = async () => {
+    if (!userInfoStorage.value.user_id) {
+      return
+    }
+
     try {
       const res = await API.getUserInfo({
         user_id: userInfoStorage.value.user_id,
@@ -730,7 +734,7 @@
     <template #content>
       <div v-if="recordDetail" class="home-sheet">
         <!-- 版图 -->
-        <div class="home-sheet-jigsaw">
+        <div v-if="recordDetail.province_url" class="home-sheet-jigsaw">
           <div
             class="home-sheet-jigsaw-image"
             :style="{
@@ -738,6 +742,11 @@
               '--background': recordDetail.background_color,
             }"
           />
+        </div>
+
+        <!-- 文案 -->
+        <div class="home-sheet-content" v-if="recordDetail.province_url">
+          再获得100经验版图将会升温版图
         </div>
 
         <!-- 图片文件 -->
@@ -750,9 +759,6 @@
             :key="index"
           />
         </template>
-
-        <!-- 文案 -->
-        <div class="home-sheet-content">再获得100经验版图将会升温版图</div>
 
         <!-- 内容部分 -->
         <div class="home-sheet-content-body">
