@@ -1,7 +1,7 @@
 <script setup>
   import { reactive, ref, watch } from 'vue'
   import { Api } from '@/api'
-  import { onShow } from '@dcloudio/uni-app'
+  import { onShow, onLoad } from '@dcloudio/uni-app'
   import { toast, showLoading, hideLoading, setStorage } from '@/utils'
   import { USER_INFO, USER_TOKEN } from '@/enum'
 
@@ -31,6 +31,8 @@
     { key: '', title: '', active: '' },
     { key: '', title: '', active: '' },
   ])
+  /** 邀请 id */
+  const inviteId = ref()
 
   /**
    * 发送验证码
@@ -83,7 +85,13 @@
         if (res.data.is_new_user) {
           step.value = 2
         } else {
-          uni.redirectTo({ url: '/pages/home/index' })
+          if (inviteId.value) {
+            uni.redirectTo({
+              url: `/pages/home/index?invite_id=${inviteId.value}`,
+            })
+          } else {
+            uni.redirectTo({ url: '/pages/home/index' })
+          }
         }
 
         return
@@ -129,6 +137,13 @@
 
   onShow(() => {
     autoFocus() // 获取焦点
+  })
+
+  onLoad((options) => {
+    console.log('login 启动参数', options)
+    if (options.invite_id) {
+      inviteId.value = options.invite_id
+    }
   })
 </script>
 

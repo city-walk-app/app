@@ -33,9 +33,9 @@
   /** 是否开启卫星图 */
   const enableSatellite = ref(false)
   /** 是否显示对话框 */
-  const visibleSheet = ref(true)
+  const visibleSheet = ref(false)
   /** 打开信息详情 */
-  const recordDetail = ref({})
+  const recordDetail = ref()
   /** 天气信息 */
   const weatherInfo = ref()
   /** 心情颜色 */
@@ -109,6 +109,8 @@
   const maxPictureCount = ref(2)
   /** 心情颜色配置 */
   const moodColorOptions = ref()
+  /** 邀请 id */
+  const inviteId = ref()
 
   /** 用户信息缓存 */
   const userInfoStorage = ref(getStorage(USER_INFO))
@@ -156,6 +158,14 @@
   })
 
   /**
+   * open id 登录失败
+   */
+  const openIdLoginErr = () => {
+    toast('快捷登陆失败')
+    setTimeout(emailLogin, 500)
+  }
+
+  /**
    * open id 登录
    */
   const loginOpenId = async (wx_open_id) => {
@@ -170,16 +180,15 @@
 
         setStorage(USER_INFO, res.data.user_info)
         setStorage(USER_TOKEN, res.data.token)
-        return
+
+        // 是否存在邀请
+        if (inviteId.value) {
+          getFriendInviteInfo(inviteId.value) // 获取邀请详情
+        }
       }
-
-      toast(res.message)
-
-      setTimeout(() => {
-        goPage('/pages/login/index')
-      }, 500)
     } catch (err) {
       console.log('open id 登录异常', err)
+      openIdLoginErr() // open id 登录失败
     }
   }
 
@@ -196,6 +205,7 @@
       }
     } catch (err) {
       console.log('获取 open id 异常', err)
+      openIdLoginErr() // open id 登录失败
     }
   }
 
@@ -207,10 +217,11 @@
       const res = await uni.login()
 
       if (res.errMsg === 'login:ok') {
-        getOpenId(res.code)
+        getOpenId(res.code) // 获取 open id
       }
     } catch (err) {
       console.log('微信登录异常', err)
+      openIdLoginErr() // open id 登录失败
     }
   }
 
@@ -400,13 +411,20 @@
     }
 
     try {
+      showLoading()
+
       const res = await API.friendConfirmInvite({ invite_id })
+
+      hideLoading()
 
       if (res.code === 200) {
         console.log(result)
+        inviteId.value = null
+        toast('添加成功')
       }
     } catch (err) {
       console.log('同意好友邀请接口异常', err)
+      hideLoading()
     }
   }
 
@@ -667,6 +685,21 @@
   }
 
   /**
+   * 邮箱登录
+   */
+  const emailLogin = () => {
+    console.log('邮箱登录', inviteId.value)
+    if (inviteId.value) {
+      uni.navigateTo({
+        url: `/pages/login/index?invite_id=${inviteId.value}`,
+      })
+      return
+    }
+
+    uni.navigateTo({ url: '/pages/login/index' })
+  }
+
+  /**
    * 取消完善打卡信息
    */
   const cancellation = () => {
@@ -674,14 +707,20 @@
   }
 
   onLoad((options) => {
+    console.log('启动参数', options)
+
     // 如果是登录状态
     if (isLoginState.value) {
       // 存在邀请 id
       if (options.invite_id) {
         getFriendInviteInfo(options.invite_id) // 获取邀请详情
       }
+
       getUserInfo() // 获取用户信息
+      return
     }
+
+    inviteId.value = options.invite_id
   })
 
   onShow(() => {
@@ -1051,9 +1090,7 @@
 
       <!-- 操作 -->
       <div class="home-popup-login-footer">
-        <CwButton type="line" @click="goPage('/pages/login/index')">
-          邮箱登录
-        </CwButton>
+        <CwButton type="line" @click="emailLogin">邮箱登录</CwButton>
         <CwButton @click="wxLogin">快捷登录</CwButton>
       </div>
     </div>

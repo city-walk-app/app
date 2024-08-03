@@ -35,6 +35,19 @@
     }
   }
 
+  /**
+   * 跳转用户首页
+   */
+  const goUserMain = (user_id) => {
+    if (!user_id) {
+      return
+    }
+
+    uni.navigateTo({
+      url: `/pages/mine/index?user_id=${user_id}`,
+    })
+  }
+
   friendList() // 获取朋友列表
 </script>
 
@@ -55,7 +68,12 @@
       <template v-else>
         <!-- 朋友列表-有数据 -->
         <div class="body" v-if="friends && friends.length">
-          <div class="body-item" v-for="(item, index) in friends" :key="index">
+          <div
+            class="body-item"
+            v-for="(item, index) in friends"
+            :key="index"
+            @click="goUserMain(item.user_id)"
+          >
             <!-- 头像 -->
             <div class="body-item-avatar-wrapper">
               <image
