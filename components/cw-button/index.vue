@@ -22,8 +22,8 @@
     :open-type="openType"
     :class="[
       'cw-button',
-      `cw-button-${type}`,
       {
+        [`cw-button-${type}`]: type,
         'cw-button-block': block,
       },
     ]"
@@ -32,7 +32,7 @@
       '--height': height || '96rpx',
       '--radius': radius || '28rpx',
     }"
-    hover-class="cw-button-hover"
+    :hover-class="`cw-button-hover-${type || 'default'}`"
     @click="handleClick"
   >
     <slot />
@@ -55,7 +55,7 @@
     background: var(--cw-theme-1);
     line-height: 38rpx;
     color: #fff;
-    transition: background 0.12s;
+    transition: background 0.12s, transform 0.12s, border-color 0.12s;
 
     // 线性的
     &.cw-button-line {
@@ -68,11 +68,18 @@
     &.cw-button-block {
       width: 100%;
     }
-  }
 
-  // 点击触发
-  .cw-button-hover {
-    background-color: #f1754f;
-    border-color: #f1754f;
+    // 点击触发
+    &.cw-button-hover-line {
+      border-color: #f1754f;
+      transform: scale(0.97);
+    }
+
+    // 点击触发
+    &.cw-button-hover-default {
+      background-color: #f1754f;
+      border-color: #f1754f;
+      transform: scale(0.97);
+    }
   }
 </style>

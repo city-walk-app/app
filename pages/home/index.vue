@@ -779,14 +779,22 @@
         }"
       >
         <!-- 进入设置页面 -->
-        <div class="options-button" @click="goPage('/pages/setting/index')">
+        <div
+          class="options-button"
+          hover-class="options-button-hover"
+          @click="goPage('/pages/setting/index')"
+        >
           <image class="options-setting-icon" src="/assets/svg/setting.svg" />
         </div>
 
         <!-- 操作组 -->
         <div class="options-group">
           <!-- 改变地图图层 -->
-          <div class="options-group-item" @click="changeEnableSatellite">
+          <div
+            class="options-group-item"
+            hover-class="options-button-hover"
+            @click="changeEnableSatellite"
+          >
             <image
               v-if="enableSatellite"
               class="options-setting-icon"
@@ -800,7 +808,11 @@
           </div>
           <div class="options-group-line" />
           <!-- 回到当前位置 -->
-          <div class="options-group-item" @click="moveToCurrentLocation">
+          <div
+            class="options-group-item"
+            hover-class="options-button-hover"
+            @click="moveToCurrentLocation"
+          >
             <image
               class="options-setting-icon"
               src="/assets/svg/home-position.svg"
@@ -1166,6 +1178,11 @@
       flex-direction: column;
       row-gap: 36rpx;
 
+      // 按下效果
+      .options-button-hover {
+        background-color: #eee !important;
+      }
+
       // 设置
       .options-button {
         width: 84rpx;
@@ -1197,7 +1214,6 @@
         border-radius: 16rpx;
         display: flex;
         flex-direction: column;
-        align-items: center;
         box-shadow: 0rpx 4rpx 12rpx 4rpx rgba(0, 0, 0, 0.16);
 
         .options-group-item {
