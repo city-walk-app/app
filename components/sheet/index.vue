@@ -2,8 +2,6 @@
   import { useGlobalStore } from '@/store'
   import { ref } from 'vue'
 
-  const useGlobal = useGlobalStore()
-
   const prop = defineProps({
     visible: {
       type: Boolean,
@@ -12,6 +10,8 @@
     title: String,
   })
   const emit = defineEmits(['on-close'])
+
+  const useGlobal = useGlobalStore()
 
   /** 是否显示空的标签实现点击空白处关闭 */
   const isShowCloseEmpty = ref(prop.visible)

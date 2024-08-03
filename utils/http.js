@@ -40,16 +40,19 @@ export class Http {
       }
       // 未登录
       else if (res.statusCode === 401) {
-        // clearStorage()
-        // uni.navigateTo({ url: '/pages/home/index' })
+        clearStorage()
+        uni.navigateTo({ url: '/pages/home/index' })
         toast(res.data.message)
+        return {}
       }
       // 提示错误
       else {
         toast(res.data.message)
+        return {}
       }
     } catch (err) {
       console.log('全局请求异常', err)
+      return {}
     }
   }
 }

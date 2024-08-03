@@ -1,12 +1,10 @@
 <script setup>
-  const prop = defineProps({
+  defineProps({
     visible: {
       type: Boolean,
       required: true,
     },
   })
-
-  console.log('12', prop)
 </script>
 
 <template>

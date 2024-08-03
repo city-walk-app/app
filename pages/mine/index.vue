@@ -7,6 +7,7 @@
     showLoading,
     hideLoading,
     previewImage,
+    isArray,
   } from '@/utils'
   import { DEFAULT_AVATAR } from '@/enum'
   import { onLoad } from '@dcloudio/uni-app'
@@ -100,13 +101,15 @@
         ...date,
       })
 
-      if (res.code === 200 && res.data && res.data.length) {
-        heatmap.value = res.data.map((item) => {
-          return {
-            ...item,
-            _active: false,
-          }
-        })
+      if (res.code === 200) {
+        if (isArray(res.data)) {
+          heatmap.value = res.data.map((item) => {
+            return {
+              ...item,
+              _active: false,
+            }
+          })
+        }
       }
     } catch (err) {
       console.log('接口异常', err)
@@ -125,14 +128,16 @@
       provinceListLoading.value = false
 
       if (res.code === 200) {
-        provinceList.value = res.data.map((item) => {
-          return {
-            ...item,
-            province_url: item.province_code
-              ? `https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/provinces/${item.province_code}.png`
-              : '',
-          }
-        })
+        if (isArray(res.data)) {
+          provinceList.value = res.data.map((item) => {
+            return {
+              ...item,
+              province_url: item.province_code
+                ? `https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/provinces/${item.province_code}.png`
+                : '',
+            }
+          })
+        }
       }
     } catch (err) {
       console.log('接口异常', err)
@@ -676,12 +681,13 @@
     // 版图列表
     .jigsaw-scroll {
       width: 100vw;
-      height: 310rpx;
+      height: 214rpx;
+      margin-top: 48rpx;
 
       .jigsaw-wrapper {
         width: inherit;
         height: inherit;
-        padding: 48rpx 34rpx;
+        padding: 0 34rpx;
         box-sizing: border-box;
         display: flex;
         flex-wrap: nowrap;
@@ -690,6 +696,7 @@
         .jigsaw-item {
           width: 214rpx;
           height: 214rpx;
+          flex-shrink: 0;
 
           .jigsaw-image {
             width: inherit;
@@ -697,6 +704,7 @@
             mask: var(--province) 0 0 / cover no-repeat;
             -webkit-mask: var(--province) 0 0 / cover no-repeat;
             background: var(--background);
+            flex-shrink: 0;
           }
 
           .jigsaw-item__skeleton {
@@ -713,6 +721,7 @@
     .heatmap {
       padding: 0 32rpx;
       box-sizing: border-box;
+      margin-top: 52rpx;
 
       // 头部
       .heatmap-header {

@@ -10,7 +10,15 @@
       type: Object,
     },
   })
+
   const useGlobal = useGlobalStore()
+
+  /** 样式计算 */
+  const styleDiff = ref(0)
+  /** 开始的字体大小 */
+  const startSize = ref(56)
+  /** 结束的字体大小 */
+  const endSize = ref(34)
 
   /**
    * 返回
@@ -18,10 +26,6 @@
   const back = () => {
     uni.navigateBack({ delta: 1 })
   }
-
-  const styleDiff = ref(0)
-  const startSize = ref(56)
-  const endSize = ref(34)
 
   /**
    * 页面滚动
@@ -36,20 +40,14 @@
     } else {
       styleDiff.value = diffFormat
     }
-
-    // console.log(
-    //   '字体大小',
-    //   startSize.value + (endSize.value - startSize.value) * styleDiff.value
-    // )
-    // console.log(startSize.value, endSize.value, styleDiff.value)
   }
 </script>
 
 <template>
   <scroll-view
     class="sticky-scroll"
-    :scroll-x="false"
     scroll-y
+    :scroll-x="false"
     @scroll="scroll"
   >
     <div
@@ -196,6 +194,7 @@
           }
         }
 
+        // 返回
         .back {
           width: 68rpx;
           height: 68rpx;
