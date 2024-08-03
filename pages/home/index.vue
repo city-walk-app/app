@@ -68,7 +68,11 @@
     picture: [], // 照片
   })
   /** 选择的图片 */
-  const pictureFileList = ref()
+  const pictureFileList = ref([
+    'http://city-walk.oss-cn-beijing.aliyuncs.com/assets/uploads/test/2024-08-02/1722607019444-2215a44ec70e54d0.jpg',
+  ])
+  /** 最多上传的图片 */
+  const maxPictureCount = ref(2)
 
   /** 用户信息缓存 */
   const userInfoStorage = ref(getStorage(USER_INFO))
@@ -480,17 +484,49 @@
   }
 
   /**
-   * 选择照片
+   * 选择照片替换
    */
-  const choosePicture = async () => {
+  const choosePictureReplace = async (index) => {
+    if (!isNumber(index)) {
+      return
+    }
+
     try {
       const res = await uni.chooseImage({
-        count: 2, // 选择图片的数量
+        count: 1, // 选择图片的数量
         sourceType: ['album', 'camera'],
       })
 
       if (res.errMsg === 'chooseImage:ok') {
-        pictureFileList.value = res.tempFilePaths
+        if (pictureFileList.value[index]) {
+          pictureFileList.value[index] = res.tempFilePaths[0]
+        }
+      }
+    } catch (err) {
+      console.log('替换图片异常', err)
+    }
+  }
+
+  /**
+   * 选择照片
+   */
+  const choosePicture = async (index) => {
+    if (pictureFileList.length === maxPictureCount.value) {
+      return
+    }
+
+    try {
+      const length = pictureFileList.length || 0
+
+      const res = await uni.chooseImage({
+        count: maxPictureCount.value - length, // 选择图片的数量
+        sourceType: ['album', 'camera'],
+      })
+
+      if (res.errMsg === 'chooseImage:ok') {
+        pictureFileList.value = [...pictureFileList.value, ...res.tempFilePaths]
+
+        console.log(pictureFileList.value)
       }
     } catch (err) {
       console.log('选择照片异常', err)
@@ -543,6 +579,36 @@
       getLocation() // 获取位置信息
     } catch (err) {
       console.log('获取权限异常', err)
+    }
+  }
+
+  /**
+   * 长按图片操作
+   */
+  const handleLongPictureOpt = async (index) => {
+    try {
+      const res = await uni.showActionSheet({
+        itemList: ['替换照片', '删除'],
+      })
+
+      if (res.errMsg !== 'showActionSheet:ok') {
+        return
+      }
+
+      // 替换照片
+      if (res.tapIndex === 0) {
+        choosePictureReplace(index) // 替换照片
+      }
+      // 删除
+      else if (res.tapIndex === 1) {
+        if (pictureFileList.value[index]) {
+          pictureFileList.value.splice(index, 1)
+        }
+      }
+
+      console.log(res)
+    } catch (err) {
+      console.log('长按图片操作异常', err)
     }
   }
 
@@ -749,33 +815,96 @@
           再获得100经验版图将会升温版图
         </div>
 
-        <!-- 图片文件 -->
-        <template v-if="pictureFileList && pictureFileList.length">
-          <image
-            v-for="(item, index) in pictureFileList"
-            class=""
-            style="width: 30rpx; height: 30rpx"
-            :src="item"
-            :key="index"
-          />
-        </template>
-
         <!-- 内容部分 -->
         <div class="home-sheet-content-body">
           <!-- 图片容器 -->
           <div class="home-sheet-content-body-picture-wrapper">
-            <!-- 照相机 -->
-            <div class="home-sheet-content-body-camera-wrapper">
-              <image
-                class="home-sheet-content-body-camera"
-                src="https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/city-walk/record-succese-camera.png"
-              />
-            </div>
+            <!-- 如果有一张图片的时候 -->
+            <template
+              v-if="isArray(pictureFileList) && pictureFileList.length === 1"
+            >
+              <div class="home-sheet-content-body-picture-wrapper-list">
+                <!-- 图片 -->
+                <div
+                  class="home-sheet-content-body-picture-wrapper-item"
+                  @longpress="handleLongPictureOpt(0)"
+                >
+                  <div class="home-sheet-content-body-picture-wrapper-item-box">
+                    <image
+                      class="home-sheet-content-body-picture-wrapper-item-image"
+                      mode="aspectFill"
+                      :src="pictureFileList[0]"
+                    />
+                  </div>
+                </div>
 
-            <!-- 发布瞬间按钮 -->
-            <div class="home-sheet-content-body-button" @click="choosePicture">
-              发布瞬间
-            </div>
+                <!-- 未上传的 -->
+                <div
+                  class="home-sheet-content-body-picture-wrapper-item"
+                  @click="choosePicture"
+                >
+                  <!-- 空的未上传的 -->
+                  <div
+                    class="home-sheet-content-body-picture-wrapper-item-box-empty"
+                  >
+                    <!-- 照相机 -->
+                    <div class="home-sheet-content-body-camera-wrapper">
+                      <image
+                        class="home-sheet-content-body-camera"
+                        src="https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/city-walk/record-succese-camera.png"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </template>
+
+            <!-- 如果有两张图片的时候 -->
+            <template
+              v-else-if="
+                isArray(pictureFileList) && pictureFileList.length === 2
+              "
+            >
+              <div class="home-sheet-content-body-picture-wrapper-list">
+                <!-- 图片 -->
+                <div
+                  class="home-sheet-content-body-picture-wrapper-item"
+                  v-for="(item, index) in pictureFileList"
+                  :key="index"
+                  @longpress="handleLongPictureOpt(index)"
+                >
+                  <div class="home-sheet-content-body-picture-wrapper-item-box">
+                    <image
+                      class="home-sheet-content-body-picture-wrapper-item-image"
+                      mode="aspectFill"
+                      :src="item"
+                    />
+                  </div>
+                </div>
+              </div>
+            </template>
+
+            <!-- 没有选择图片的时候 -->
+            <template v-else>
+              <!-- 照相机 -->
+              <div
+                class="home-sheet-content-body-camera-wrapper"
+                @click="choosePicture"
+              >
+                <image
+                  class="home-sheet-content-body-camera"
+                  src="https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/city-walk/record-succese-camera.png"
+                />
+              </div>
+
+              <!-- 发布瞬间按钮 -->
+              <div
+                class="home-sheet-content-body-button"
+                @click="choosePicture"
+              >
+                发布瞬间
+              </div>
+            </template>
           </div>
 
           <!-- 心情颜色 -->
@@ -1078,19 +1207,6 @@
             background: var(--img) no-repeat center / cover;
           }
 
-          // // 模糊背景
-          // &::before {
-          //   content: '';
-          //   border-radius: 20rpx;
-          //   position: absolute;
-          //   inset: 0;
-          //   top: 10rpx;
-          //   z-index: -1;
-          //   background: var(--img);
-          //   background-size: cover;
-          //   filter: blur(12rpx) brightness(1.1);
-          // }
-
           // 主题
           .footer-card-title {
             font-family: Douyin Sans, Douyin Sans;
@@ -1137,19 +1253,6 @@
     .footer-gaussian {
       width: 100vw;
       height: 380rpx;
-      // background: linear-gradient(180deg, transparent, #fff 43%);
-      // background: linear-gradient(
-      //   180deg,
-      //   rgba(255, 255, 255, 0) 20%,
-      //   #fff 43%
-      // );
-      // // background-color: transparent;
-      // // background: hsla(0, 0%, 100%, 0.75);
-      // // -webkit-backdrop-filter: blur(5px);
-      // // backdrop-filter: blur(5px);
-      // // background: hsla(0, 0%, 100%, 0.2);
-      // -webkit-backdrop-filter: blur(25rpx);
-      // backdrop-filter: blur(25rpx);
       position: fixed;
       z-index: 9;
       right: 0;
@@ -1276,7 +1379,7 @@
       width: 100%;
       background: rgba(255, 255, 255, 0.3);
       box-shadow: 0rpx 0rpx 17rpx 0rpx rgba(159, 159, 159, 0.25);
-      border-radius: 44rpx 44rpx 44rpx 44rpx;
+      border-radius: 44rpx;
       border: 2rpx solid;
       border-image: linear-gradient(
           162deg,
@@ -1289,10 +1392,10 @@
       box-sizing: border-box;
       margin-top: 32rpx;
 
-      // 图片容器
+      // 图片容器-没有选择图片的时候
       .home-sheet-content-body-picture-wrapper {
         width: 100%;
-        min-height: 282rpx;
+        height: 282rpx;
         background: linear-gradient(135deg, #fff2d1 0%, #fff 100%);
         box-shadow: 0rpx 0rpx 17rpx 0rpx rgba(159, 159, 159, 0.25);
         border-radius: 28rpx;
@@ -1336,6 +1439,55 @@
           display: flex;
           justify-content: center;
           align-items: center;
+        }
+      }
+
+      // 图片容器-选择了图片之后
+      .home-sheet-content-body-picture-wrapper-list {
+        width: inherit;
+        height: inherit;
+        display: flex;
+        align-items: stretch;
+
+        // 左右两项
+        .home-sheet-content-body-picture-wrapper-item {
+          flex: 1;
+          flex-shrink: 0;
+          padding: 15rpx;
+          box-sizing: border-box;
+          display: flex;
+          position: relative;
+
+          // 图片容器
+          .home-sheet-content-body-picture-wrapper-item-box {
+            flex: 1;
+            display: flex;
+            flex-shrink: 0;
+            background-color: var(--cw-skeleton-background-light);
+            border-radius: 28rpx;
+            position: relative;
+            overflow: hidden;
+
+            // 图片元素
+            .home-sheet-content-body-picture-wrapper-item-image {
+              flex: 1;
+              display: flex;
+              width: inherit;
+              height: inherit;
+              flex-shrink: 0;
+            }
+          }
+
+          // 空的图片容器
+          .home-sheet-content-body-picture-wrapper-item-box-empty {
+            flex: 1;
+            flex-shrink: 0;
+            border-radius: 28rpx;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+          }
         }
       }
 
