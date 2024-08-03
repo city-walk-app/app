@@ -1103,7 +1103,6 @@
     flex: 1;
     flex-direction: column;
     justify-content: space-between;
-    align-items: center;
     padding: 60rpx 32rpx var(--cw-padding-bottom) 32rpx;
     box-sizing: border-box;
 

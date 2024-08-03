@@ -197,107 +197,178 @@
           <!-- 信息 -->
           <div class="card">
             <!-- 名字 -->
-            <div class="card-item" @click="openSheet('nick_name', '修改名字')">
+            <div
+              class="card-item"
+              hover-class="card-item-hover"
+              @click="openSheet('nick_name', '修改名字')"
+            >
               <div class="card-item-label">
-                <image
-                  class="card-item-label-icon"
-                  src="https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/city-walk/setting-nick-name.png"
-                />
+                <div
+                  class="card-item-label-icon-wrapper"
+                  style="--background: #ef442f"
+                >
+                  <image
+                    class="card-item-label-icon"
+                    src="/assets/svg/setting-nick-name.svg"
+                  />
+                </div>
                 <div class="card-item-label-title">名字</div>
               </div>
 
-              <image class="card-item-arrow" src="" />
+              <image
+                class="card-item-arrow"
+                src="/assets/svg/right-black.svg"
+              />
             </div>
 
             <!-- 性别 -->
-            <div class="card-item" @click="openSheet('gender', '修改性别')">
+            <div
+              class="card-item"
+              hover-class="card-item-hover"
+              @click="openSheet('gender', '修改性别')"
+            >
               <div class="card-item-label">
-                <image
-                  class="card-item-label-icon"
-                  src="https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/city-walk/setting-nick-name.png"
-                />
+                <div
+                  class="card-item-label-icon-wrapper"
+                  style="--background: #f39026"
+                >
+                  <image
+                    class="card-item-label-icon"
+                    src="/assets/svg/setting-gender.svg"
+                  />
+                </div>
                 <div class="card-item-label-title">性别</div>
               </div>
 
-              <image class="card-item-arrow" src="" />
+              <image
+                class="card-item-arrow"
+                src="/assets/svg/right-black.svg"
+              />
             </div>
 
             <!-- 手机 -->
-            <div class="card-item" @click="openSheet('mobile', '修改手机')">
+            <div
+              class="card-item"
+              hover-class="card-item-hover"
+              @click="openSheet('mobile', '修改手机')"
+            >
               <div class="card-item-label">
-                <image
-                  class="card-item-label-icon"
-                  src="https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/city-walk/setting-nick-name.png"
-                />
+                <div
+                  class="card-item-label-icon-wrapper"
+                  style="--background: #fac736"
+                >
+                  <image
+                    class="card-item-label-icon"
+                    src="/assets/svg/setting-mobile.svg"
+                  />
+                </div>
                 <div class="card-item-label-title">手机</div>
               </div>
 
-              <image class="card-item-arrow" src="" />
+              <image
+                class="card-item-arrow"
+                src="/assets/svg/right-black.svg"
+              />
             </div>
 
-            <!-- 邮箱 -->
-            <div class="card-item" @click="openSheet('email', '修改邮箱')">
+            <!-- 偏好 -->
+            <div
+              class="card-item"
+              @click="openSheet('preference_type', '修改偏好')"
+            >
               <div class="card-item-label">
-                <image
-                  class="card-item-label-icon"
-                  src="https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/city-walk/setting-nick-name.png"
-                />
-                <div class="card-item-label-title">邮箱</div>
+                <div
+                  class="card-item-label-icon-wrapper"
+                  style="--background: #50c348"
+                >
+                  <image
+                    class="card-item-label-icon"
+                    src="/assets/svg/setting-preference-type.svg"
+                  />
+                </div>
+                <div class="card-item-label-title">偏好</div>
               </div>
 
-              <image class="card-item-arrow" src="" />
+              <image
+                class="card-item-arrow"
+                src="/assets/svg/right-black.svg"
+              />
             </div>
 
             <!-- 签名 -->
-            <div class="card-item" @click="openSheet('signature', '修改签名')">
+            <div
+              class="card-item"
+              hover-class="card-item-hover"
+              @click="openSheet('signature', '修改签名')"
+            >
               <div class="card-item-label">
-                <image
-                  class="card-item-label-icon"
-                  src="https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/city-walk/setting-nick-name.png"
-                />
+                <div
+                  class="card-item-label-icon-wrapper"
+                  style="--background: #1d6ff8"
+                >
+                  <image
+                    class="card-item-label-icon"
+                    src="/assets/svg/setting-signature.svg"
+                  />
+                </div>
                 <div class="card-item-label-title">签名</div>
               </div>
 
-              <image class="card-item-arrow" src="" />
+              <image
+                class="card-item-arrow"
+                src="/assets/svg/right-black.svg"
+              />
             </div>
           </div>
 
           <!-- 账户 -->
           <div class="card">
             <!-- 赞助 -->
-            <div class="card-item">
+            <div class="card-item" hover-class="card-item-hover">
               <div class="card-item-label">
                 <div class="card-item-label-sutitle">赞助</div>
               </div>
 
-              <image class="card-item-arrow" src="" />
+              <image
+                class="card-item-arrow"
+                src="/assets/svg/right-black.svg"
+              />
             </div>
 
             <!-- 加入 CityWalk -->
-            <div class="card-item">
+            <div class="card-item" hover-class="card-item-hover">
               <div class="card-item-label">
                 <div class="card-item-label-sutitle">加入 CityWalk</div>
               </div>
 
-              <image class="card-item-arrow" src="" />
+              <image
+                class="card-item-arrow"
+                src="/assets/svg/right-black.svg"
+              />
             </div>
 
             <!-- 给个好评 -->
-            <div class="card-item">
+            <div class="card-item" hover-class="card-item-hover">
               <div class="card-item-label">
                 <div class="card-item-label-sutitle">给个好评</div>
               </div>
 
-              <image class="card-item-arrow" src="" />
+              <image
+                class="card-item-arrow"
+                src="/assets/svg/right-black.svg"
+              />
             </div>
 
             <!-- Github -->
-            <div class="card-item">
+            <div class="card-item" hover-class="card-item-hover">
               <div class="card-item-label">
                 <div class="card-item-label-sutitle">Github</div>
               </div>
 
-              <image class="card-item-arrow" src="" />
+              <image
+                class="card-item-arrow"
+                src="/assets/svg/right-black.svg"
+              />
             </div>
           </div>
         </div>
@@ -373,8 +444,8 @@
           </div>
         </template>
 
-        <!-- 邮箱 -->
-        <template v-else-if="sheetKey === 'email'">
+        <!-- 偏好 -->
+        <template v-else-if="sheetKey === 'preference_type'">
           <div class="setting-sheet-input-wrapper">
             <input
               class="setting-sheet-input"
@@ -474,16 +545,29 @@
           height: 120rpx;
           padding: 34rpx 32rpx;
           box-sizing: border-box;
+          transition: background 0.24s;
 
+          // 标签
           .card-item-label {
             display: flex;
             align-items: center;
             column-gap: 28rpx;
 
-            .card-item-label-icon {
+            .card-item-label-icon-wrapper {
               width: 52rpx;
               height: 52rpx;
               border-radius: 50%;
+              flex-shrink: 0;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              background-color: var(--background);
+
+              .card-item-label-icon {
+                width: 32rpx;
+                height: 32rpx;
+                flex-shrink: 0;
+              }
             }
 
             // 标题
@@ -503,11 +587,17 @@
             }
           }
 
+          // 右箭头
           .card-item-arrow {
-            width: 20rpx;
-            height: 20rpx;
+            width: 30rpx;
+            height: 30rpx;
             flex-shrink: 0;
           }
+        }
+
+        // 点击状态
+        .card-item-hover {
+          background: rgba(0, 0, 0, 0.06);
         }
       }
     }
@@ -538,7 +628,6 @@
     flex: 1;
     flex-direction: column;
     justify-content: space-between;
-    align-items: center;
     padding: 60rpx 32rpx var(--cw-padding-bottom) 32rpx;
     box-sizing: border-box;
 
