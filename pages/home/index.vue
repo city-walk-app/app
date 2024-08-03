@@ -32,20 +32,55 @@
   /** 是否开启卫星图 */
   const enableSatellite = ref(false)
   /** 是否显示对话框 */
-  const visibleSheet = ref(true)
+  const visibleSheet = ref(false)
   /** 打开信息详情 */
-  const recordDetail = ref({})
+  const recordDetail = ref()
   /** 天气信息 */
   const weatherInfo = ref()
   /** 心情颜色 */
   const moodColors = ref([
-    { color: '#f16a59', borderColor: '#ef442f', key: '', type: '' },
-    { color: '#f6a552', borderColor: '#f39026', key: '', type: '' },
-    { color: '#fad35c', borderColor: '#fac736', key: '', type: '' },
-    { color: '#74cd6d', borderColor: '#50c348', key: '', type: '' },
-    { color: '#4a8cf9', borderColor: '#1d6ff8', key: '', type: '' },
-    { color: '#af72dc', borderColor: '#9b4fd3', key: '', type: '' },
-    { color: '#9b9ca0', borderColor: '#838387', key: '', type: '' },
+    {
+      color: '#f16a59',
+      borderColor: '#ef442f',
+      key: 'Excited',
+      type: '兴奋的',
+    },
+    {
+      color: '#f6a552',
+      borderColor: '#f39026',
+      key: 'Enthusiastic',
+      type: '热情的',
+    },
+    {
+      color: '#fad35c',
+      borderColor: '#fac736',
+      key: 'Happy',
+      type: '快乐的',
+    },
+    {
+      color: '#74cd6d',
+      borderColor: '#50c348',
+      key: 'Relaxed',
+      type: '放松的',
+    },
+    {
+      color: '#4a8cf9',
+      borderColor: '#1d6ff8',
+      key: 'Calm',
+      type: '平静的',
+    },
+    {
+      color: '#af72dc',
+      borderColor: '#9b4fd3',
+      key: 'Mysterious',
+      type: '神秘的',
+    },
+    {
+      color: '#9b9ca0',
+      borderColor: '#838387',
+      key: 'Neutral',
+      type: '中性的',
+    },
   ])
   /** 出行方式 */
   const travelMode = ref([
@@ -68,11 +103,11 @@
     picture: [], // 照片
   })
   /** 选择的图片 */
-  const pictureFileList = ref([
-    'http://city-walk.oss-cn-beijing.aliyuncs.com/assets/uploads/test/2024-08-02/1722607019444-2215a44ec70e54d0.jpg',
-  ])
+  const pictureFileList = ref()
   /** 最多上传的图片 */
   const maxPictureCount = ref(2)
+  /** 心情颜色配置 */
+  const moodColorOptions = ref()
 
   /** 用户信息缓存 */
   const userInfoStorage = ref(getStorage(USER_INFO))
@@ -612,6 +647,21 @@
     }
   }
 
+  /**
+   * 选择心情颜色
+   */
+  const selectMoodColors = (item) => {
+    if (routeDetailForm.mood_color === item.key) {
+      routeDetailForm.mood_color = ''
+      moodColorOptions.value = null
+    } else {
+      routeDetailForm.mood_color = item.key
+      moodColorOptions.value = item
+    }
+
+    console.log(routeDetailForm.mood_color)
+  }
+
   onLoad((options) => {
     // 如果是登录状态
     if (isLoginState.value) {
@@ -910,14 +960,32 @@
           <!-- 心情颜色 -->
           <div class="home-sheet-content-body-mood-colors">
             <div
-              class="home-sheet-content-body-color"
               v-for="(item, index) in moodColors"
+              :class="[
+                'home-sheet-content-body-color',
+                {
+                  'home-sheet-content-body-color-not':
+                    routeDetailForm.mood_color &&
+                    item.key !== routeDetailForm.mood_color,
+                },
+              ]"
               :key="index"
               :style="{
                 '--background': item.color,
                 '--border-color': item.borderColor,
               }"
+              @click="selectMoodColors(item)"
             />
+
+            <div
+              v-if="routeDetailForm.mood_color && moodColorOptions"
+              class="home-sheet-content-body-color-title"
+              :style="{
+                '--color': moodColorOptions.color,
+              }"
+            >
+              {{ moodColorOptions.type }}
+            </div>
           </div>
 
           <!-- 位置 -->
@@ -1496,8 +1564,17 @@
         display: flex;
         align-items: center;
         margin-top: 32rpx;
-        justify-content: space-between;
+        // justify-content: space-between;
         flex-wrap: nowrap;
+        column-gap: 12rpx;
+
+        // 主题
+        .home-sheet-content-body-color-title {
+          font-weight: 400;
+          font-size: 32rpx;
+          line-height: 38rpx;
+          color: var(--color);
+        }
 
         .home-sheet-content-body-color {
           width: 74rpx;
@@ -1506,6 +1583,14 @@
           flex-shrink: 0;
           border: 2rpx solid var(--border-color);
           background-color: var(--background);
+          transition: opacity 0.25s;
+          opacity: 1;
+
+          // 未选中的
+          &.home-sheet-content-body-color-not {
+            // opacity: 0.3;
+            display: none;
+          }
         }
       }
 
