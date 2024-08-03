@@ -8,6 +8,7 @@
     hideLoading,
     previewImage,
     isArray,
+    toast,
   } from '@/utils'
   import { DEFAULT_AVATAR } from '@/enum'
   import { onLoad } from '@dcloudio/uni-app'
