@@ -381,90 +381,101 @@
     <!-- 弹窗内容 -->
     <template #content>
       <div class="setting-sheet">
-        <!-- 头像 -->
-        <template v-if="sheetKey === 'avatar'">
-          <div class="setting-sheet-avatar-wrapper" @click="chooseAvatar">
-            <image
-              v-if="avatarFile"
-              class="setting-sheet-avatar-image"
-              mode="aspectFill"
-              :src="avatarFile"
-            />
-            <image
-              v-else
-              class="setting-sheet-avatar-image"
-              mode="aspectFill"
-              :src="userInfoStorage.avatar || DEFAULT_AVATAR"
-            />
+        <div class="setting-sheet-body">
+          <!-- 头像 -->
+          <template v-if="sheetKey === 'avatar'">
+            <div class="setting-sheet-avatar-wrapper" @click="chooseAvatar">
+              <image
+                v-if="avatarFile"
+                class="setting-sheet-avatar-image"
+                mode="aspectFill"
+                :src="avatarFile"
+              />
+              <image
+                v-else
+                class="setting-sheet-avatar-image"
+                mode="aspectFill"
+                :src="userInfoStorage.avatar || DEFAULT_AVATAR"
+              />
 
-            <div v-if="!avatarFile" class="setting-sheet-avatar-title">
-              点击选择照片
-            </div>
-          </div>
-        </template>
-
-        <!-- 名字 -->
-        <template v-else-if="sheetKey === 'nick_name'">
-          <div class="setting-sheet-input-wrapper">
-            <input
-              class="setting-sheet-input"
-              type="text"
-              v-model="userInfoStorage.nick_name"
-            />
-          </div>
-        </template>
-
-        <!-- 性别 -->
-        <template v-else-if="sheetKey === 'gender'">
-          <div class="setting-sheet-gender-wrapper">
-            <!-- 基本选项 -->
-            <div class="setting-sheet-gender-options">
-              <div class="setting-sheet-gender-item" @click="changeGender('1')">
-                男
-              </div>
-              <div class="setting-sheet-gender-item" @click="changeGender('2')">
-                女
+              <div v-if="!avatarFile" class="setting-sheet-avatar-title">
+                点击选择照片
               </div>
             </div>
-            <!-- 其它选项 -->
-            <div class="setting-sheet-gender-other" @click="changeGender('3')">
-              不愿透露
+          </template>
+
+          <!-- 名字 -->
+          <template v-else-if="sheetKey === 'nick_name'">
+            <div class="setting-sheet-input-wrapper">
+              <input
+                v-model="userInfoStorage.nick_name"
+                class="setting-sheet-input"
+                type="text"
+                :maxlength="16"
+                :adjust-position="false"
+              />
             </div>
-          </div>
-        </template>
+          </template>
 
-        <!-- 手机 -->
-        <template v-else-if="sheetKey === 'mobile'">
-          <div class="setting-sheet-input-wrapper">
-            <input
-              class="setting-sheet-input"
-              type="text"
-              v-model="userInfoStorage.mobile"
-            />
-          </div>
-        </template>
+          <!-- 性别 -->
+          <template v-else-if="sheetKey === 'gender'">
+            <div class="setting-sheet-gender-wrapper">
+              <!-- 基本选项 -->
+              <div class="setting-sheet-gender-options">
+                <div
+                  class="setting-sheet-gender-item"
+                  @click="changeGender('1')"
+                >
+                  男
+                </div>
+                <div
+                  class="setting-sheet-gender-item"
+                  @click="changeGender('2')"
+                >
+                  女
+                </div>
+              </div>
+              <!-- 其它选项 -->
+              <div
+                class="setting-sheet-gender-other"
+                @click="changeGender('3')"
+              >
+                不愿透露
+              </div>
+            </div>
+          </template>
 
-        <!-- 偏好 -->
-        <template v-else-if="sheetKey === 'preference_type'">
-          <div class="setting-sheet-input-wrapper">
-            <input
-              class="setting-sheet-input"
-              type="text"
-              v-model="userInfoStorage.email"
-            />
-          </div>
-        </template>
+          <!-- 手机 -->
+          <template v-else-if="sheetKey === 'mobile'">
+            <div class="setting-sheet-input-wrapper">
+              <input
+                v-model="userInfoStorage.mobile"
+                class="setting-sheet-input"
+                type="number"
+                :maxlength="11"
+                :adjust-position="false"
+              />
+            </div>
+          </template>
 
-        <!-- 签名 -->
-        <template v-else-if="sheetKey === 'signature'">
-          <div class="setting-sheet-input-wrapper">
-            <input
-              class="setting-sheet-input"
-              type="text"
-              v-model="userInfoStorage.signature"
-            />
-          </div>
-        </template>
+          <!-- 偏好 -->
+          <template v-else-if="sheetKey === 'preference_type'">
+            <div class="setting-sheet-input-wrapper">偏好设置</div>
+          </template>
+
+          <!-- 签名 -->
+          <template v-else-if="sheetKey === 'signature'">
+            <div class="setting-sheet-input-wrapper">
+              <input
+                v-model="userInfoStorage.signature"
+                class="setting-sheet-input"
+                type="text"
+                :maxlength="30"
+                :adjust-position="false"
+              />
+            </div>
+          </template>
+        </div>
 
         <!-- 提交按钮 -->
         <CwButton block @click="submitInfo">就这样</CwButton>
@@ -501,6 +512,7 @@
             rgba(255, 255, 255, 1)
           )
           2 2;
+        overflow: hidden;
 
         // 头像
         .card-item-avatar {
@@ -545,7 +557,7 @@
           height: 120rpx;
           padding: 34rpx 32rpx;
           box-sizing: border-box;
-          transition: background 0.24s;
+          transition: background 0.11s;
 
           // 标签
           .card-item-label {
@@ -631,86 +643,93 @@
     padding: 60rpx 32rpx var(--cw-padding-bottom) 32rpx;
     box-sizing: border-box;
 
-    // 头像容器
-    .setting-sheet-avatar-wrapper {
-      width: 366rpx;
-      height: 366rpx;
-      border-radius: 50%;
-      background-color: var(--cw-skeleton-background-light);
+    .setting-sheet-body {
       display: flex;
+      flex-direction: column;
+      justify-content: center;
       align-items: center;
-      flex-direction: column;
-      row-gap: 26rpx;
 
-      // 预览的头像
-      .setting-sheet-avatar-image {
-        width: inherit;
-        height: inherit;
-        border-radius: inherit;
-        flex-shrink: 0;
-      }
-
-      // 标题
-      .setting-sheet-avatar-title {
-        font-weight: 400;
-        font-size: 28rpx;
-        color: #9a9a9a;
-        line-height: 33rpx;
-      }
-    }
-
-    // 输入框
-    .setting-sheet-input-wrapper {
-      width: 646rpx;
-      height: 116rpx;
-      background: #eee;
-      border-radius: 40rpx;
-
-      .setting-sheet-input {
-        width: inherit;
-        height: inherit;
-        padding: 30rpx 46rpx;
-        box-sizing: border-box;
-        font-size: 34rpx;
-        font-weight: 600;
-        color: #333;
-      }
-    }
-
-    // 性别
-    .setting-sheet-gender-wrapper {
-      display: flex;
-      flex-direction: column;
-      row-gap: 32rpx;
-
-      // 选项
-      .setting-sheet-gender-options {
+      // 头像容器
+      .setting-sheet-avatar-wrapper {
+        width: 366rpx;
+        height: 366rpx;
+        border-radius: 50%;
+        background-color: var(--cw-skeleton-background-light);
         display: flex;
         align-items: center;
-        column-gap: 24rpx;
+        flex-direction: column;
+        row-gap: 26rpx;
 
-        .setting-sheet-gender-item {
-          width: 300rpx;
-          height: 300rpx;
-          background: #eee;
-          border-radius: 40rpx;
-          padding: 28rpx;
-          box-sizing: border-box;
-          display: flex;
-          align-items: flex-end;
-          justify-content: flex-end;
+        // 预览的头像
+        .setting-sheet-avatar-image {
+          width: inherit;
+          height: inherit;
+          border-radius: inherit;
+          flex-shrink: 0;
+        }
+
+        // 标题
+        .setting-sheet-avatar-title {
+          font-weight: 400;
+          font-size: 28rpx;
+          color: #9a9a9a;
+          line-height: 33rpx;
         }
       }
 
-      // 不愿透露的
-      .setting-sheet-gender-other {
-        width: 624rpx;
+      // 输入框
+      .setting-sheet-input-wrapper {
+        width: 646rpx;
         height: 116rpx;
         background: #eee;
-        border-radius: 20rpx;
+        border-radius: 40rpx;
+
+        .setting-sheet-input {
+          width: inherit;
+          height: inherit;
+          padding: 30rpx 46rpx;
+          box-sizing: border-box;
+          font-size: 34rpx;
+          font-weight: 600;
+          color: #333;
+        }
+      }
+
+      // 性别
+      .setting-sheet-gender-wrapper {
         display: flex;
-        justify-content: center;
-        align-items: center;
+        flex-direction: column;
+        row-gap: 32rpx;
+
+        // 选项
+        .setting-sheet-gender-options {
+          display: flex;
+          align-items: center;
+          column-gap: 24rpx;
+
+          .setting-sheet-gender-item {
+            width: 300rpx;
+            height: 300rpx;
+            background: #eee;
+            border-radius: 40rpx;
+            padding: 28rpx;
+            box-sizing: border-box;
+            display: flex;
+            align-items: flex-end;
+            justify-content: flex-end;
+          }
+        }
+
+        // 不愿透露的
+        .setting-sheet-gender-other {
+          width: 624rpx;
+          height: 116rpx;
+          background: #eee;
+          border-radius: 20rpx;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
       }
     }
   }
