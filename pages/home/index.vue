@@ -10,6 +10,7 @@
     hideLoading,
     goPage,
     isNumber,
+    isArray,
   } from '@/utils'
   import { USER_INFO, USER_TOKEN, DEFAULT_AVATAR } from '@/enum'
   import { onLoad, onShow } from '@dcloudio/uni-app'
@@ -245,7 +246,7 @@
     })
 
     if (res.code === 200) {
-      if (res.data && res.data.length) {
+      if (isArray(res.data)) {
         setMarkers(res.data)
       }
       return
