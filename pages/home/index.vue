@@ -545,7 +545,7 @@
   /**
    * 选择照片
    */
-  const choosePicture = async (index) => {
+  const choosePicture = async () => {
     if (pictureFileList.length === maxPictureCount.value) {
       return
     }
@@ -559,7 +559,10 @@
       })
 
       if (res.errMsg === 'chooseImage:ok') {
-        pictureFileList.value = [...pictureFileList.value, ...res.tempFilePaths]
+        pictureFileList.value = [
+          ...(pictureFileList.value || []),
+          ...res.tempFilePaths,
+        ]
 
         console.log(pictureFileList.value)
       }
