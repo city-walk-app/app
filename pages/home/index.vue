@@ -11,6 +11,7 @@
     goPage,
     isNumber,
     isArray,
+    previewImage,
   } from '@/utils'
   import { USER_INFO, USER_TOKEN, DEFAULT_AVATAR } from '@/enum'
   import { onLoad, onShow } from '@dcloudio/uni-app'

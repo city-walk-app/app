@@ -55,6 +55,7 @@
     background: var(--cw-theme-1);
     line-height: 38rpx;
     color: #fff;
+    transition: background 0.12s;
 
     // 线性的
     &.cw-button-line {
@@ -71,5 +72,7 @@
 
   // 点击触发
   .cw-button-hover {
+    background-color: #f1754f;
+    border-color: #f1754f;
   }
 </style>
