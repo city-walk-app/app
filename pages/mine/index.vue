@@ -441,12 +441,17 @@
             >
               <!-- 时间线 -->
               <div class="details-everyone-time-line">
-                <image
+                <div
                   v-if="index === 0"
-                  class="details-everyone-time-line-avatar"
-                  src="https://img1.baidu.com/it/u=1784112474,311889214&fm=253&fmt=auto&app=120&f=JPEG?w=500&h=500"
-                  mode="aspectFill"
-                />
+                  class="cw-skeleton-animated details-everyone-time-line-avatar-wrapper"
+                >
+                  <image
+                    v-if="userInfo"
+                    class="details-everyone-time-line-avatar"
+                    mode="aspectFill"
+                    :src="userInfo.avatar || DEFAULT_AVATAR"
+                  />
+                </div>
 
                 <!-- 圈 -->
                 <div v-else class="details-everyone-time-line-circle">
@@ -876,10 +881,20 @@
             align-items: center;
 
             // 头像
-            .details-everyone-time-line-avatar {
+            .details-everyone-time-line-avatar-wrapper {
               width: 92rpx;
               height: 92rpx;
               border-radius: 50%;
+              flex-shrink: 0;
+              background-color: var(--cw-skeleton-background-light);
+              overflow: hidden;
+
+              .details-everyone-time-line-avatar {
+                width: inherit;
+                height: inherit;
+                border-radius: inherit;
+                flex-shrink: 0;
+              }
             }
 
             // 圈
