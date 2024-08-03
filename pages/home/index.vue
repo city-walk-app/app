@@ -96,7 +96,7 @@
         setStorage(USER_INFO, res.data)
       }
     } catch (err) {
-      console.log('接口异常', err)
+      console.log('获取用户信息异常', err)
     }
   }
 
@@ -115,35 +115,43 @@
    * open id 登录
    */
   const loginOpenId = async (wx_open_id) => {
-    const res = await API.loginOpenId({ wx_open_id })
+    try {
+      const res = await API.loginOpenId({ wx_open_id })
 
-    toast(res.message)
+      toast(res.message)
 
-    if (res.code === 200) {
-      userInfoStorage.value = res.data.user_info
-      userTokenStorage.value = res.data.token
+      if (res.code === 200) {
+        userInfoStorage.value = res.data.user_info
+        userTokenStorage.value = res.data.token
 
-      setStorage(USER_INFO, res.data.user_info)
-      setStorage(USER_TOKEN, res.data.token)
-      return
+        setStorage(USER_INFO, res.data.user_info)
+        setStorage(USER_TOKEN, res.data.token)
+        return
+      }
+
+      toast(res.message)
+
+      setTimeout(() => {
+        goPage('/pages/login/index')
+      }, 500)
+    } catch (err) {
+      console.log('open id 登录异常', err)
     }
-
-    toast(res.message)
-
-    setTimeout(() => {
-      goPage('/pages/login/index')
-    }, 500)
   }
 
   /**
    * 获取 open id
    */
   const getOpenId = async (code) => {
-    const res = await API.getOpenId({ code })
+    try {
+      const res = await API.getOpenId({ code })
 
-    if (res.code === 200) {
-      loginOpenId(res.data.openid)
-      getLocation() // 获取位置信息
+      if (res.code === 200) {
+        loginOpenId(res.data.openid)
+        getLocation() // 获取位置信息
+      }
+    } catch (err) {
+      console.log('获取 open id 异常', err)
     }
   }
 
@@ -151,10 +159,14 @@
    * 微信登录
    */
   const wxLogin = async () => {
-    const res = await uni.login()
+    try {
+      const res = await uni.login()
 
-    if (res.errMsg === 'login:ok') {
-      getOpenId(res.code)
+      if (res.errMsg === 'login:ok') {
+        getOpenId(res.code)
+      }
+    } catch (err) {
+      console.log('微信登录异常', err)
     }
   }
 
@@ -177,43 +189,47 @@
    * 记录当前位置
    */
   const onRecord = async () => {
-    const res = await uni.chooseLocation({ type: 'gcj02' })
+    try {
+      const res = await uni.chooseLocation({ type: 'gcj02' })
 
-    if (res.errMsg !== 'chooseLocation:ok') {
-      toast('查看位置错误')
-      return
-    }
-
-    const { latitude, longitude, name, address } = res
-
-    if (isNumber(longitude) || isNumber(latitude)) {
-      toast('参数缺失')
-      return
-    }
-
-    console.log('打卡成功', res)
-
-    /** 创建当前位置信息 */
-    const result = await API.locationCreateRecord({
-      latitude,
-      longitude,
-    })
-
-    if (result.code === 200) {
-      recordDetail.value = {
-        ...result.data,
-        province_url: result.data.province_code
-          ? `https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/provinces/${result.data.province_code}.png`
-          : '',
+      if (res.errMsg !== 'chooseLocation:ok') {
+        toast('查看位置错误')
+        return
       }
 
-      routeDetailForm.address = address + name
-      routeDetailForm.route_id = result.data.route_id
-      openSheet() // 打开对话框
-      return
-    }
+      const { latitude, longitude, name, address } = res
 
-    toast(result.message)
+      if (!isNumber(longitude) || !isNumber(latitude)) {
+        toast('打卡失败')
+        return
+      }
+
+      console.log('打卡成功', res)
+
+      /** 创建当前位置信息 */
+      const result = await API.locationCreateRecord({
+        latitude,
+        longitude,
+      })
+
+      if (result.code === 200) {
+        recordDetail.value = {
+          ...result.data,
+          province_url: result.data.province_code
+            ? `https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/provinces/${result.data.province_code}.png`
+            : '',
+        }
+
+        routeDetailForm.address = address + name
+        routeDetailForm.route_id = result.data.route_id
+        openSheet() // 打开对话框
+        return
+      }
+
+      toast(result.message)
+    } catch (err) {
+      console.log('接口异常', err)
+    }
   }
 
   /**
@@ -240,61 +256,73 @@
    * 获取周边热门地点
    */
   const getLocationPopularRecommend = async () => {
-    const res = await API.getLocationPopularRecommend({
-      longitude: longitude.value,
-      latitude: latitude.value,
-    })
+    try {
+      const res = await API.getLocationPopularRecommend({
+        longitude: longitude.value,
+        latitude: latitude.value,
+      })
 
-    if (res.code === 200) {
-      if (isArray(res.data)) {
-        setMarkers(res.data)
+      if (res.code === 200) {
+        if (isArray(res.data) && res.data.length) {
+          setMarkers(res.data) // 设置地图标点
+        }
+        return
       }
-      return
-    }
 
-    toast(res.message)
+      toast(res.message)
+    } catch (err) {
+      console.log('接口异常', err)
+    }
   }
 
   /**
    * 获取当前地区的天气
    */
   const getWeatherInfo = async () => {
-    const res = await API.getWeatherInfo({
-      longitude: longitude.value,
-      latitude: latitude.value,
-    })
+    try {
+      const res = await API.getWeatherInfo({
+        longitude: longitude.value,
+        latitude: latitude.value,
+      })
 
-    if (res.code === 200) {
-      weatherInfo.value = res.data
-      return
+      if (res.code === 200) {
+        weatherInfo.value = res.data
+        return
+      }
+
+      toast(res.message)
+    } catch (err) {
+      console.log('获取当前地区的天气接口异常', err)
     }
-
-    toast(res.message)
   }
 
   /**
    * 获取位置信息
    */
   const getLocation = async () => {
-    /**
-     * @see getLocation https://developers.weixin.qq.com/miniprogram/dev/api/location/wx.getLocation.html
-     */
-    const res = await uni.getLocation({
-      type: 'gcj02',
-      isHighAccuracy: true,
-    })
+    try {
+      /**
+       * @see getLocation https://developers.weixin.qq.com/miniprogram/dev/api/location/wx.getLocation.html
+       */
+      const res = await uni.getLocation({
+        type: 'gcj02',
+        isHighAccuracy: true,
+      })
 
-    if (res.errMsg !== 'getLocation:ok') {
-      toast('获取地理位置失败')
-      return
-    }
+      if (res.errMsg !== 'getLocation:ok') {
+        toast('获取地理位置失败')
+        return
+      }
 
-    if (isNumber(res.longitude) && isNumber(res.latitude)) {
-      longitude.value = res.longitude
-      latitude.value = res.latitude
+      if (isNumber(res.longitude) && isNumber(res.latitude)) {
+        longitude.value = res.longitude
+        latitude.value = res.latitude
 
-      // getLocationPopularRecommend() // 获取周边热门地点
-      // getWeatherInfo() // 获取天气信息
+        // getLocationPopularRecommend() // 获取周边热门地点
+        // getWeatherInfo() // 获取天气信息
+      }
+    } catch (err) {
+      console.log('获取位置信息异常', err)
     }
   }
 
@@ -320,11 +348,29 @@
   }
 
   /**
+   * 同意好友邀请
+   */
+  const friendConfirmInvite = async (invite_id) => {
+    if (!invite_id) {
+      return
+    }
+
+    try {
+      const res = await API.friendConfirmInvite({ invite_id })
+
+      if (res.code === 200) {
+        console.log(result)
+      }
+    } catch (err) {
+      console.log('同意好友邀请接口异常', err)
+    }
+  }
+
+  /**
    * 获取邀请详情
    */
   const getFriendInviteInfo = async (invite_id) => {
     try {
-      console.log('获取详情')
       const res = await API.getFriendInviteInfo({ invite_id })
 
       console.log(res)
@@ -332,7 +378,7 @@
       if (res.code === 200) {
         const modalRes = await uni.showModal({
           title: '好友申请',
-          content: `${res.data.name} 申请加你为好友，你同意吗？`,
+          content: `${res.data.name || ''} 申请加你为好友，你同意吗？`,
           showCancel: true,
           cancelText: '拒绝',
           confirmText: '同意',
@@ -343,16 +389,13 @@
           return
         }
 
+        // 同意好友邀请
         if (modalRes.confirm) {
-          const result = await API.friendConfirmInvite({ invite_id })
-
-          if (result.code === 200) {
-            console.log(result)
-          }
+          friendConfirmInvite(invite_id) // 同意好友邀请
         }
       }
     } catch (err) {
-      console.log('接口异常', err)
+      console.log('异常', err)
     }
   }
 
@@ -405,7 +448,7 @@
       showLoading()
 
       // 上传图片
-      if (pictureFileList.value && pictureFileList.value.length) {
+      if (isArray(pictureFileList.value) && pictureFileList.value.length) {
         const upRes = await uploadOSSImages(API, pictureFileList.value)
 
         console.log('上传的图片', upRes)
@@ -454,47 +497,49 @@
    * 获取权限
    */
   const getSetting = async () => {
-    const settingRes = await uni.getSetting()
+    try {
+      const settingRes = await uni.getSetting()
 
-    console.log('获取权限', settingRes)
+      console.log('获取权限', settingRes)
 
-    if (settingRes.errMsg !== 'getSetting:ok') {
-      return
-    }
-
-    // return
-
-    // 不是已授权位置权限状态
-    if (!settingRes.authSetting['scope.userLocation']) {
-      const modalRes = await uni.showModal({
-        title: '位置权限',
-        content: '当前暂未开启位置权限，避免影响功能正常使用，你要去开启吗？',
-        showCancel: true,
-        cancelText: '先不了',
-        confirmText: '去开启',
-      })
-
-      if (modalRes.errMsg !== 'showModal:ok') {
+      if (settingRes.errMsg !== 'getSetting:ok') {
         return
       }
 
-      if (modalRes.confirm) {
-        const openRes = await uni.openSetting()
+      // 不是已授权位置权限状态
+      if (!settingRes.authSetting['scope.userLocation']) {
+        const modalRes = await uni.showModal({
+          title: '位置权限',
+          content: '当前暂未开启位置权限，避免影响功能正常使用，你要去开启吗？',
+          showCancel: true,
+          cancelText: '先不了',
+          confirmText: '去开启',
+        })
 
-        if (openRes.errMsg !== 'openSetting:ok') {
+        if (modalRes.errMsg !== 'showModal:ok') {
           return
         }
 
-        // 已经授权了
-        if (openRes.authSetting['scope.userLocation']) {
-          getLocation() // 获取位置信息
+        if (modalRes.confirm) {
+          const openRes = await uni.openSetting()
+
+          if (openRes.errMsg !== 'openSetting:ok') {
+            return
+          }
+
+          // 已经授权了
+          if (openRes.authSetting['scope.userLocation']) {
+            getLocation() // 获取位置信息
+          }
         }
+
+        return
       }
 
-      return
+      getLocation() // 获取位置信息
+    } catch (err) {
+      console.log('获取权限异常', err)
     }
-
-    getLocation() // 获取位置信息
   }
 
   onLoad((options) => {
