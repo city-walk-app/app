@@ -370,6 +370,22 @@
                 src="/assets/svg/right-black.svg"
               />
             </div>
+
+            <!-- 联系客服 -->
+            <button
+              class="card-item"
+              open-type="contact"
+              hover-class="card-item-hover"
+            >
+              <div class="card-item-label">
+                <div class="card-item-label-sutitle">联系客服</div>
+              </div>
+
+              <image
+                class="card-item-arrow"
+                src="/assets/svg/right-black.svg"
+              />
+            </button>
           </div>
         </div>
         <div class="exit-wrapper" @click="outLogin">
@@ -558,6 +574,13 @@
           padding: 34rpx 32rpx;
           box-sizing: border-box;
           transition: background 0.11s;
+          background-color: transparent;
+          border-radius: 0;
+          border: none;
+
+          &::after {
+            display: none;
+          }
 
           // 标签
           .card-item-label {
