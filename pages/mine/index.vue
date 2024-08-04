@@ -39,26 +39,30 @@
   const visibleSheet = ref(false)
   /** 月份选择列表 */
   const monthSelectList = ref([
-    { title: '一', key: 1 },
-    { title: '二', key: 2 },
-    { title: '三', key: 3 },
-    { title: '四', key: 4 },
-    { title: '五', key: 5 },
-    { title: '六', key: 6 },
-    { title: '七', key: 7 },
-    { title: '八', key: 8 },
-    { title: '九', key: 9 },
-    { title: '十', key: 10 },
-    { title: '十一', key: 11 },
-    { title: '十二', key: 12 },
+    { title: '一', key: '01' },
+    { title: '二', key: '02' },
+    { title: '三', key: '03' },
+    { title: '四', key: '04' },
+    { title: '五', key: '05' },
+    { title: '六', key: '06' },
+    { title: '七', key: '07' },
+    { title: '八', key: '08' },
+    { title: '九', key: '09' },
+    { title: '十', key: '10' },
+    { title: '十一', key: '11' },
+    { title: '十二', key: '12' },
   ])
   /** 年份选择列表 */
   const yearSelectList = ref()
+  /** 当前时间 */
+  const date = new Date()
   /** 热力图筛选参数 */
   const heatmapDateParams = reactive({
-    year: null,
-    month: null,
+    year: date.getFullYear(),
+    month: (date.getMonth() + 1).toString().padStart(2, '0'),
   })
+  /** 热力图每一项的详情 */
+  const heatmapItemDetail = ref()
 
   /**
    * 设置年份数组
@@ -111,6 +115,8 @@
               _active: false,
             }
           })
+
+          console.log(heatmap.value)
         }
       }
     } catch (err) {
@@ -171,10 +177,14 @@
   const heatmapItemClick = (item) => {
     item._active = !item._active
 
+    console.log(item)
+
     if (item._active) {
       routeDetailList.value = item.routes
+      heatmapItemDetail.value = item
     } else {
-      routeDetailList.value = []
+      routeDetailList.value = null
+      heatmapItemDetail.value = null
     }
   }
 
@@ -363,7 +373,9 @@
                 />
               </div>
               <div class="heatmap-header-date-time">
-                {{ getCurrentDateFormatted() }}
+                {{ heatmapDateParams.year || '' }}-{{
+                  heatmapDateParams.month || ''
+                }}
               </div>
             </div>
           </div>
@@ -396,13 +408,23 @@
             </div>
 
             <!-- 右侧热力图-加载完成 -->
-            <div class="heatmap-body-right" v-if="heatmap && heatmap.length">
+            <div
+              :class="[
+                'heatmap-body-right',
+                {
+                  'heatmap-body-right-active':
+                    routeDetailList && routeDetailList.length,
+                },
+              ]"
+              v-if="heatmap && heatmap.length"
+            >
               <div
                 class="heatmap-body-right-item-wrapper"
                 v-for="(item, index) in heatmap"
                 :key="index"
                 @click="heatmapItemClick(item)"
               >
+                <!-- 每一项 -->
                 <div
                   :class="[
                     'heatmap-body-right-item',
@@ -415,7 +437,20 @@
                       ? item.background_color
                       : 'none',
                   }"
-                ></div>
+                />
+
+                <!-- 详情 -->
+                <div
+                  v-if="heatmapItemDetail && item._active"
+                  class="heatmap-body-right-item-detail"
+                >
+                  <div class="heatmap-body-right-item-date">
+                    {{ heatmapItemDetail.date || '' }}
+                  </div>
+                  <div class="heatmap-body-right-item-content">
+                    打卡{{ heatmapItemDetail.route_count || 0 }}个地点
+                  </div>
+                </div>
               </div>
             </div>
 
@@ -813,7 +848,14 @@
           grid-template-columns: repeat(7, 1fr);
           row-gap: 24rpx;
           position: relative;
+          overflow: hidden;
 
+          // 选中的圆角
+          &.heatmap-body-right-active {
+            border-radius: 20rpx;
+          }
+
+          // 每一项容器
           .heatmap-body-right-item-wrapper {
             width: 54rpx;
             height: 52rpx;
@@ -821,21 +863,43 @@
             background: url('https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/city-walk/main-heatmap-check.svg')
               no-repeat center / cover;
 
+            // 每一项
             .heatmap-body-right-item {
               width: inherit;
               height: inherit;
               border-radius: inherit;
-              transition: 0.3s;
+              transition: transform 0.5s, border-radiu 0.5s;
 
               // 选中状态
               &.heatmap-body-right-item-active {
-                width: 100%;
-                height: 100%;
-                position: absolute;
-                top: 0;
-                right: 0;
-                left: 0;
-                bottom: 0;
+                transform: scale(20);
+                border-radius: 0;
+                z-index: 40;
+              }
+            }
+
+            // 选中的文案详情
+            .heatmap-body-right-item-detail {
+              position: absolute;
+              inset: 0;
+              display: flex;
+              flex-direction: column;
+              justify-content: center;
+              align-items: center;
+              row-gap: 18rpx;
+
+              .heatmap-body-right-item-date {
+                font-weight: 500;
+                font-size: 44rpx;
+                color: #ffffff;
+                line-height: 52rpx;
+              }
+
+              .heatmap-body-right-item-content {
+                font-weight: 500;
+                font-size: 44rpx;
+                color: #ffffff;
+                line-height: 52rpx;
               }
             }
           }
