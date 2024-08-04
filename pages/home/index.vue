@@ -14,7 +14,7 @@
     previewImage,
   } from '@/utils'
   import { USER_INFO, USER_TOKEN, DEFAULT_AVATAR } from '@/enum'
-  import { onLoad, onShow } from '@dcloudio/uni-app'
+  import { onLoad, onShow, onUnload } from '@dcloudio/uni-app'
   import { useGlobalStore } from '@/store'
   import FilterPopup from '@/components/filter-popup'
   import Sheet from '@/components/sheet'
@@ -101,7 +101,7 @@
     content: '', // 内容
     travel_type: '', // 出行方式
     mood_color: '', // 心情颜色
-    address: '', // 位置信息
+    address: '电话的哈等哈', // 位置信息
     picture: [], // 照片
   })
   /** 选择的图片 */
@@ -112,6 +112,8 @@
   const moodColorOptions = ref()
   /** 邀请 id */
   const inviteId = ref()
+  /** 键盘高度 */
+  const keyboardHeight = ref(16)
 
   /** 用户信息缓存 */
   const userInfoStorage = ref(getStorage(USER_INFO))
@@ -714,6 +716,14 @@
     await previewImage(urls, current)
   }
 
+  /**
+   * 键盘高度变化执行的回调
+   */
+  const handleKeyboardHeightChange = (evt) => {
+    keyboardHeight.value = evt.height
+    console.log('键盘', res.height)
+  }
+
   onLoad((options) => {
     console.log('启动参数', options)
 
@@ -725,10 +735,19 @@
       }
 
       getUserInfo() // 获取用户信息
+      // #ifdef MP-WEIXIN
+      uni.onKeyboardHeightChange(handleKeyboardHeightChange) // 监听键盘高度变化事件
+      // #endif
       return
     }
 
     inviteId.value = options.invite_id
+  })
+
+  onUnload(() => {
+    // #ifdef MP-WEIXIN
+    uni.offKeyboardHeightChange(handleKeyboardHeightChange) // 移除键盘高度变化事件监听
+    // #endif
   })
 
   onShow(() => {
@@ -920,7 +939,13 @@
 
     <!-- 弹窗内容 -->
     <template #content>
-      <div v-if="recordDetail" class="home-sheet">
+      <div
+        v-if="recordDetail"
+        class="home-sheet"
+        :style="{
+          '--padding-bottom': keyboardHeight + 'px',
+        }"
+      >
         <!-- 版图 -->
         <div v-if="recordDetail.province_url" class="home-sheet-jigsaw">
           <div
@@ -1077,13 +1102,16 @@
 
           <!-- 说点什么 -->
           <div class="home-sheet-content-body-speak">
-            <!-- <div class="home-sheet-content-body-speak-text">说点什么？</div> -->
-            <div class="home-sheet-content-body-speak-text">
-              <textarea
-                class="home-sheet-content-body-speak-text-textarea"
-                v-model="routeDetailForm.content"
-              />
-            </div>
+            <textarea
+              v-model="routeDetailForm.content"
+              class="home-sheet-content-body-speak-text-textarea"
+              placeholder="说点什么？"
+              auto-height
+              placeholder-class="home-sheet-content-body-speak-text-textarea-placeholder"
+              :maxlength="140"
+              :adjust-position="false"
+              :show-confirm-bar="false"
+            />
           </div>
         </div>
 
@@ -1457,10 +1485,11 @@
     justify-content: center;
     flex-direction: column;
     align-items: center;
-    padding: 40rpx 32rpx;
+    padding: 40rpx 32rpx var(--padding-bottom) 32rpx;
     box-sizing: border-box;
     position: relative;
     flex: 1;
+    overflow-y: auto;
 
     // 版图
     .home-sheet-jigsaw {
@@ -1646,20 +1675,28 @@
         align-items: center;
         position: relative;
         margin-top: 32rpx;
+        padding: 26rpx 32rpx;
+        box-sizing: border-box;
+        display: flex;
+        align-items: center;
 
+        // 地点文案
         .home-sheet-content-body-position-text {
           font-weight: 400;
           font-size: 32rpx;
           color: #666666;
           line-height: 38rpx;
-          text-align: left;
+          width: 100%;
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
         }
       }
 
       // 说点什么
       .home-sheet-content-body-speak {
         width: 100%;
-        height: 124rpx;
+        min-height: 124rpx;
         background: linear-gradient(135deg, #fff2d1 0%, #fff 100%);
         box-shadow: 0rpx 0rpx 17rpx 0rpx rgba(159, 159, 159, 0.25);
         border-radius: 28rpx;
@@ -1671,26 +1708,27 @@
             rgba(255, 255, 255, 1)
           )
           2 2;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        position: relative;
         margin-top: 32rpx;
-        position: relative;
+        padding: 26rpx 32rpx;
+        box-sizing: border-box;
 
-        .home-sheet-content-body-speak-text {
+        // 占位文字
+        .home-sheet-content-body-speak-text-textarea-placeholder {
           font-weight: 500;
           font-size: 36rpx;
-          color: #666666;
+          color: #a8a8a8;
           line-height: 42rpx;
-          position: absolute;
-          inset: 0;
-          overflow: hidden;
+        }
 
-          .home-sheet-content-body-speak-text-textarea {
-            position: absolute;
-            inset: 0;
-          }
+        // 输入框
+        .home-sheet-content-body-speak-text-textarea {
+          width: 100%;
+          background-color: transparent;
+          border: none;
+          font-weight: 500;
+          font-size: 36rpx;
+          color: #666;
+          line-height: 42rpx;
         }
       }
     }
