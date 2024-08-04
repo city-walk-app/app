@@ -8,6 +8,11 @@
       required: true,
     },
     title: String,
+    bottom: Number,
+    isMoveClose: {
+      type: Boolean,
+      default: false,
+    },
   })
   const emit = defineEmits(['on-close'])
 
@@ -84,7 +89,7 @@
     <!-- 空的标签实现点击空白处关闭 -->
     <div
       v-if="isShowCloseEmpty"
-      class="sheet-close-empty"
+      class="sheet-close-empty-header"
       :style="{
         '--height': `${
           useGlobal.headerBtnPosi.top +
@@ -96,6 +101,20 @@
       @click="close"
     />
 
+    <!-- 底部占位元素 -->
+    <div
+      v-if="isShowCloseEmpty"
+      class="sheet-close-empty-body"
+      :style="{
+        '--height': `${
+          useGlobal.headerBtnPosi.top +
+          useGlobal.headerBtnPosi.height +
+          5 +
+          'px'
+        }`,
+      }"
+    ></div>
+
     <!-- 对话框内容 -->
     <div
       :class="['sheet-dialog', { 'shee-dialog-open': visible }]"
@@ -106,12 +125,14 @@
           5 +
           'px'
         })`,
+        '--bottom': bottom ? bottom + 'px' : 0,
       }"
       @transitionend.self="transitionend"
-      @touchstart="handleTouchStart"
-      @touchmove="handleTouchMove"
-      @touchend="handleTouchEnd"
+      @touchstart="isMoveClose ? handleTouchStart : null"
+      @touchmove="isMoveClose ? handleTouchMove : null"
+      @touchend="isMoveClose ? handleTouchEnd : null"
     >
+      <!-- 头部操作栏 -->
       <div class="sheet-dialog-header">
         <!-- 占位元素 -->
         <div class="sheet-dialog-header-before" />
@@ -128,7 +149,10 @@
         </div>
       </div>
 
-      <slot name="content" />
+      <!-- 身体内容部分 -->
+      <div class="sheet-dialog-body">
+        <slot name="content" />
+      </div>
     </div>
   </div>
 </template>
@@ -156,7 +180,7 @@
     }
 
     // 空的标签实现点击空白处关闭
-    .sheet-close-empty {
+    .sheet-close-empty-header {
       height: var(--height);
       background-color: transparent;
       width: 100vw;
@@ -167,15 +191,27 @@
       left: 0;
     }
 
+    // 底部占位元素
+    .sheet-close-empty-body {
+      height: calc(100vh - var(--height));
+      background-color: #fff;
+      width: 100vw;
+      position: fixed;
+      bottom: 0;
+      right: 0;
+      left: 0;
+      z-index: 1;
+    }
+
     // 对话框内容
     .sheet-dialog {
       transform: translateY(97vh);
-      transition: transform 0.24s;
+      transition: transform 0.24s, bottom 0.26s;
       width: 100vw;
       position: absolute;
       right: 0;
       left: 0;
-      bottom: 0;
+      bottom: var(--bottom);
       background: rgba(255, 255, 255, 0.98);
       backdrop-filter: blur(25px);
       z-index: 600;
@@ -184,6 +220,7 @@
       flex-direction: column;
       border-radius: 19rpx 19rpx 0 0;
       height: var(--height);
+      z-index: 40;
 
       // 头部
       .sheet-dialog-header {
@@ -193,6 +230,7 @@
         position: relative;
         padding: 34rpx;
         box-sizing: border-box;
+        flex-shrink: 0;
 
         .sheet-dialog-header-before {
           width: 60rpx;
@@ -225,6 +263,12 @@
             flex-shrink: 0;
           }
         }
+      }
+
+      // 内容部分
+      .sheet-dialog-body {
+        flex: 1;
+        overflow-y: auto;
       }
 
       &.shee-dialog-open {

@@ -259,6 +259,7 @@
   <Sheet
     v-model:visible="visibleSheet"
     title="筛选时间段"
+    is-move-close
     @on-close="closeSheet"
   >
     <!-- 我的页面 -->

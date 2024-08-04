@@ -113,7 +113,7 @@
   /** 邀请 id */
   const inviteId = ref()
   /** 键盘高度 */
-  const keyboardHeight = ref(16)
+  const keyboardHeight = ref(0)
 
   /** 用户信息缓存 */
   const userInfoStorage = ref(getStorage(USER_INFO))
@@ -721,7 +721,7 @@
    */
   const handleKeyboardHeightChange = (evt) => {
     keyboardHeight.value = evt.height
-    console.log('键盘', res.height)
+    console.log('键盘', evt.height)
   }
 
   onLoad((options) => {
@@ -762,7 +762,11 @@
 </script>
 
 <template>
-  <Sheet v-model:visible="visibleSheet" @on-close="closeSheet">
+  <Sheet
+    v-model:visible="visibleSheet"
+    :bottom="keyboardHeight"
+    @on-close="closeSheet"
+  >
     <!-- 首页内容 -->
     <div class="home" :style="{ paddingTop: (statusBarHeight || 90) + 'px' }">
       <!-- 顶部模糊 -->
@@ -939,13 +943,7 @@
 
     <!-- 弹窗内容 -->
     <template #content>
-      <div
-        v-if="recordDetail"
-        class="home-sheet"
-        :style="{
-          '--padding-bottom': keyboardHeight + 'px',
-        }"
-      >
+      <div v-if="recordDetail" class="home-sheet">
         <!-- 版图 -->
         <div v-if="recordDetail.province_url" class="home-sheet-jigsaw">
           <div
@@ -959,7 +957,7 @@
 
         <!-- 文案 -->
         <div class="home-sheet-content" v-if="recordDetail.province_url">
-          再获得100经验版图将会升温版图
+          再获得100经验版图将会升温版图 {{ keyboardHeight + 'px' }}
         </div>
 
         <!-- 内容部分 -->
@@ -1485,7 +1483,7 @@
     justify-content: center;
     flex-direction: column;
     align-items: center;
-    padding: 40rpx 32rpx var(--padding-bottom) 32rpx;
+    padding: 40rpx 32rpx;
     box-sizing: border-box;
     position: relative;
     flex: 1;

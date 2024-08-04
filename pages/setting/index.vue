@@ -168,6 +168,7 @@
 <template>
   <Sheet
     v-model:visible="visibleSheet"
+    is-move-close
     :title="sheetTite"
     @on-close="closeSheet"
   >
