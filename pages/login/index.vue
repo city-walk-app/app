@@ -3,7 +3,7 @@
   import { Api } from '@/api'
   import { onShow, onLoad } from '@dcloudio/uni-app'
   import { toast, showLoading, hideLoading, setStorage } from '@/utils'
-  import { USER_INFO, USER_TOKEN } from '@/enum'
+  import { USER_INFO, USER_TOKEN, preferences } from '@/enum'
 
   const API = new Api()
 
@@ -20,17 +20,7 @@
   /** 验证码输入框聚焦 */
   const codeInputFocus = ref(false)
   /** 偏好列表 */
-  const preferences = ref([
-    { key: '', title: '', active: '' },
-    { key: '', title: '', active: '' },
-    { key: '', title: '', active: '' },
-    { key: '', title: '', active: '' },
-    { key: '', title: '', active: '' },
-    { key: '', title: '', active: '' },
-    { key: '', title: '', active: '' },
-    { key: '', title: '', active: '' },
-    { key: '', title: '', active: '' },
-  ])
+  const preferenceList = ref(preferences)
   /** 邀请 id */
   const inviteId = ref()
 
@@ -260,9 +250,11 @@
           <div class="preferences">
             <div
               class="preference-item"
-              v-for="(item, index) in preferences"
+              v-for="(item, index) in preferenceList"
               :key="index"
-            ></div>
+            >
+              {{ item.title }}
+            </div>
           </div>
         </div>
 
@@ -413,8 +405,17 @@
             .preference-item {
               width: 192rpx;
               height: 184rpx;
+              flex-shrink: 0;
               background: #eee;
               border-radius: 16rpx;
+              padding: 20rpx 21rpx;
+              box-sizing: border-box;
+              display: flex;
+              justify-content: flex-end;
+              align-items: flex-end;
+              color: #333;
+              font-size: 27rpx;
+              font-weight: 600;
             }
           }
         }

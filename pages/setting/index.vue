@@ -7,7 +7,7 @@
     showLoading,
     hideLoading,
   } from '@/utils'
-  import { USER_INFO, DEFAULT_AVATAR } from '@/enum'
+  import { USER_INFO, DEFAULT_AVATAR, preferences } from '@/enum'
   import { Api } from '@/api'
   import Sheet from '@/components/sheet'
   import StickyScroll from '@/components/sticky-scroll'
@@ -24,6 +24,8 @@
   const sheetTite = ref('')
   /** 头像文件 */
   const avatarFile = ref()
+  /** 偏好列表 */
+  const preferenceList = ref(preferences)
 
   /** 缓存的当前用户信息 */
   const userInfoStorage = ref(getStorage(USER_INFO))
@@ -476,7 +478,15 @@
 
           <!-- 偏好 -->
           <template v-else-if="sheetKey === 'preference_type'">
-            <div class="setting-sheet-input-wrapper">偏好设置</div>
+            <div class="setting-sheet-preference-wrapper">
+              <div
+                class="preference-item"
+                v-for="(item, index) in preferenceList"
+                :key="index"
+              >
+                {{ item.title }}
+              </div>
+            </div>
           </template>
 
           <!-- 签名 -->
@@ -715,6 +725,30 @@
           font-size: 34rpx;
           font-weight: 600;
           color: #333;
+        }
+      }
+
+      // 偏好设置
+      .setting-sheet-preference-wrapper {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        column-gap: 48rpx;
+        row-gap: 50rpx;
+
+        .preference-item {
+          width: 192rpx;
+          height: 184rpx;
+          flex-shrink: 0;
+          background: #eee;
+          border-radius: 16rpx;
+          padding: 20rpx 21rpx;
+          box-sizing: border-box;
+          display: flex;
+          justify-content: flex-end;
+          align-items: flex-end;
+          color: #333;
+          font-size: 27rpx;
+          font-weight: 600;
         }
       }
 
