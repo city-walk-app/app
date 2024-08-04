@@ -32,6 +32,8 @@
     startY.value = 0
     isDragging.value = false
 
+    isShowCloseEmpty.value = false
+
     emit('on-close')
   }
 
@@ -39,13 +41,19 @@
    * 动画结束触发
    */
   const transitionend = () => {
-    isShowCloseEmpty.value = prop.visible
+    if (prop.visible) {
+      isShowCloseEmpty.value = prop.visible
+    }
   }
 
   /**
    * 下滑开始
    */
   const handleTouchStart = (evt) => {
+    if (!prop.isMoveClose) {
+      return
+    }
+
     console.log('start')
     startY.value = evt.touches[0].clientY
     isDragging.value = true
@@ -55,6 +63,10 @@
    * 下滑中
    */
   const handleTouchMove = (evt) => {
+    if (!prop.isMoveClose) {
+      return
+    }
+
     console.log('move')
     if (!isDragging.value) return
 
@@ -71,6 +83,10 @@
    * 下滑结束
    */
   const handleTouchEnd = () => {
+    if (!prop.isMoveClose) {
+      return
+    }
+
     console.log('End')
     isDragging.value = false
   }
@@ -128,9 +144,9 @@
         '--bottom': bottom ? bottom + 'px' : 0,
       }"
       @transitionend.self="transitionend"
-      @touchstart="isMoveClose ? handleTouchStart : null"
-      @touchmove="isMoveClose ? handleTouchMove : null"
-      @touchend="isMoveClose ? handleTouchEnd : null"
+      @touchstart="handleTouchStart"
+      @touchmove="handleTouchMove"
+      @touchend="handleTouchEnd"
     >
       <!-- 头部操作栏 -->
       <div class="sheet-dialog-header">
@@ -269,6 +285,8 @@
       .sheet-dialog-body {
         flex: 1;
         overflow-y: auto;
+        display: flex;
+        flex-direction: column;
       }
 
       &.shee-dialog-open {
