@@ -181,6 +181,7 @@
           <div class="card">
             <div
               class="card-item-avatar"
+              hover-class="card-item-hover"
               @click="openSheet('avatar', '修改头像')"
             >
               <div class="avatar">
@@ -350,18 +351,6 @@
               />
             </div>
 
-            <!-- 给个好评 -->
-            <div class="card-item" hover-class="card-item-hover">
-              <div class="card-item-label">
-                <div class="card-item-label-sutitle">给个好评</div>
-              </div>
-
-              <image
-                class="card-item-arrow"
-                src="/assets/svg/right-black.svg"
-              />
-            </div>
-
             <!-- Github -->
             <div class="card-item" hover-class="card-item-hover">
               <div class="card-item-label">
@@ -391,7 +380,13 @@
             </button>
           </div>
         </div>
-        <div class="exit-wrapper" @click="outLogin">
+
+        <!-- 退出登录 -->
+        <div
+          class="exit-wrapper"
+          hover-class="exit-wrapper-hover"
+          @click="outLogin"
+        >
           <div class="exit-wrapper-text">退出登录</div>
         </div>
       </div>
@@ -654,10 +649,12 @@
       height: 120rpx;
       background: #ffffff;
       box-shadow: 0rpx 0rpx 17rpx 0rpx rgba(159, 159, 159, 0.25);
-      border-radius: 32rpx 32rpx 32rpx 32rpx;
+      border-radius: 32rpx;
       display: flex;
       justify-content: center;
       align-items: center;
+      overflow: hidden;
+      transition: background 0.11s;
 
       .exit-wrapper-text {
         font-weight: 400;
@@ -665,6 +662,11 @@
         color: #f65e56;
         line-height: 38rpx;
       }
+    }
+
+    // 点击状态
+    .exit-wrapper-hover {
+      background: rgba(0, 0, 0, 0.06);
     }
   }
 

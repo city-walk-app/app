@@ -802,22 +802,14 @@
         }"
       >
         <!-- 进入设置页面 -->
-        <div
-          class="options-button"
-          hover-class="options-button-hover"
-          @click="goPage('/pages/setting/index')"
-        >
+        <div class="options-button" @click="goPage('/pages/setting/index')">
           <image class="options-setting-icon" src="/assets/svg/setting.svg" />
         </div>
 
         <!-- 操作组 -->
         <div class="options-group">
           <!-- 改变地图图层 -->
-          <div
-            class="options-group-item"
-            hover-class="options-button-hover"
-            @click="changeEnableSatellite"
-          >
+          <div class="options-group-item" @click="changeEnableSatellite">
             <image
               v-if="enableSatellite"
               class="options-setting-icon"
@@ -831,11 +823,7 @@
           </div>
           <div class="options-group-line" />
           <!-- 回到当前位置 -->
-          <div
-            class="options-group-item"
-            hover-class="options-button-hover"
-            @click="moveToCurrentLocation"
-          >
+          <div class="options-group-item" @click="moveToCurrentLocation">
             <image
               class="options-setting-icon"
               src="/assets/svg/home-position.svg"
@@ -1204,11 +1192,6 @@
       flex-direction: column;
       row-gap: 36rpx;
 
-      // 按下效果
-      .options-button-hover {
-        background-color: #eee !important;
-      }
-
       // 设置
       .options-button {
         width: 84rpx;
@@ -1289,7 +1272,6 @@
         height: 83rpx;
         background: rgba(255, 255, 255, 0.2);
         backdrop-filter: blur(15rpx);
-        // box-shadow: 0rpx 0rpx 9rpx 2rpx rgba(255, 185, 57, 0.3);
         box-shadow: 0rpx 4rpx 12rpx 4rpx rgba(0, 0, 0, 0.16);
         border-radius: 50%;
         border: 2rpx solid #fff;
@@ -1377,7 +1359,6 @@
 
           // 主题
           .footer-card-title {
-            font-family: Douyin Sans, Douyin Sans;
             font-weight: bold;
             font-size: 32rpx;
             color: #fff;
@@ -1386,7 +1367,6 @@
 
           // 内容
           .footer-card-content {
-            font-family: PingFang SC, PingFang SC;
             font-weight: 400;
             font-size: 24rpx;
             color: #fff;

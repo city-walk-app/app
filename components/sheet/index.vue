@@ -1,6 +1,6 @@
 <script setup>
   import { useGlobalStore } from '@/store'
-  import { ref } from 'vue'
+  import { ref, watch } from 'vue'
 
   const prop = defineProps({
     visible: {
@@ -40,9 +40,9 @@
    * 动画结束触发
    */
   const transitionend = () => {
-    // if (prop.visible) {
-    isShowCloseEmpty.value = prop.visible
-    // }
+    if (prop.visible) {
+      isShowCloseEmpty.value = true
+    }
   }
 
   /**
@@ -89,6 +89,15 @@
     console.log('End')
     isDragging.value = false
   }
+
+  watch(
+    () => prop.visible,
+    (newValue) => {
+      if (!newValue) {
+        isShowCloseEmpty.value = false
+      }
+    }
+  )
 </script>
 
 <template>
