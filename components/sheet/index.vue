@@ -31,8 +31,7 @@
   const close = () => {
     startY.value = 0
     isDragging.value = false
-
-    isShowCloseEmpty.value = false
+    // isShowCloseEmpty.value = false
 
     emit('on-close')
   }
@@ -41,9 +40,9 @@
    * 动画结束触发
    */
   const transitionend = () => {
-    if (prop.visible) {
-      isShowCloseEmpty.value = prop.visible
-    }
+    // if (prop.visible) {
+    isShowCloseEmpty.value = prop.visible
+    // }
   }
 
   /**
@@ -95,10 +94,7 @@
 <template>
   <div class="sheet">
     <!-- 容器，存放内容 -->
-    <div
-      :class="['sheet-wrapper', { 'shee-wrapper-open': visible }]"
-      @click="wrapperClose"
-    >
+    <div :class="['sheet-wrapper', { 'shee-wrapper-open': visible }]">
       <slot />
     </div>
 
@@ -119,7 +115,7 @@
 
     <!-- 底部占位元素 -->
     <div
-      v-if="isShowCloseEmpty"
+      v-if="isShowCloseEmpty && bottom"
       class="sheet-close-empty-body"
       :style="{
         '--height': `${
@@ -129,7 +125,7 @@
           'px'
         }`,
       }"
-    ></div>
+    />
 
     <!-- 对话框内容 -->
     <div
