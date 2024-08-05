@@ -115,8 +115,6 @@
               _active: false,
             }
           })
-
-          console.log(heatmap.value)
         }
       }
     } catch (err) {
@@ -165,6 +163,8 @@
 
       if (res.code === 200) {
         routeList.value = res.data
+
+        console.log(routeList.value)
       }
     } catch (err) {
       console.log('接口异常', err)
@@ -576,6 +576,9 @@
               class="routes-item"
               v-for="(item, index) in routeList"
               :key="index"
+              :style="{
+                '--background': item.mood_color || '#F8D035',
+              }"
               @click="routeDetail(item.list_id)"
             >
               <div class="routes-item-count">地点x{{ item.count }}</div>
@@ -1101,7 +1104,7 @@
       .routes-item {
         width: 326rpx;
         height: 232rpx;
-        background: #af52dd;
+        background: var(--background);
         border-radius: 16rpx;
         position: relative;
         overflow: hidden;
@@ -1129,7 +1132,7 @@
         .routes-item-shadow {
           width: 326rpx;
           height: 127rpx;
-          background: rgba(255, 255, 255, 0.05);
+          background: rgba(255, 255, 255, 0.5);
           border-image: linear-gradient(
               169deg,
               rgba(255, 255, 255, 1),

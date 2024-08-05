@@ -1,8 +1,8 @@
 import { USER_TOKEN } from '@/enum'
 import { getStorage, toast, clearStorage } from '@/utils'
 
-export const VUE_APP_API_URL = 'https://api.city-walk.top' // 生产环境
-// const VUE_APP_API_URL = 'http://localhost:1219' // 本地环境
+// export const VUE_APP_API_URL = 'https://api.city-walk.top' // 生产环境
+const VUE_APP_API_URL = 'http://localhost:1219' // 本地环境
 
 export class Http {
   /**
@@ -29,8 +29,6 @@ export class Http {
         method,
       })
 
-      console.log(res)
-
       if (res.errMsg !== 'request:ok') {
         toast('网络连接失败')
         return
@@ -39,8 +37,6 @@ export class Http {
       // 成功状态
       if (res.statusCode === 200 || res.statusCode === 201) {
         const data = res.data
-
-        console.log(data)
 
         // 接口响应成功
         if (data.code === 200) {

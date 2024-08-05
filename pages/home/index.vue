@@ -44,56 +44,56 @@
     {
       color: '#f16a59',
       borderColor: '#ef442f',
-      key: 'Excited',
+      key: 'EXCITED',
       type: '兴奋的',
     },
     {
       color: '#f6a552',
       borderColor: '#f39026',
-      key: 'Enthusiastic',
+      key: 'ENTHUSIASTIC',
       type: '热情的',
     },
     {
       color: '#fad35c',
       borderColor: '#fac736',
-      key: 'Happy',
+      key: 'HAPPY',
       type: '快乐的',
     },
     {
       color: '#74cd6d',
       borderColor: '#50c348',
-      key: 'Relaxed',
+      key: 'RELAXED',
       type: '放松的',
     },
     {
       color: '#4a8cf9',
       borderColor: '#1d6ff8',
-      key: 'Calm',
+      key: 'CALM',
       type: '平静的',
     },
     {
       color: '#af72dc',
       borderColor: '#9b4fd3',
-      key: 'Mysterious',
+      key: 'MYSTERIOUS',
       type: '神秘的',
     },
     {
       color: '#9b9ca0',
       borderColor: '#838387',
-      key: 'Neutral',
+      key: 'NEUTRAL',
       type: '中性的',
     },
   ])
   /** 出行方式 */
-  const travelMode = ref([
-    { icon: '', key: '', type: '公交' },
-    { icon: '', key: '', type: '地铁' },
-    { icon: '', key: '', type: '自行车' },
-    { icon: '', key: '', type: '步行' },
-    { icon: '', key: '', type: '开车' },
-    { icon: '', key: '', type: '火车' },
-    { icon: '', key: '', type: '飞机' },
-    { icon: '', key: '', type: '船' },
+  const travelType = ref([
+    { icon: '', key: 'WALKING', type: '步行' },
+    { icon: '', key: 'BICYCLE', type: '自行车' },
+    { icon: '', key: 'CAR', type: '自驾' },
+    { icon: '', key: 'BUS', type: '公交' },
+    { icon: '', key: 'METRO', type: '地铁' },
+    { icon: '', key: 'TRAIN', type: '火车' },
+    { icon: '', key: 'AIRPLANE', type: '飞机' },
+    { icon: '', key: 'SHIP', type: '船' },
   ])
   /** 步行记录详情表单 */
   const routeDetailForm = reactive({
