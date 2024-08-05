@@ -1,15 +1,19 @@
 <script setup>
   import { ref } from 'vue'
   import { Api } from '@/api'
-  import { onShareAppMessage } from '@dcloudio/uni-app'
+  import { onShareAppMessage, onReady } from '@dcloudio/uni-app'
   import StickyScroll from '@/components/sticky-scroll'
   import CwButton from '@/components/cw-button'
-  import { toast } from '../../utils'
+  import { showLoading, hideLoading } from '../../utils'
 
   const API = new Api()
 
   /** 二维码图片 */
   const qrCodeBase64 = ref('')
+  /** 画板顶部高度 */
+  const canvasTopHeight = ref(420)
+  /** 画板底部高度 */
+  const canvasBottomHeight = ref(160)
 
   /**
    * 邀请朋友
@@ -34,7 +38,8 @@
       const res = await API.getInviteQrCode({})
 
       if (res.code === 200) {
-        qrCodeBase64.value = res.data
+        // qrCodeBase64.value = res.data
+        return res.data
       }
     } catch (err) {
       console.log('接口异常', err)
@@ -42,11 +47,104 @@
   }
 
   /**
+   * 加载图片
+   */
+  const loadImage = async (src) => {
+    const res = await uni.getImageInfo({ src })
+
+    console.log(res)
+
+    if (res.errMsg === 'getImageInfo:ok') {
+      return res
+    }
+  }
+
+  /**
+   * 绘制海报
+   */
+  const drawPoster = async () => {
+    try {
+      const context = uni.createCanvasContext('invite-poster')
+
+      // 加载顶部图片
+      const topImage = await loadImage(
+        'https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/demos/invite-banner.png'
+      )
+      // 加载中间二维码图片
+      const qrCodeImage = await loadImage(
+        'https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/city-walk/qr-code.jpg'
+      )
+      // const qrCodeImage = await getInviteQrCode()
+
+      console.log(qrCodeImage)
+
+      // 获取canvas宽高
+      const { windowWidth } = uni.getSystemInfoSync()
+      const canvasWidth = windowWidth
+      /** 画板高度 */
+      const canvasHeight = canvasTopHeight.value + canvasBottomHeight.value
+
+      // 设置背景色
+      context.setFillStyle('#ffffff')
+      context.fillRect(0, 0, canvasWidth, canvasHeight)
+
+      // 绘制顶部图片
+      const topImageHeight = canvasTopHeight.value
+      context.drawImage(topImage.path, 0, 0, canvasWidth, topImageHeight)
+
+      // 绘制中间二维码图片
+      const qrCodeSize = 90
+      const qrCodeX = (canvasWidth - qrCodeSize) / 2
+      const qrCodeY =
+        topImageHeight + (canvasBottomHeight.value - qrCodeSize) / 2 // 底部留白区域内垂直居中
+
+      context.drawImage(
+        qrCodeImage.path,
+        qrCodeX,
+        qrCodeY,
+        qrCodeSize,
+        qrCodeSize
+      )
+
+      // 绘制底部文字
+      const text = '长按识别二维码加我好友'
+      context.setFontSize(16)
+      context.setFillStyle('#333333')
+      context.setTextAlign('center')
+      context.fillText(text, canvasWidth / 2, canvasHeight - 20)
+
+      context.draw()
+
+      console.log('画板', context)
+    } catch (err) {
+      console.log('绘制异常', err)
+    }
+  }
+
+  /**
    * 分享海报
    */
   const sharePoster = async () => {
-    console.log('分享海报')
-    toast('开发中...')
+    try {
+      showLoading('绘制中...')
+
+      await drawPoster()
+
+      const res = await uni.canvasToTempFilePath({
+        canvasId: 'invite-poster',
+      })
+
+      hideLoading()
+
+      // 分享图片
+      if (res.errMsg === 'canvasToTempFilePath:ok') {
+        // #ifdef MP-WEIXIN
+        uni.showShareImageMenu({ path: res.tempFilePath })
+        // #endif
+      }
+    } catch (err) {
+      console.log('绘制异常', err)
+    }
   }
 
   /**
@@ -64,10 +162,25 @@
       }
     }
   })
+
+  onReady(() => {
+    // drawPoster() // 绘制海报
+  })
 </script>
 
 <template>
   <StickyScroll title="邀请朋友">
+    <!-- 绘制的海报图 -->
+    <canvas
+      class="invite-poster"
+      canvas-id="invite-poster"
+      id="invite-poster"
+      :style="{
+        '--height': canvasTopHeight + canvasBottomHeight + 'px',
+      }"
+    />
+
+    <!-- 邀请 -->
     <div class="invite">
       <!-- 内容 -->
       <div class="main">
@@ -93,6 +206,13 @@
 </template>
 
 <style lang="scss">
+  // 海报图
+  .invite-poster {
+    width: 100%;
+    height: var(--height);
+  }
+
+  // 邀请页面
   .invite {
     position: relative;
     overflow: hidden;
