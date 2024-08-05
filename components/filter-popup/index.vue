@@ -8,7 +8,7 @@
 </script>
 
 <template>
-  <div v-if="!visible" class="filter-popup">
+  <div v-if="visible" class="filter-popup">
     <!-- 遮罩层 -->
     <div class="filter-popup-mask" />
 

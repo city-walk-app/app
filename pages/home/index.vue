@@ -161,6 +161,11 @@
   })
 
   /**
+   * 是否未登录
+   */
+  const isNoLogin = computed(() => !isLoginState.value)
+
+  /**
    * open id 登录失败
    */
   const openIdLoginErr = () => {
@@ -847,12 +852,6 @@
         @poitap="poitap"
         @regionchange="regionchange"
       />
-      <!-- <div
-      class="map"
-      style="
-        background: url('https://wxls-cms.oss-cn-hangzhou.aliyuncs.com/online/2024-04-18/218da022-f4bf-456a-99af-5cb8e157f7b8.jpg');
-      "
-    ></div> -->
 
       <!-- 天气 -->
       <div v-if="weatherInfo" class="weather">
@@ -945,7 +944,7 @@
 
         <!-- 文案 -->
         <div class="home-sheet-content" v-if="recordDetail.province_url">
-          再获得100经验版图将会升温版图 {{ keyboardHeight + 'px' }}
+          再获得100经验版图将会升温版图
         </div>
 
         <!-- 内容部分 -->
@@ -1111,7 +1110,7 @@
   </Sheet>
 
   <!-- 登录提示弹出层 -->
-  <FilterPopup v-model:visible="isLoginState">
+  <FilterPopup v-model:visible="isNoLogin">
     <div class="home-popup-login">
       <!-- 头部 logo -->
       <div class="home-popup-login-header">
@@ -1418,7 +1417,7 @@
 
   // 登录提示弹出层
   .home-popup-login {
-    padding: 110rpx 34rpx calc(34rpx + env(safe-area-inset-bottom)) 34rpx;
+    padding: 210rpx 34rpx var(--cw-padding-bottom) 34rpx;
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
@@ -1429,8 +1428,8 @@
 
     // 头部 logo
     .home-popup-login-header {
-      width: 300rpx;
-      height: 300rpx;
+      width: 120rpx;
+      height: 120rpx;
       border-radius: 50%;
 
       .home-popup-login-header-logo {
