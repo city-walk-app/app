@@ -578,11 +578,12 @@
               }"
               @click="routeDetail(item.list_id)"
             >
-              <div class="routes-item-count">地点x{{ item.count }}</div>
+              <div class="routes-item-count">地点×{{ item.count }}</div>
               <div class="routes-item-date">
                 {{ getCurrentDateFormatted(item.create_at) }}
               </div>
-              <div class="routes-item-shadow"></div>
+              <div class="routes-item-round" />
+              <div class="routes-item-shadow" />
             </div>
           </div>
 
@@ -1095,6 +1096,7 @@
         position: relative;
         overflow: hidden;
 
+        // 数量
         .routes-item-count {
           font-weight: 500;
           font-size: 32rpx;
@@ -1103,8 +1105,10 @@
           position: absolute;
           top: 55rpx;
           right: 32rpx;
+          z-index: 20;
         }
 
+        // 时间
         .routes-item-date {
           font-weight: 400;
           font-size: 28rpx;
@@ -1113,13 +1117,13 @@
           position: absolute;
           right: 32rpx;
           bottom: 22rpx;
+          z-index: 20;
         }
 
         .routes-item-shadow {
           width: 326rpx;
-          height: 127rpx;
-          // background: rgba(255, 255, 255, 0.05);
-          background: rgba(255, 255, 255, 0.5);
+          height: 140rpx;
+          background: rgba(255, 255, 255, 0.1);
           border-image: linear-gradient(
               169deg,
               rgba(255, 255, 255, 1),
@@ -1130,6 +1134,19 @@
           right: 0;
           left: 0;
           bottom: 0;
+        }
+
+        .routes-item-round {
+          width: 620rpx;
+          height: 620rpx;
+          background-color: rgba(0, 0, 0, 0.3);
+          border-radius: 0 0 0 950rpx;
+          position: absolute;
+          top: -340rpx;
+          right: -200rpx;
+          z-index: 10;
+          transform: rotate(-35deg);
+          background: var(--background);
         }
       }
 

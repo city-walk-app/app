@@ -14,7 +14,7 @@
       default: false,
     },
   })
-  const emit = defineEmits(['on-close'])
+  const emit = defineEmits(['on-close', 'on-close-end'])
 
   const useGlobal = useGlobalStore()
 
@@ -42,6 +42,11 @@
   const transitionend = () => {
     if (prop.visible) {
       isShowCloseEmpty.value = true
+    }
+
+    // 动画结束执行回调
+    if (!prop.visible) {
+      emit('on-close-end')
     }
   }
 

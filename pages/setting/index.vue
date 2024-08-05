@@ -59,6 +59,16 @@
   }
 
   /**
+   * 关闭结束执行的回调
+   */
+  const closeSheetEnd = () => {
+    console.log('关闭结束')
+    avatarFile.value = null
+    sheetKey.value = ''
+    sheetTite.value = ''
+  }
+
+  /**
    * 打开对话框
    */
   const openSheet = (key, title) => {
@@ -210,6 +220,7 @@
     is-move-close
     :title="sheetTite"
     @on-close="closeSheet"
+    @on-close-end="closeSheetEnd"
   >
     <!-- 设置页面 -->
     <StickyScroll title="设置">

@@ -218,6 +218,22 @@
   }
 
   /**
+   * 关闭结束执行的回调
+   */
+  const closeSheetEnd = () => {
+    console.log('关闭结束')
+    routeDetailForm.route_id = '' // 步行 id
+    routeDetailForm.content = '' // 内容
+    routeDetailForm.travel_type = '' // 出行方式
+    routeDetailForm.mood_color = '' // 心情颜色
+    routeDetailForm.address = '' // 位置信息
+    routeDetailForm.picture = [] // 照片
+
+    recordDetail.value = null
+    pictureFileList.value = null
+  }
+
+  /**
    * 微信登录
    */
   const wxLogin = async () => {
@@ -774,6 +790,7 @@
     v-model:visible="visibleSheet"
     :bottom="keyboardHeight"
     @on-close="closeSheet"
+    @on-close-end="closeSheetEnd"
   >
     <!-- 首页内容 -->
     <div class="home" :style="{ paddingTop: (statusBarHeight || 90) + 'px' }">
