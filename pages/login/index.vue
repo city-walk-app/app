@@ -35,6 +35,8 @@
         return
       }
 
+      setEmailInputFocus(false) // 改变邮箱输入框焦点
+
       showLoading('获取中...')
 
       const res = await API.sendEmail({ email: loginForm.email })
@@ -46,9 +48,13 @@
       if (res.code === 200) {
         toast('获取成功')
         step.value = 1
+        return
       }
+
+      setEmailInputFocus(true) // 改变邮箱输入框焦点
     } catch (err) {
       console.log('接口异常', err)
+      setEmailInputFocus(true) // 改变邮箱输入框焦点
     }
   }
 
@@ -66,6 +72,20 @@
   }
 
   /**
+   * 邮箱失去焦点
+   */
+  const setEmailInputFocus = (target) => {
+    emailInputFocus.value = target
+  }
+
+  /**
+   * 邮箱失去焦点
+   */
+  const setCodeInputFocus = (target) => {
+    codeInputFocus.value = target
+  }
+
+  /**
    * 登录
    */
   const onLogin = async () => {
@@ -75,6 +95,8 @@
         toast('验证码格式不正确')
         return
       }
+
+      setCodeInputFocus(false) // 改变验证码聚焦状态
 
       showLoading('处理中...')
 
@@ -97,8 +119,10 @@
       }
 
       toast(res.message)
+      setCodeInputFocus(true) // 改变验证码聚焦状态
     } catch (err) {
       console.log('接口异常', err)
+      setCodeInputFocus(true) // 改变验证码聚焦状态
     }
   }
 
@@ -137,9 +161,11 @@
    */
   const autoFocus = () => {
     if (step.value === 0) {
-      emailInputFocus.value = true
+      setEmailInputFocus(true)
+      console.log('设置邮箱聚焦')
     } else if (step.value === 1) {
-      codeInputFocus.value = true
+      setCodeInputFocus(true)
+      console.log('设置验证码聚焦')
     }
   }
 
@@ -212,6 +238,8 @@
               :adjust-position="false"
               :focus="emailInputFocus"
               @confirm="sendEmail"
+              @blur="setEmailInputFocus(false)"
+              @focus="setEmailInputFocus(true)"
             />
           </div>
         </div>
@@ -238,7 +266,7 @@
 
         <div class="body">
           <!-- 验证码 -->
-          <div class="code-input-wrapper" @click="codeInputFocus = true">
+          <div class="code-input-wrapper" @click="setCodeInputFocus(true)">
             <!-- 验证码输入框 -->
             <div
               :class="[
@@ -258,8 +286,9 @@
               type="number"
               :focus="codeInputFocus"
               :adjust-position="false"
-              @blur="codeInputFocus = false"
               @conform="onLogin"
+              @blur="setCodeInputFocus(false)"
+              @focus="setCodeInputFocus(true)"
             />
           </div>
         </div>
