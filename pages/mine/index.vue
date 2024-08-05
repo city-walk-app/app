@@ -467,9 +467,6 @@
 
         <!-- 详情步行 -->
         <div class="details" v-if="routeDetailList && routeDetailList.length">
-          <!-- 左侧时间线 -->
-          <!-- <div class="details-left"></div> -->
-
           <!-- 时间线 -->
           <div class="details-everyone">
             <div
@@ -577,7 +574,7 @@
               v-for="(item, index) in routeList"
               :key="index"
               :style="{
-                '--background': item.mood_color || '#F8D035',
+                '--background': item.mood_color || '#FFCC94',
               }"
               @click="routeDetail(item.list_id)"
             >
@@ -918,17 +915,6 @@
       box-sizing: border-box;
       position: relative;
 
-      // 左侧
-      .details-left {
-        width: 152rpx;
-        background-color: skyblue;
-        flex-shrink: 0;
-        position: absolute;
-        top: 0;
-        left: 0;
-        bottom: 0;
-      }
-
       // 右侧
       .details-everyone {
         flex: 1;
@@ -1132,6 +1118,7 @@
         .routes-item-shadow {
           width: 326rpx;
           height: 127rpx;
+          // background: rgba(255, 255, 255, 0.05);
           background: rgba(255, 255, 255, 0.5);
           border-image: linear-gradient(
               169deg,

@@ -613,32 +613,35 @@
 
       // 不是已授权位置权限状态
       if (!settingRes.authSetting['scope.userLocation']) {
-        const modalRes = await uni.showModal({
-          title: '位置权限',
-          content: '当前暂未开启位置权限，避免影响功能正常使用，你要去开启吗？',
-          showCancel: true,
-          cancelText: '先不了',
-          confirmText: '去开启',
-        })
-
-        if (modalRes.errMsg !== 'showModal:ok') {
-          return
-        }
-
-        if (modalRes.confirm) {
-          const openRes = await uni.openSetting()
-
-          if (openRes.errMsg !== 'openSetting:ok') {
-            return
-          }
-
-          // 已经授权了
-          if (openRes.authSetting['scope.userLocation']) {
-            getLocation() // 获取位置信息
-          }
-        }
-
+        toast('暂未开启位置权限')
         return
+
+        //   const modalRes = await uni.showModal({
+        //     title: '位置权限',
+        //     content: '当前暂未开启位置权限，避免影响功能正常使用，你要去开启吗？',
+        //     showCancel: true,
+        //     cancelText: '先不了',
+        //     confirmText: '去开启',
+        //   })
+
+        //   if (modalRes.errMsg !== 'showModal:ok') {
+        //     return
+        //   }
+
+        //   if (modalRes.confirm) {
+        //     const openRes = await uni.openSetting()
+
+        //     if (openRes.errMsg !== 'openSetting:ok') {
+        //       return
+        //     }
+
+        //     // 已经授权了
+        //     if (openRes.authSetting['scope.userLocation']) {
+        //       getLocation() // 获取位置信息
+        //     }
+        //   }
+
+        //   return
       }
 
       getLocation() // 获取位置信息
