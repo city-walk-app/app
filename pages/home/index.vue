@@ -101,7 +101,7 @@
     content: '', // 内容
     travel_type: '', // 出行方式
     mood_color: '', // 心情颜色
-    address: '电话的哈等哈', // 位置信息
+    address: '', // 位置信息
     picture: [], // 照片
   })
   /** 选择的图片 */
