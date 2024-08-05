@@ -180,6 +180,28 @@
   const selectPreference = (item) => {
     item.active = !item.active
   }
+
+  /**
+   * 复制 github 链接
+   */
+  const copyGithubLink = async () => {
+    try {
+      const res = await uni.setClipboardData({
+        data: 'https://github.com/city-walk-app',
+      })
+
+      if (res.errMsg === 'setClipboardData:ok') {
+        toast('复制成功，可粘贴到浏览器访问')
+        return
+      }
+
+      toast('复制异常，请重试')
+    } catch (err) {
+      console.log('复制异常', err)
+
+      toast('复制异常，请重试')
+    }
+  }
 </script>
 
 <template>
@@ -345,7 +367,11 @@
           <!-- 账户 -->
           <div class="card">
             <!-- 赞助 -->
-            <div class="card-item" hover-class="card-item-hover">
+            <div
+              class="card-item"
+              hover-class="card-item-hover"
+              @click="openSheet('sponsor', '赞助')"
+            >
               <div class="card-item-label">
                 <div class="card-item-label-sutitle">赞助</div>
               </div>
@@ -357,7 +383,11 @@
             </div>
 
             <!-- 加入 CityWalk -->
-            <div class="card-item" hover-class="card-item-hover">
+            <div
+              class="card-item"
+              hover-class="card-item-hover"
+              @click="openSheet('join', '加入 CityWalk')"
+            >
               <div class="card-item-label">
                 <div class="card-item-label-sutitle">加入 CityWalk</div>
               </div>
@@ -369,7 +399,11 @@
             </div>
 
             <!-- Github -->
-            <div class="card-item" hover-class="card-item-hover">
+            <div
+              class="card-item"
+              hover-class="card-item-hover"
+              @click="copyGithubLink"
+            >
               <div class="card-item-label">
                 <div class="card-item-label-sutitle">Github</div>
               </div>
@@ -520,10 +554,46 @@
               />
             </div>
           </template>
+
+          <!-- 赞助 -->
+          <template v-else-if="sheetKey === 'sponsor'">
+            <div class="setting-sheet-other-wrapper">
+              <div class="cw-skeleton-animated setting-sheet-qrcode-box">
+                <image
+                  class="setting-sheet-qrcode"
+                  src="https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/city-walk/setting-qrcode-sponsor.jpg"
+                  mode="aspectFill"
+                  show-menu-by-longpress
+                />
+              </div>
+            </div>
+          </template>
+
+          <!-- 加入 CityWalk -->
+          <template v-else-if="sheetKey === 'join'">
+            <div class="setting-sheet-other-wrapper">
+              <div class="cw-skeleton-animated setting-sheet-qrcode-box">
+                <image
+                  class="setting-sheet-qrcode"
+                  src="https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/city-walk/setting-qrcode-join.jpg"
+                  mode="aspectFill"
+                  show-menu-by-longpress
+                />
+              </div>
+            </div>
+          </template>
         </div>
 
         <!-- 提交按钮 -->
-        <CwButton block @click="submitInfo">就这样</CwButton>
+        <CwButton
+          v-if="sheetKey === 'sponsor' || sheetKey === 'join'"
+          type="line"
+          block
+          @click="closeSheet"
+        >
+          关闭
+        </CwButton>
+        <CwButton v-else block @click="submitInfo">就这样</CwButton>
       </div>
     </template>
   </Sheet>
@@ -751,6 +821,30 @@
           font-size: 34rpx;
           font-weight: 600;
           color: #333;
+        }
+      }
+
+      // 其它的
+      .setting-sheet-other-wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        row-gap: 20rpx;
+
+        .setting-sheet-qrcode-box {
+          width: 500rpx;
+          height: 700rpx;
+          flex-shrink: 0;
+          border-radius: 20rpx;
+          overflow: hidden;
+          background-color: var(--cw-skeleton-background-light);
+
+          .setting-sheet-qrcode {
+            width: inherit;
+            height: inherit;
+            flex-shrink: 0;
+          }
         }
       }
 

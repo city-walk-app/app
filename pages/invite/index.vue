@@ -2,16 +2,14 @@
   import { ref } from 'vue'
   import { Api } from '@/api'
   import { onShareAppMessage } from '@dcloudio/uni-app'
-  import { useGlobalStore } from '@/store'
   import StickyScroll from '@/components/sticky-scroll'
   import CwButton from '@/components/cw-button'
+  import { toast } from '../../utils'
 
   const API = new Api()
-  const useGlobal = useGlobalStore()
-  const qrCodeBase64 = ref('')
 
-  console.log(useGlobal.headerBtnPosi)
-  console.log(useGlobal.navBarHeight)
+  /** 二维码图片 */
+  const qrCodeBase64 = ref('')
 
   /**
    * 邀请朋友
@@ -48,6 +46,7 @@
    */
   const sharePoster = async () => {
     console.log('分享海报')
+    toast('开发中...')
   }
 
   /**
