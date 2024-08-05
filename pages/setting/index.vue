@@ -122,6 +122,16 @@
         return
       }
     }
+    // 偏好设置
+    else if (sheetKey.value === 'preference_type') {
+      const activePreference = preferenceList.value.filter(
+        (item) => item.active
+      )
+
+      if (activePreference && activePreference.length) {
+        data[sheetKey.value] = activePreference.map((item) => item.key)
+      }
+    }
     // 其它设置
     else {
       data[sheetKey.value] = userInfoStorage.value[sheetKey.value]
@@ -162,6 +172,13 @@
     }
 
     userInfoStorage.gender = value
+  }
+
+  /**
+   * 选择偏好
+   */
+  const selectPreference = (item) => {
+    item.active = !item.active
   }
 </script>
 
@@ -476,9 +493,15 @@
           <template v-else-if="sheetKey === 'preference_type'">
             <div class="setting-sheet-preference-wrapper">
               <div
-                class="preference-item"
+                :class="[
+                  'preference-item',
+                  {
+                    'preference-item-active': item.active,
+                  },
+                ]"
                 v-for="(item, index) in preferenceList"
                 :key="index"
+                @click="selectPreference(item)"
               >
                 {{ item.title }}
               </div>
@@ -752,6 +775,11 @@
           color: #333;
           font-size: 27rpx;
           font-weight: 600;
+
+          &.preference-item-active {
+            background-color: var(--cw-theme-1);
+            color: #fff;
+          }
         }
       }
 

@@ -87,26 +87,33 @@
         <div
           v-for="(item, index) in rankingList"
           :key="index"
-          :class="['ranking-item', { 'ranking-item-first': index === 0 }]"
+          :class="[
+            'ranking-item',
+            { 'ranking-item-first': index === 0 && item.experiences },
+          ]"
           @click="goUserMain(item.user_id)"
         >
           <!-- 名次 -->
           <div class="ranking-item-count">
-            <image
-              v-if="index === 0"
-              class="ranking-item-count-icon"
-              src="https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/city-walk/ranking-1.svg"
-            />
-            <image
-              v-else-if="index === 1"
-              class="ranking-item-count-icon"
-              src="https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/city-walk/ranking-2.svg"
-            />
-            <image
-              v-else-if="index === 2"
-              class="ranking-item-count-icon"
-              src="https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/city-walk/ranking-3.svg"
-            />
+            <template v-if="item.experiences">
+              <image
+                v-if="index === 0"
+                class="ranking-item-count-icon"
+                src="https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/city-walk/ranking-1.svg"
+              />
+              <image
+                v-else-if="index === 1"
+                class="ranking-item-count-icon"
+                src="https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/city-walk/ranking-2.svg"
+              />
+              <image
+                v-else-if="index === 2"
+                class="ranking-item-count-icon"
+                src="https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/city-walk/ranking-3.svg"
+              />
+              <div v-else class="ranking-item-count-text">{{ index + 1 }}</div>
+            </template>
+
             <div v-else class="ranking-item-count-text">{{ index + 1 }}</div>
           </div>
 
@@ -114,7 +121,7 @@
           <div class="ranking-item-avatar-wrapper">
             <!-- 皇冠 -->
             <image
-              v-if="index === 0"
+              v-if="index === 0 && item.experiences"
               class="ranking-item-avatar-crown"
               src="https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/city-walk/ranking-crown.png"
             />
@@ -129,13 +136,13 @@
 
           <!-- 信息 -->
           <div class="ranking-item-info">
-            <div class="ranking-item-info-name">{{ item.name }}</div>
+            <div class="ranking-item-info-name">{{ item.nick_name }}</div>
             <div class="ranking-item-info-content">
               今日共打卡
               <div class="ranking-item-info-count" v-if="item.count">
                 {{ item.count }}
               </div>
-              <template v-else>{{ item.count }}</template>
+              <template v-else>0</template>
               个地点
             </div>
           </div>

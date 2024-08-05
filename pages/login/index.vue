@@ -39,6 +39,8 @@
 
       const res = await API.sendEmail({ email: loginForm.email })
 
+      console.log(res)
+
       hideLoading()
 
       if (res.code === 200) {
@@ -47,6 +49,19 @@
       }
     } catch (err) {
       console.log('接口异常', err)
+    }
+  }
+
+  /**
+   * 返回首页
+   */
+  const redirectHome = () => {
+    if (inviteId.value) {
+      uni.redirectTo({
+        url: `/pages/home/index?invite_id=${inviteId.value}`,
+      })
+    } else {
+      uni.redirectTo({ url: '/pages/home/index' })
     }
   }
 
@@ -75,13 +90,7 @@
         if (res.data.is_new_user) {
           step.value = 2
         } else {
-          if (inviteId.value) {
-            uni.redirectTo({
-              url: `/pages/home/index?invite_id=${inviteId.value}`,
-            })
-          } else {
-            uni.redirectTo({ url: '/pages/home/index' })
-          }
+          redirectHome() // 返回首页
         }
 
         return
@@ -96,7 +105,32 @@
   /**
    * 提交偏好设置
    */
-  const submit = async () => {}
+  const submit = async () => {
+    try {
+      const activePreference = preferenceList.value.filter(
+        (item) => item.active
+      )
+
+      if (!activePreference || !activePreference.length) {
+        toast('请选择至少一个偏好')
+        return
+      }
+
+      showLoading('处理中...')
+
+      const res = await API.setUserInfo({
+        preference_type: activePreference.map((item) => item.key),
+      })
+
+      hideLoading()
+
+      if (res.code === 200) {
+        redirectHome() // 返回首页
+      }
+    } catch (err) {
+      console.log('设置信息接口异常', err)
+    }
+  }
 
   /**
    * 获取焦点
@@ -124,6 +158,13 @@
       }
     }
   )
+
+  /**
+   * 选择偏好
+   */
+  const selectPreference = (item) => {
+    item.active = !item.active
+  }
 
   onShow(() => {
     autoFocus() // 获取焦点
@@ -249,9 +290,15 @@
         <div class="body">
           <div class="preferences">
             <div
-              class="preference-item"
+              :class="[
+                'preference-item',
+                {
+                  'preference-item-active': item.active,
+                },
+              ]"
               v-for="(item, index) in preferenceList"
               :key="index"
+              @click="selectPreference(item)"
             >
               {{ item.title }}
             </div>
@@ -416,6 +463,11 @@
               color: #333;
               font-size: 27rpx;
               font-weight: 600;
+
+              &.preference-item-active {
+                background-color: var(--cw-theme-1);
+                color: #fff;
+              }
             }
           }
         }
