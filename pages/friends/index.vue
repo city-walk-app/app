@@ -89,7 +89,7 @@
 
         <!-- 朋友列表-没有朋友 -->
         <div v-else class="body-empty">
-          <Empty title="居然一个朋友都没有" />
+          <Empty title="一个朋友都没有" />
         </div>
       </template>
     </div>

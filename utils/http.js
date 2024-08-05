@@ -53,15 +53,12 @@ export class Http {
           toast(data.message)
         }
         // 提示错误
-        else {
+        else if (data.code === 0) {
           toast(data.message)
         }
-
-        return {}
       }
     } catch (err) {
       console.log('全局请求异常', err)
-      return {}
     }
   }
 }
