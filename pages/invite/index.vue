@@ -1,17 +1,15 @@
 <script setup>
   import { ref } from 'vue'
   import { Api } from '@/api'
-  import { onShareAppMessage, onReady } from '@dcloudio/uni-app'
+  import { onShareAppMessage } from '@dcloudio/uni-app'
   import StickyScroll from '@/components/sticky-scroll'
   import CwButton from '@/components/cw-button'
   import { showLoading, hideLoading } from '../../utils'
 
   const API = new Api()
 
-  /** 二维码图片 */
-  const qrCodeBase64 = ref('')
   /** 画板顶部高度 */
-  const canvasTopHeight = ref(420)
+  const canvasTopHeight = ref(520)
   /** 画板底部高度 */
   const canvasBottomHeight = ref(160)
 
@@ -38,7 +36,6 @@
       const res = await API.getInviteQrCode({})
 
       if (res.code === 200) {
-        // qrCodeBase64.value = res.data
         return res.data
       }
     } catch (err) {
@@ -50,12 +47,16 @@
    * 加载图片
    */
   const loadImage = async (src) => {
-    const res = await uni.getImageInfo({ src })
+    try {
+      const res = await uni.getImageInfo({ src })
 
-    console.log(res)
+      console.log(res)
 
-    if (res.errMsg === 'getImageInfo:ok') {
-      return res
+      if (res.errMsg === 'getImageInfo:ok') {
+        return res
+      }
+    } catch (err) {
+      console.log('加载图片异常', err)
     }
   }
 
@@ -66,19 +67,13 @@
     try {
       const context = uni.createCanvasContext('invite-poster')
 
-      // 加载顶部图片
+      /** 加载顶部图片 */
       const topImage = await loadImage(
         'https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/demos/invite-banner.png'
       )
-      // 加载中间二维码图片
-      const qrCodeImage = await loadImage(
-        'https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/city-walk/qr-code.jpg'
-      )
-      // const qrCodeImage = await getInviteQrCode()
+      const qrCodeImageBase64 = await getInviteQrCode()
 
-      console.log(qrCodeImage)
-
-      // 获取canvas宽高
+      // 获取 canvas 宽高
       const { windowWidth } = uni.getSystemInfoSync()
       const canvasWidth = windowWidth
       /** 画板高度 */
@@ -99,7 +94,7 @@
         topImageHeight + (canvasBottomHeight.value - qrCodeSize) / 2 // 底部留白区域内垂直居中
 
       context.drawImage(
-        qrCodeImage.path,
+        qrCodeImageBase64,
         qrCodeX,
         qrCodeY,
         qrCodeSize,
@@ -114,8 +109,6 @@
       context.fillText(text, canvasWidth / 2, canvasHeight - 20)
 
       context.draw()
-
-      console.log('画板', context)
     } catch (err) {
       console.log('绘制异常', err)
     }
@@ -162,10 +155,6 @@
       }
     }
   })
-
-  onReady(() => {
-    // drawPoster() // 绘制海报
-  })
 </script>
 
 <template>
@@ -210,6 +199,8 @@
   .invite-poster {
     width: 100%;
     height: var(--height);
+    position: fixed;
+    left: -9909rpx;
   }
 
   // 邀请页面

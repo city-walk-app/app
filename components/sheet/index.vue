@@ -31,7 +31,6 @@
   const close = () => {
     startY.value = 0
     isDragging.value = false
-    // isShowCloseEmpty.value = false
 
     emit('on-close')
   }
@@ -108,7 +107,7 @@
 <template>
   <div class="sheet">
     <!-- 容器，存放内容 -->
-    <div :class="['sheet-wrapper', { 'shee-wrapper-open': visible }]">
+    <div :class="['sheet-wrapper', { 'sheet-wrapper-open': visible }]">
       <slot />
     </div>
 
@@ -143,7 +142,7 @@
 
     <!-- 对话框内容 -->
     <div
-      :class="['sheet-dialog', { 'shee-dialog-open': visible }]"
+      :class="['sheet-dialog', { 'sheet-dialog-open': visible }]"
       :style="{
         '--height': `calc(100vh - ${
           useGlobal.headerBtnPosi.top +
@@ -199,7 +198,7 @@
       transform: scale(1) translateY(0);
       transition: transform 0.24s;
 
-      &.shee-wrapper-open {
+      &.sheet-wrapper-open {
         transform: scale(0.9) translateY(30px);
         border-radius: 15px;
       }
@@ -299,7 +298,7 @@
         flex-direction: column;
       }
 
-      &.shee-dialog-open {
+      &.sheet-dialog-open {
         transform: translateY(0);
       }
     }

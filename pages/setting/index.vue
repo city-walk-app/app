@@ -21,7 +21,7 @@
   /** 控制弹窗内容的 key */
   const sheetKey = ref('')
   /** 控制弹窗内容的 title */
-  const sheetTite = ref('')
+  const sheetTitle = ref('')
   /** 头像文件 */
   const avatarFile = ref()
   /** 偏好列表 */
@@ -65,7 +65,7 @@
     console.log('关闭结束')
     avatarFile.value = null
     sheetKey.value = ''
-    sheetTite.value = ''
+    sheetTitle.value = ''
   }
 
   /**
@@ -77,7 +77,7 @@
     }
 
     sheetKey.value = key
-    sheetTite.value = title
+    sheetTitle.value = title
     visibleSheet.value = true
   }
 
@@ -218,7 +218,7 @@
   <Sheet
     v-model:visible="visibleSheet"
     is-move-close
-    :title="sheetTite"
+    :title="sheetTitle"
     @on-close="closeSheet"
     @on-close-end="closeSheetEnd"
   >

@@ -869,7 +869,7 @@
               width: inherit;
               height: inherit;
               border-radius: inherit;
-              transition: transform 0.5s, border-radiu 0.5s;
+              transition: transform 0.5s, border-radius 0.5s;
 
               // 选中状态
               &.heatmap-body-right-item-active {
