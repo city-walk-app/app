@@ -11,20 +11,15 @@ export const getCurrentDateFormatted = (dateStr) => {
 }
 
 /**
+ * 格式化时间配置对象
+ */
+const formatTimeOptions = { hour: '2-digit', minute: '2-digit' }
+
+/**
  * 格式化当前时间
  * 
  * @param dateStr 时间
  */
 export const formatTime = (dateStr) => {
-  const date = new Date(dateStr)
-
-  // 获取小时和分钟
-  let hours = date.getUTCHours()
-  let minutes = date.getUTCMinutes()
-
-  // 将小时和分钟转换为两位数的字符串
-  hours = hours.toString().padStart(2, '0')
-  minutes = minutes.toString().padStart(2, '0')
-
-  return `${hours}:${minutes}`
+  return new Date(dateStr).toLocaleTimeString(void 0, formatTimeOptions)
 }

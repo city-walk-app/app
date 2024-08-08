@@ -27,16 +27,15 @@
   const avatarFile = ref()
   /** 偏好列表 */
   const preferenceList = ref()
-
-  /** 缓存的当前用户信息 */
-  const userInfoStorage = ref(getStorage(USER_INFO))
+  /** 当前用户信息 */
+  const userInfo = ref(getStorage(USER_INFO))
 
   /**
    * 设置偏好设置
    */
   const setPreferenceList = () => {
     try {
-      const preferenceType = userInfoStorage.value.preference_type
+      const preferenceType = userInfo.value.preference_type
 
       if (isArray(preferenceType) && preferenceType.length) {
         preferenceList.value = preferences.map((item) => {
@@ -169,7 +168,7 @@
     }
     // 其它设置
     else {
-      data[sheetKey.value] = userInfoStorage.value[sheetKey.value]
+      data[sheetKey.value] = userInfo.value[sheetKey.value]
     }
 
     // 没有内容
@@ -188,7 +187,7 @@
       if (res.code === 200) {
         setStorage(USER_INFO, res.data)
         closeSheet() // 关闭对话框
-        userInfoStorage.value = res.data
+        userInfo.value = res.data
         return
       }
 
@@ -206,7 +205,7 @@
       return
     }
 
-    userInfoStorage.gender = value
+    userInfo.value.gender = value
   }
 
   /**
@@ -266,7 +265,7 @@
                   <image
                     class="avatar-image"
                     mode="aspectFill"
-                    :src="userInfoStorage.avatar || DEFAULT_AVATAR"
+                    :src="userInfo.avatar || DEFAULT_AVATAR"
                   />
                 </div>
 
@@ -498,7 +497,7 @@
                 v-else
                 class="setting-sheet-avatar-image"
                 mode="aspectFill"
-                :src="userInfoStorage.avatar || DEFAULT_AVATAR"
+                :src="userInfo.avatar || DEFAULT_AVATAR"
               />
 
               <div v-if="!avatarFile" class="setting-sheet-avatar-title">
@@ -511,7 +510,7 @@
           <template v-else-if="sheetKey === 'nick_name'">
             <div class="setting-sheet-input-wrapper">
               <input
-                v-model="userInfoStorage.nick_name"
+                v-model="userInfo.nick_name"
                 class="setting-sheet-input"
                 type="text"
                 :maxlength="16"
@@ -526,13 +525,25 @@
               <!-- 基本选项 -->
               <div class="setting-sheet-gender-options">
                 <div
-                  class="setting-sheet-gender-item"
+                  :class="[
+                    'setting-sheet-gender-item',
+                    {
+                      'setting-sheet-gender-item-active':
+                        userInfo.gender === '1',
+                    },
+                  ]"
                   @click="changeGender('1')"
                 >
                   男
                 </div>
                 <div
-                  class="setting-sheet-gender-item"
+                  :class="[
+                    'setting-sheet-gender-item',
+                    {
+                      'setting-sheet-gender-item-active':
+                        userInfo.gender === '2',
+                    },
+                  ]"
                   @click="changeGender('2')"
                 >
                   女
@@ -540,7 +551,12 @@
               </div>
               <!-- 其它选项 -->
               <div
-                class="setting-sheet-gender-other"
+                :class="[
+                  'setting-sheet-gender-other',
+                  {
+                    'setting-sheet-gender-item-active': userInfo.gender === '3',
+                  },
+                ]"
                 @click="changeGender('3')"
               >
                 不愿透露
@@ -552,7 +568,7 @@
           <template v-else-if="sheetKey === 'mobile'">
             <div class="setting-sheet-input-wrapper">
               <input
-                v-model="userInfoStorage.mobile"
+                v-model="userInfo.mobile"
                 class="setting-sheet-input"
                 type="number"
                 :maxlength="11"
@@ -584,7 +600,7 @@
           <template v-else-if="sheetKey === 'signature'">
             <div class="setting-sheet-input-wrapper">
               <input
-                v-model="userInfoStorage.signature"
+                v-model="userInfo.signature"
                 class="setting-sheet-input"
                 type="text"
                 :maxlength="30"
@@ -937,6 +953,11 @@
             display: flex;
             align-items: flex-end;
             justify-content: flex-end;
+
+            &.setting-sheet-gender-item-active {
+              background-color: var(--cw-theme-1);
+              color: #fff;
+            }
           }
         }
 
@@ -949,6 +970,11 @@
           display: flex;
           justify-content: center;
           align-items: center;
+
+          &.setting-sheet-gender-item-active {
+            background-color: var(--cw-theme-1);
+            color: #fff;
+          }
         }
       }
     }
