@@ -602,7 +602,7 @@
           block
           @click="closeSheet"
         >
-          关闭
+          好的
         </CwButton>
         <CwButton v-else block @click="submitInfo">就这样</CwButton>
       </div>

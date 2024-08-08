@@ -4,8 +4,11 @@
   import { onShow, onLoad } from '@dcloudio/uni-app'
   import { toast, showLoading, hideLoading, setStorage } from '@/utils'
   import { USER_INFO, USER_TOKEN, preferences } from '@/enum'
+  import { useGlobalStore } from '@/store'
 
   const API = new Api()
+
+  const useGlobal = useGlobalStore()
 
   const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/
 
@@ -32,6 +35,10 @@
       // 邮箱不正确
       if (!emailRegex.test(loginForm.email)) {
         toast('输入正确邮箱之后再获取')
+
+        setTimeout(() => {
+          setEmailInputFocus(true) // 改变邮箱输入框焦点
+        }, 500)
         return
       }
 
@@ -193,6 +200,13 @@
     item.active = !item.active
   }
 
+  /**
+   * 返回
+   */
+  const back = () => {
+    uni.navigateBack({ delta: 1 })
+  }
+
   onShow(() => {
     autoFocus() // 获取焦点
   })
@@ -207,6 +221,18 @@
 
 <template>
   <div class="login">
+    <!-- 返回按钮 -->
+    <div
+      class="back"
+      :style="{
+        top: useGlobal.headerBtnPosi.top + 'px',
+      }"
+      @click="back"
+    >
+      <image class="back-icon" src="/assets/svg/left.svg" />
+    </div>
+
+    <!-- 登录内容 -->
     <div
       class="login-swiper"
       :style="{ transform: `translateX(-${step * 100}vw)` }"
@@ -351,6 +377,27 @@
     width: 100vw;
     background: url('https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/city-walk/main-blank.png')
       no-repeat;
+
+    // 返回
+    .back {
+      width: 68rpx;
+      height: 68rpx;
+      background: rgba(255, 255, 255, 0.7);
+      box-shadow: 0rpx 2rpx 23rpx 0rpx rgba(158, 158, 158, 0.25);
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: fixed;
+      left: 32rpx;
+      z-index: 20;
+
+      .back-icon {
+        width: 50rpx;
+        height: 50rpx;
+        flex-shrink: 0;
+      }
+    }
 
     // 登录表单轮播图
     .login-swiper {
