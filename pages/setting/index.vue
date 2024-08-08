@@ -6,6 +6,7 @@
     uploadOSSImages,
     showLoading,
     hideLoading,
+    isArray,
   } from '@/utils'
   import { USER_INFO, DEFAULT_AVATAR, preferences } from '@/enum'
   import { Api } from '@/api'
@@ -25,10 +26,34 @@
   /** 头像文件 */
   const avatarFile = ref()
   /** 偏好列表 */
-  const preferenceList = ref(preferences)
+  const preferenceList = ref()
 
   /** 缓存的当前用户信息 */
   const userInfoStorage = ref(getStorage(USER_INFO))
+
+  /**
+   * 设置偏好设置
+   */
+  const setPreferenceList = () => {
+    try {
+      const preferenceType = userInfoStorage.value.preference_type
+
+      if (isArray(preferenceType) && preferenceType.length) {
+        preferenceList.value = preferences.map((item) => {
+          return {
+            ...item,
+            active: preferenceType.includes(item.key),
+          }
+        })
+        return
+      }
+
+      preferenceList.value = preferences
+    } catch (err) {
+      console.log('设置偏好设置异常', err)
+      preferenceList.value = preferences
+    }
+  }
 
   /**
    * 点击退出登录
@@ -212,6 +237,8 @@
       toast('复制异常，请重试')
     }
   }
+
+  setPreferenceList() // 设置偏好设置
 </script>
 
 <template>
