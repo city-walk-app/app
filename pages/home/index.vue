@@ -963,8 +963,11 @@
         </div>
 
         <!-- 文案 -->
-        <div class="home-sheet-content" v-if="recordDetail.province_url">
-          再获得100经验版图将会升温版图
+        <div
+          class="home-sheet-content"
+          v-if="recordDetail.province_url && recordDetail.content"
+        >
+          {{ recordDetail.content }}
         </div>
 
         <!-- 内容部分 -->
