@@ -361,9 +361,10 @@
         </scroll-view>
 
         <!-- 热力图 -->
-        <div class="heatmap">
+        <div class="heatmap" v-if="heatmap && heatmap.length">
           <!-- 头部切换日期 -->
           <div class="heatmap-header">
+            <!-- 热力图加载完成 -->
             <div class="heatmap-header-date" @click="openSheet">
               <!-- 日历 -->
               <div class="heatmap-header-date-calendar">
@@ -416,7 +417,6 @@
                     routeDetailList && routeDetailList.length,
                 },
               ]"
-              v-if="heatmap && heatmap.length"
             >
               <div
                 class="heatmap-body-right-item-wrapper"
@@ -453,9 +453,30 @@
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+
+        <!-- 热力图-骨架图 -->
+        <div v-else class="heatmap">
+          <!-- 头部 -->
+          <div class="heatmap-header">
+            <!-- 骨架图 -->
+            <div class="cw-skeleton-animated heatmap-header-date__skeleton" />
+          </div>
+
+          <!-- 内容 -->
+          <div class="heatmap-body">
+            <!-- 左侧骨架图 -->
+            <div class="heatmap-body-left">
+              <div
+                v-for="i in 3"
+                :key="i"
+                class="cw-skeleton-animated heatmap-body-left-item__skeleton"
+              />
+            </div>
 
             <!-- 右侧热力图-骨架图 -->
-            <div v-else class="heatmap-body-right">
+            <div class="heatmap-body-right">
               <div
                 class="heatmap-body-right-item-wrapper"
                 v-for="i in 31"
@@ -806,6 +827,13 @@
             line-height: 44rpx;
           }
         }
+
+        // 日期选择骨架图
+        .heatmap-header-date__skeleton {
+          width: 212rpx;
+          height: 52rpx;
+          background-color: var(--cw-skeleton-background-light);
+        }
       }
 
       // 内容部分
@@ -822,6 +850,7 @@
           flex-direction: column;
           row-gap: 60rpx;
 
+          // 左侧标识
           .heatmap-body-left-item {
             display: flex;
             align-items: center;
@@ -839,6 +868,13 @@
               color: #666666;
               line-height: 33rpx;
             }
+          }
+
+          // 左侧骨架图
+          .heatmap-body-left-item__skeleton {
+            width: 128rpx;
+            height: 36rpx;
+            background-color: var(--cw-skeleton-background-light);
           }
         }
 
