@@ -4,7 +4,7 @@
   import { onShareAppMessage } from '@dcloudio/uni-app'
   import StickyScroll from '@/components/sticky-scroll'
   import CwButton from '@/components/cw-button'
-  import { showLoading, hideLoading } from '../../utils'
+  import { showLoading, hideLoading, toast } from '../../utils'
 
   const API = new Api()
 
@@ -33,7 +33,7 @@
    */
   const getInviteQrCode = async () => {
     try {
-      const res = await API.getInviteQrCode({})
+      const res = await API.getInviteQrCode()
 
       if (res.code === 200) {
         return res.data
@@ -104,7 +104,7 @@
       // 绘制底部文字
       const text = '长按识别二维码加我好友'
       context.setFontSize(16)
-      context.setFillStyle('#333333')
+      context.setFillStyle('#333')
       context.setTextAlign('center')
       context.fillText(text, canvasWidth / 2, canvasHeight - 20)
 
@@ -136,6 +136,8 @@
         // #endif
       }
     } catch (err) {
+      hideLoading()
+      toast('分享异常，请重试')
       console.log('绘制异常', err)
     }
   }
@@ -172,23 +174,26 @@
     <!-- 邀请 -->
     <div class="invite">
       <!-- 内容 -->
-      <div class="main">
-        <div class="body">
-          <div class="body-banner"></div>
-          <div class="body-footer">
-            <image
-              class="body-footer-qr-code"
-              src="https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/city-walk/qr-code.jpg"
-            />
-            <div class="body-footer-text">长按识别二维码加我好友</div>
-          </div>
+      <div class="body">
+        <!-- 封面图 -->
+        <div class="body-banner" />
+
+        <!-- 底部 -->
+        <div class="body-content">
+          <image
+            class="body-content-qr-code"
+            src="https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/city-walk/qr-code.jpg"
+          />
+          <div class="body-content-text">长按识别二维码加我好友</div>
         </div>
       </div>
 
       <!-- 底部 -->
       <div class="footer">
-        <CwButton type="line" @click="sharePoster">分享海报</CwButton>
-        <CwButton open-type="share">分享链接</CwButton>
+        <div class="footer-content">
+          <CwButton type="line" @click="sharePoster">分享海报</CwButton>
+          <CwButton open-type="share">分享链接</CwButton>
+        </div>
       </div>
     </div>
   </StickyScroll>
@@ -210,91 +215,85 @@
     padding: 0 32rpx var(--cw-padding-bottom) 32rpx;
     box-sizing: border-box;
 
-    .main {
-      box-sizing: border-box;
+    // 内容
+    .body {
+      margin-top: 44rpx;
+      width: 100%;
+      height: 1120rpx;
+      border-radius: 44rpx;
+      background-color: #fff;
+      display: flex;
+      overflow: hidden;
+      flex-direction: column;
+      box-shadow: 0rpx 2rpx 23rpx 0rpx rgba(158, 158, 158, 0.25);
 
-      // 头部
-      .header {
-        display: flex;
-        align-items: center;
-        column-gap: 32rpx;
-        position: sticky;
-        z-index: 50;
-
-        .title {
-          font-weight: bold;
-          transition: 0.09s;
-          font-size: 56rpx;
-          color: #333333;
-          line-height: 66rpx;
-        }
-
-        .back {
-          width: 68rpx;
-          height: 68rpx;
-          background: rgba(255, 255, 255, 0.7);
-          box-shadow: 0rpx 2rpx 23rpx 0rpx rgba(158, 158, 158, 0.25);
-          border-radius: 50%;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-        }
+      // 封面图
+      .body-banner {
+        width: 100%;
+        height: 806rpx;
+        border-radius: 44rpx 44rpx 0 0;
+        background: url('https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/demos/invite-banner.png')
+          no-repeat center / cover;
       }
 
-      // 内容
-      .body {
-        margin-top: 44rpx;
-        width: 100%;
-        height: 1120rpx;
-        border-radius: 44rpx;
-        background-color: #fff;
+      .body-content {
         display: flex;
-        overflow: hidden;
         flex-direction: column;
-        box-shadow: 0rpx 2rpx 23rpx 0rpx rgba(158, 158, 158, 0.25);
+        justify-content: center;
+        align-items: center;
+        row-gap: 24rpx;
+        flex: 1;
 
-        .body-banner {
-          width: 100%;
-          height: 806rpx;
-          border-radius: 44rpx 44rpx 0 0;
-          background: url('https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/demos/invite-banner.png')
-            no-repeat center / cover;
+        .body-content-qr-code {
+          width: 188rpx;
+          height: 188rpx;
+          flex-shrink: 0;
         }
 
-        .body-footer {
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          align-items: center;
-          row-gap: 24rpx;
-          flex: 1;
-
-          .body-footer-qr-code {
-            width: 188rpx;
-            height: 188rpx;
-            flex-shrink: 0;
-          }
-
-          .body-footer-text {
-            font-weight: 400;
-            font-size: 28rpx;
-            color: #666666;
-            line-height: 33rpx;
-          }
+        .body-content-text {
+          font-weight: 400;
+          font-size: 28rpx;
+          color: #666666;
+          line-height: 33rpx;
         }
       }
     }
+  }
 
-    // 底部操作
-    .footer {
+  // 底部操作
+  .footer {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    padding-bottom: var(--cw-padding-bottom);
+    box-sizing: border-box;
+    padding-top: 33rpx;
+
+    .footer-content {
       display: flex;
       justify-content: center;
       align-items: center;
       column-gap: 46rpx;
-      position: fixed;
-      bottom: 94rpx;
+      position: relative;
+      z-index: 20;
+    }
+
+    &::after {
+      content: '';
+      display: block;
+      position: absolute;
+      bottom: 0;
       right: 0;
       left: 0;
+      top: 0;
+      mask-image: linear-gradient(
+        0deg,
+        #fff 0%,
+        rgb(255, 255, 255, 0.8) 80%,
+        transparent
+      );
+      backdrop-filter: blur(12px);
     }
   }
 </style>
