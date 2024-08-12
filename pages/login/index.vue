@@ -125,10 +125,11 @@
         return
       }
 
-      toast(res.message)
+      loginForm.code = ''
       setCodeInputFocus(true) // 改变验证码聚焦状态
     } catch (err) {
       console.log('接口异常', err)
+      loginForm.code = ''
       setCodeInputFocus(true) // 改变验证码聚焦状态
     }
   }
