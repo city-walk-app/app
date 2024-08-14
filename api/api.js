@@ -104,7 +104,7 @@ export class Api extends Http {
   }
 
   /**
-   * 获取用户步行记录列表
+   * 获取用户步行记录详情
    */
   getUserRouteDetail = (data) => {
     return this.request({ url: '/location/get/user/route/detail', data })
