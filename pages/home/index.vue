@@ -35,7 +35,7 @@
   const enableSatellite = ref(false)
   /** 是否显示对话框 */
   const visibleSheet = ref(false)
-  /** 打开信息详情 */
+  /** 打卡信息详情 */
   const recordDetail = ref()
   /** 天气信息 */
   const weatherInfo = ref()
@@ -109,7 +109,7 @@
   /** 最多上传的图片 */
   const maxPictureCount = ref(2)
   /** 心情颜色配置 */
-  const moodColorOptions = ref()
+  const moodColorActive = ref()
   /** 邀请 id */
   const inviteId = ref()
   /** 键盘高度 */
@@ -702,10 +702,10 @@
   const selectMoodColors = (item) => {
     if (routeDetailForm.mood_color === item.key) {
       routeDetailForm.mood_color = ''
-      moodColorOptions.value = null
+      moodColorActive.value = null
     } else {
       routeDetailForm.mood_color = item.key
-      moodColorOptions.value = item
+      moodColorActive.value = item
     }
 
     console.log(routeDetailForm.mood_color)
@@ -1090,13 +1090,13 @@
             />
 
             <div
-              v-if="routeDetailForm.mood_color && moodColorOptions"
+              v-if="routeDetailForm.mood_color && moodColorActive"
               class="home-sheet-content-body-color-title"
               :style="{
-                '--color': moodColorOptions.color,
+                '--color': moodColorActive.color,
               }"
             >
-              {{ moodColorOptions.type }}
+              {{ moodColorActive.type }}
             </div>
           </div>
 
