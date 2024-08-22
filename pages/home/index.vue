@@ -397,8 +397,8 @@
         longitude.value = res.longitude
         latitude.value = res.latitude
 
-        // getLocationPopularRecommend() // 获取周边热门地点
-        // getWeatherInfo() // 获取天气信息
+        getLocationPopularRecommend() // 获取周边热门地点
+        getWeatherInfo() // 获取天气信息
       }
     } catch (err) {
       console.log('获取位置信息异常', err)
