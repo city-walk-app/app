@@ -8,7 +8,7 @@
     hideLoading,
     isArray,
   } from '@/utils'
-  import { USER_INFO, DEFAULT_AVATAR, preferences } from '@/enum'
+  import { USER_INFO, DEFAULT_AVATAR } from '@/enum'
   import { Api } from '@/api'
   import Sheet from '@/components/sheet'
   import StickyScroll from '@/components/sticky-scroll'
@@ -25,34 +25,8 @@
   const sheetTitle = ref('')
   /** 头像文件 */
   const avatarFile = ref()
-  /** 偏好列表 */
-  const preferenceList = ref()
   /** 当前用户信息 */
   const userInfo = ref(getStorage(USER_INFO))
-
-  /**
-   * 设置偏好设置
-   */
-  const setPreferenceList = () => {
-    try {
-      const preferenceType = userInfo.value.preference_type
-
-      if (isArray(preferenceType) && preferenceType.length) {
-        preferenceList.value = preferences.map((item) => {
-          return {
-            ...item,
-            active: preferenceType.includes(item.key),
-          }
-        })
-        return
-      }
-
-      preferenceList.value = preferences
-    } catch (err) {
-      console.log('设置偏好设置异常', err)
-      preferenceList.value = preferences
-    }
-  }
 
   /**
    * 点击退出登录
@@ -156,16 +130,6 @@
         return
       }
     }
-    // 偏好设置
-    else if (sheetKey.value === 'preference_type') {
-      const activePreference = preferenceList.value.filter(
-        (item) => item.active
-      )
-
-      if (activePreference && activePreference.length) {
-        data[sheetKey.value] = activePreference.map((item) => item.key)
-      }
-    }
     // 其它设置
     else {
       data[sheetKey.value] = userInfo.value[sheetKey.value]
@@ -209,13 +173,6 @@
   }
 
   /**
-   * 选择偏好
-   */
-  const selectPreference = (item) => {
-    item.active = !item.active
-  }
-
-  /**
    * 复制 github 链接
    */
   const copyGithubLink = async () => {
@@ -236,8 +193,6 @@
       toast('复制异常，请重试')
     }
   }
-
-  setPreferenceList() // 设置偏好设置
 </script>
 
 <template>
@@ -343,30 +298,6 @@
                   />
                 </div>
                 <div class="card-item-label-title">手机</div>
-              </div>
-
-              <image
-                class="card-item-arrow"
-                src="/assets/svg/right-black.svg"
-              />
-            </div>
-
-            <!-- 偏好 -->
-            <div
-              class="card-item"
-              @click="openSheet('preference_type', '修改偏好')"
-            >
-              <div class="card-item-label">
-                <div
-                  class="card-item-label-icon-wrapper"
-                  style="--background: #50c348"
-                >
-                  <image
-                    class="card-item-label-icon"
-                    src="/assets/svg/setting-preference-type.svg"
-                  />
-                </div>
-                <div class="card-item-label-title">偏好</div>
               </div>
 
               <image
@@ -574,25 +505,6 @@
                 :maxlength="11"
                 :adjust-position="false"
               />
-            </div>
-          </template>
-
-          <!-- 偏好 -->
-          <template v-else-if="sheetKey === 'preference_type'">
-            <div class="setting-sheet-preference-wrapper">
-              <div
-                :class="[
-                  'preference-item',
-                  {
-                    'preference-item-active': item.active,
-                  },
-                ]"
-                v-for="(item, index) in preferenceList"
-                :key="index"
-                @click="selectPreference(item)"
-              >
-                {{ item.title }}
-              </div>
             </div>
           </template>
 
@@ -898,35 +810,6 @@
             width: inherit;
             height: inherit;
             flex-shrink: 0;
-          }
-        }
-      }
-
-      // 偏好设置
-      .setting-sheet-preference-wrapper {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        column-gap: 48rpx;
-        row-gap: 50rpx;
-
-        .preference-item {
-          width: 192rpx;
-          height: 184rpx;
-          flex-shrink: 0;
-          background: #eee;
-          border-radius: 16rpx;
-          padding: 20rpx 21rpx;
-          box-sizing: border-box;
-          display: flex;
-          justify-content: flex-end;
-          align-items: flex-end;
-          color: #333;
-          font-size: 27rpx;
-          font-weight: 600;
-
-          &.preference-item-active {
-            background-color: var(--cw-theme-1);
-            color: #fff;
           }
         }
       }

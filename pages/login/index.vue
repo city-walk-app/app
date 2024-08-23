@@ -3,7 +3,7 @@
   import { Api } from '@/api'
   import { onShow, onLoad } from '@dcloudio/uni-app'
   import { toast, showLoading, hideLoading, setStorage } from '@/utils'
-  import { USER_INFO, USER_TOKEN, preferences } from '@/enum'
+  import { USER_INFO, USER_TOKEN } from '@/enum'
   import { useGlobalStore } from '@/store'
 
   const API = new Api()
@@ -22,8 +22,6 @@
   const emailInputFocus = ref(false)
   /** 验证码输入框聚焦 */
   const codeInputFocus = ref(false)
-  /** 偏好列表 */
-  const preferenceList = ref(preferences)
   /** 邀请 id */
   const inviteId = ref()
 
@@ -115,13 +113,7 @@
         setStorage(USER_INFO, res.data.user_info)
         setStorage(USER_TOKEN, res.data.token)
 
-        // 新用户完善偏好设置
-        if (res.data.is_new_user) {
-          step.value = 2
-        } else {
-          redirectHome() // 返回首页
-        }
-
+        redirectHome() // 返回首页
         return
       }
 
@@ -131,36 +123,6 @@
       console.log('接口异常', err)
       loginForm.code = ''
       setCodeInputFocus(true) // 改变验证码聚焦状态
-    }
-  }
-
-  /**
-   * 提交偏好设置
-   */
-  const submit = async () => {
-    try {
-      const activePreference = preferenceList.value.filter(
-        (item) => item.active
-      )
-
-      if (!activePreference || !activePreference.length) {
-        toast('请选择至少一个偏好')
-        return
-      }
-
-      showLoading('处理中...')
-
-      const res = await API.setUserInfo({
-        preference_type: activePreference.map((item) => item.key),
-      })
-
-      hideLoading()
-
-      if (res.code === 200) {
-        redirectHome() // 返回首页
-      }
-    } catch (err) {
-      console.log('设置信息接口异常', err)
     }
   }
 
@@ -193,13 +155,6 @@
       }
     }
   )
-
-  /**
-   * 选择偏好
-   */
-  const selectPreference = (item) => {
-    item.active = !item.active
-  }
 
   /**
    * 返回
@@ -327,45 +282,6 @@
 
         <!-- 重新获取 -->
         <div class="try-send">重新获取</div>
-      </div>
-
-      <!-- 3. 选择偏好 -->
-      <div class="login-swiper-item">
-        <!-- 头部 -->
-        <div class="header">
-          <div class="header-logo-wrapper">
-            <image
-              class="header-logo"
-              src="https://city-walk.oss-cn-beijing.aliyuncs.com/assets/images/city-walk/logo.jpg"
-            />
-          </div>
-
-          <div class="header-title">你的偏好？</div>
-        </div>
-
-        <!-- 输入框 -->
-        <div class="body">
-          <div class="preferences">
-            <div
-              :class="[
-                'preference-item',
-                {
-                  'preference-item-active': item.active,
-                },
-              ]"
-              v-for="(item, index) in preferenceList"
-              :key="index"
-              @click="selectPreference(item)"
-            >
-              {{ item.title }}
-            </div>
-          </div>
-        </div>
-
-        <!-- 登录按钮 -->
-        <div class="button" hover-class="button-hover" @click="submit">
-          <image class="button-icon" src="/assets/svg/right.svg" />
-        </div>
       </div>
     </div>
   </div>
@@ -517,35 +433,6 @@
             .code-input {
               position: fixed;
               left: -99999rpx;
-            }
-          }
-
-          // 偏好设置
-          .preferences {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            column-gap: 48rpx;
-            row-gap: 50rpx;
-
-            .preference-item {
-              width: 192rpx;
-              height: 184rpx;
-              flex-shrink: 0;
-              background: #eee;
-              border-radius: 16rpx;
-              padding: 20rpx 21rpx;
-              box-sizing: border-box;
-              display: flex;
-              justify-content: flex-end;
-              align-items: flex-end;
-              color: #333;
-              font-size: 27rpx;
-              font-weight: 600;
-
-              &.preference-item-active {
-                background-color: var(--cw-theme-1);
-                color: #fff;
-              }
             }
           }
         }

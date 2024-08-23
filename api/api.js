@@ -27,10 +27,10 @@ export class Api extends Http {
   }
 
   /**
-   * 获取周边热门地点
+   * 获取今天的打卡记录
    */
-  getLocationPopularRecommend = (data) => {
-    return this.request({ url: '/location/get/popular/recommend', data })
+  getTodayRecord = (data) => {
+    return this.request({ url: '/location/get/today/record', data })
   }
 
   /**

@@ -332,14 +332,11 @@
   }
 
   /**
-   * 获取周边热门地点
+   * 获取今天的打卡记录
    */
-  const getLocationPopularRecommend = async () => {
+  const getTodayRecord = async () => {
     try {
-      const res = await API.getLocationPopularRecommend({
-        longitude: longitude.value,
-        latitude: latitude.value,
-      })
+      const res = await API.getTodayRecord({})
 
       if (res.code === 200) {
         if (isArray(res.data) && res.data.length) {
@@ -397,7 +394,7 @@
         longitude.value = res.longitude
         latitude.value = res.latitude
 
-        getLocationPopularRecommend() // 获取周边热门地点
+        getTodayRecord() // 获取今天的打卡记录
         getWeatherInfo() // 获取天气信息
       }
     } catch (err) {
